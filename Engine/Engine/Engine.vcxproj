@@ -19,10 +19,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\imgui\imgui.cpp" />
+    <ClCompile Include="..\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\imgui\imconfig.h" />
+    <ClInclude Include="..\imgui\imgui.h" />
+    <ClInclude Include="..\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="..\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\imgui\imgui_internal.h" />
+    <ClInclude Include="..\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\imgui\imstb_truetype.h" />
     <ClInclude Include="include\glad\glad.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
   </ItemGroup>
@@ -79,8 +95,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\Engine\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\Engine\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -88,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\ldevillard\Desktop\Engine\Engine\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\ldevillard\Desktop\Engine\Engine\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,6 +146,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\ldevillard\Desktop\Engine\Engine\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,6 +162,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\ldevillard\Desktop\Engine\Engine\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
