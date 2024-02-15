@@ -26,6 +26,7 @@
     <ClCompile Include="..\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Shader\Shader.cpp" />
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -41,6 +42,11 @@
     <ClInclude Include="..\imgui\imstb_truetype.h" />
     <ClInclude Include="include\glad\glad.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
+    <ClInclude Include="include\Shader\Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\FragmentShader.glsl" />
+    <None Include="shaders\VertexShader.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -95,7 +101,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\Engine\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\logan\Desktop\Engine\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\Engine\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -147,6 +153,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\ldevillard\Desktop\Engine\Engine\imgui</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
