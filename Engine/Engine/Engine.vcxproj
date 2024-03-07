@@ -29,6 +29,7 @@
     <ClCompile Include="src\Shader\Shader.cpp" />
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\imgui\imconfig.h" />
@@ -43,10 +44,15 @@
     <ClInclude Include="include\glad\glad.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
     <ClInclude Include="include\Shader\Shader.h" />
+    <ClInclude Include="include\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\FragmentShader.glsl" />
     <None Include="shaders\VertexShader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\textures\awesomeface.png" />
+    <Image Include="resources\textures\container.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -101,20 +107,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\logan\Desktop\Engine\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\Engine\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\ldevillard\Desktop\Tests\Engine\Engine\imgui;C:\Users\ldevillard\Desktop\Tests\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Tests\Engine\Engine\Engine\include;C:\Users\logan\Desktop\Engine\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\Engine\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\ldevillard\Desktop\Tests\Engine\ThirdPartyLibs\Libs;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\Users\ldevillard\Desktop\Tests\Engine\Engine\imgui;C:\Users\ldevillard\Desktop\Tests\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Tests\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Users\ldevillard\Desktop\Tests\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>C:\Users\ldevillard\Desktop\Tests\Engine\Engine\imgui;C:\Users\ldevillard\Desktop\Tests\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Tests\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Users\ldevillard\Desktop\Tests\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <IncludePath>C:\Users\ldevillard\Desktop\Tests\Engine\Engine\imgui;C:\Users\ldevillard\Desktop\Tests\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Tests\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Users\ldevillard\Desktop\Tests\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
