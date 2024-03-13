@@ -9,7 +9,9 @@ enum CameraDirection
    FORWARD,
    BACKWARD,
    LEFT,
-   RIGHT
+   RIGHT,
+   UP,
+   DOWN
 };
 
 const float YAW = -90.0f;
@@ -42,6 +44,7 @@ class Camera
 
       // getters
       glm::mat4 GetViewMatrix();
+      void SetSpeedFactor(float factor);
 
       // inputs processing
       void ProcessKeyboard(CameraDirection direction, float deltaTime);
@@ -49,6 +52,8 @@ class Camera
       void ProcessMouseScroll(float yoffset);
 
    private:
+      float m_SpeedFactor = 1;
+
       // calculates the front vector from the Camera's (updated) Euler Angles
       void updateCameraVectors();
 };

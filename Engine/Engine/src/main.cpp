@@ -19,11 +19,11 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
-void processWireframe(bool& enable);
+void processImGui(bool& enable, float deltaTime);
 
 // settings
-unsigned int SCR_WIDTH = 800;
-unsigned int SCR_HEIGHT = 600;
+unsigned int SCR_WIDTH = 1280;
+unsigned int SCR_HEIGHT = 720;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -164,7 +164,6 @@ int main()
     };
 
     // render loop
-    // -----------
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -200,13 +199,16 @@ int main()
            glm::mat4 model = glm::mat4(1.0f);
            model = glm::translate(model, cubePositions[i]);
            float angle = 20.0f * (i + 1);
-           model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+           if (i % 3 == 0)
+              model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+           else
+              model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
            shader.SetMat4("model", model);
 
            glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
-        processWireframe(wireframeMode);
+        processImGui(wireframeMode, deltaTime);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         glfwSwapBuffers(window);
@@ -226,11 +228,13 @@ int main()
     return 0;
 }
 
-void processWireframe(bool &enable)
+void processImGui(bool &enable, float deltaTime)
 {
    ImGui_ImplOpenGL3_NewFrame();
    ImGui_ImplGlfw_NewFrame();
    ImGui::NewFrame();
+
+   float fps = 1.0f / deltaTime;
 
    if (enable)
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -238,7 +242,9 @@ void processWireframe(bool &enable)
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
    ImGui::Begin("Editor");
-   ImGui::Checkbox("Wireframe", &enable);
+   ImGui::Text("FPS: %.1f", fps);
+   ImGui::Checkbox("Wireframe", & enable);
+   ImGui::InputFloat("Camera Speed", &camera.MovementSpeed);
    ImGui::End();
 
    ImGui::Render();
@@ -259,8 +265,15 @@ void processInput(GLFWwindow* window)
        camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
        camera.ProcessKeyboard(RIGHT, deltaTime);
-    /*if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-       camera.ProcessKeyboard(RIGHT, deltaTime);*/
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+       camera.ProcessKeyboard(DOWN, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+       camera.ProcessKeyboard(UP, deltaTime);
+    
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+       camera.SetSpeedFactor(2);
+    else
+       camera.SetSpeedFactor(1);
 }
 
 // glfw: whenever the mouse moves, this callback is called
@@ -269,6 +282,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_PRESS)
    {
       glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+      firstMouse = true;
       return;
    }
 
@@ -289,6 +303,11 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
    lastX = xpos;
    lastY = ypos;
+
+   // smooth
+   const float sensitivity = 0.5f;
+   xoffset *= sensitivity;
+   yoffset *= sensitivity;
 
    camera.ProcessMouseMovement(xoffset, yoffset);
 }
