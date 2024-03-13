@@ -1,25 +1,26 @@
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-
-#include <glad/glad.h>
-#include <glfw3.h>
+// std
 #include <iostream>
 
+// libs
+#include <glad/glad.h>
+#include <glfw3.h>
 #include <stb_image.h>
-#include "Shader.h"
-#include "Texture.h"
-#include "Camera.h"
 
+// glm
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+// user define
+#include "Shader.h"
+#include "Texture.h"
+#include "Camera.h"
+#include "debug/DebugMenu.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
-void processImGui(bool& enable, float deltaTime);
 
 // settings
 unsigned int SCR_WIDTH = 1280;
@@ -142,14 +143,6 @@ int main()
 
     bool wireframeMode = false;
 
-    // initialize imgui
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
-
     glm::vec3 cubePositions[] = {
         glm::vec3(0.0f,  0.0f,  0.0f),
         glm::vec3(2.0f,  5.0f, -15.0f),
@@ -162,6 +155,14 @@ int main()
         glm::vec3(1.5f,  0.2f, -1.5f),
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
+
+    // initialize and setup debug menu
+    DebugMenu debugMenu(window);
+    DebugParameters params = debugMenu.GetParameters();
+    params.Wireframe = &wireframeMode;
+    params.CameraSpeed = &camera.MovementSpeed;
+    params.DeltaTime = &deltaTime;
+    debugMenu.SetParameters(params);
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -208,16 +209,15 @@ int main()
            glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
-        processImGui(wireframeMode, deltaTime);
+        // debug
+        debugMenu.Render();
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    debugMenu.Terminate();
 
     // optional: de-allocate all resources once they've outlived their purpose:
     glDeleteVertexArrays(1, &VAO);
@@ -226,29 +226,6 @@ int main()
     // glfw: terminate, clearing all previously allocated GLFW resources.
     glfwTerminate();
     return 0;
-}
-
-void processImGui(bool &enable, float deltaTime)
-{
-   ImGui_ImplOpenGL3_NewFrame();
-   ImGui_ImplGlfw_NewFrame();
-   ImGui::NewFrame();
-
-   float fps = 1.0f / deltaTime;
-
-   if (enable)
-      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-   else
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-   ImGui::Begin("Editor");
-   ImGui::Text("FPS: %.1f", fps);
-   ImGui::Checkbox("Wireframe", & enable);
-   ImGui::InputFloat("Camera Speed", &camera.MovementSpeed);
-   ImGui::End();
-
-   ImGui::Render();
-   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly

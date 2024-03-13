@@ -68,7 +68,7 @@ void Shader::Use()
    glUseProgram(ID);
 }
 
-#pragma region Utility Functions
+#pragma region Utility
 
 void Shader::SetBool(const std::string& name, bool value) const
 {
