@@ -28,22 +28,34 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
    updateCameraVectors();
 }
 
-glm::mat4 Camera::GetViewMatrix()
-{
-   return glm::lookAt(Position, Position + Front, Up);
-}
-
 void Camera::ProcessKeyboard(CameraDirection direction, float deltaTime)
 {
-   float velocity = MovementSpeed * deltaTime;
-   if (direction == FORWARD)
-      Position += Front * velocity;
-   if (direction == BACKWARD)
-      Position -= Front * velocity;
-   if (direction == LEFT)
-      Position -= Right * velocity;
-   if (direction == RIGHT)
-      Position += Right * velocity;
+   float velocity = MovementSpeed * m_SpeedFactor * deltaTime;
+   glm::vec3 targetPosition = Position;
+
+   switch (direction)
+   {
+      case FORWARD :
+         targetPosition += Front * velocity;
+         break;
+      case BACKWARD :
+         targetPosition -= Front * velocity;
+         break;
+      case LEFT :
+         targetPosition -= Right * velocity;
+         break;
+      case RIGHT :
+         targetPosition += Right * velocity;
+         break;
+      case UP :
+         targetPosition += Up * velocity;
+         break;
+      case DOWN:
+         targetPosition -= Up * velocity;
+         break;
+   }
+
+   Position = targetPosition;
 }
 
 void Camera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch)
@@ -75,6 +87,20 @@ void Camera::ProcessMouseScroll(float yoffset)
    if (Zoom > 45.0f)
       Zoom = 45.0f;
 }
+
+#pragma region Utility Functions
+
+glm::mat4 Camera::GetViewMatrix()
+{
+   return glm::lookAt(Position, Position + Front, Up);
+}
+
+void Camera::SetSpeedFactor(float factor) 
+{
+   m_SpeedFactor = factor;
+}
+
+#pragma endregion
 
 #pragma endregion
 
