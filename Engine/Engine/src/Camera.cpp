@@ -88,7 +88,7 @@ void Camera::ProcessMouseScroll(float yoffset)
       Zoom = 45.0f;
 }
 
-#pragma region Utility Functions
+#pragma region Utility
 
 glm::mat4 Camera::GetViewMatrix()
 {
