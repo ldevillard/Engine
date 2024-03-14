@@ -55,6 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\FragmentShader.glsl" />
+    <None Include="shaders\light\Color.fs" />
+    <None Include="shaders\light\Color.vs" />
+    <None Include="shaders\light\LightCube.fs" />
+    <None Include="shaders\light\LightCube.vs" />
     <None Include="shaders\VertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
