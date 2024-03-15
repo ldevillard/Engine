@@ -30,7 +30,7 @@ unsigned int SCR_WIDTH = 1280;
 unsigned int SCR_HEIGHT = 720;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 4.0f));
+Camera camera(glm::vec3(0.0f, .5f, 8.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -40,7 +40,7 @@ float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lightPos(0.f, -0.05f, 2.675f);
 
 int main()
 {
@@ -110,7 +110,7 @@ int main()
         shader.Use();
 
         // fragment shader uniforms
-        shader.SetVec3("objectColor", 1.0f, 0.5f, 0.31f);
+        shader.SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
         shader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
         shader.SetVec3("lightPos", lightPos);
         shader.SetVec3("viewPos", camera.Position);
@@ -125,6 +125,7 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         shader.SetMat4("model", model);
         backPack.Draw(shader);
 
