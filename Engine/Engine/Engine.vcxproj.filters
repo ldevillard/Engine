@@ -54,13 +54,19 @@
     <ClCompile Include="src\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Texture.cpp">
+    <ClCompile Include="src\data\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\debug\DebugMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data\Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,13 +113,22 @@
     <ClInclude Include="include\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Texture.h">
+    <ClInclude Include="include\data\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\debug\DebugMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
