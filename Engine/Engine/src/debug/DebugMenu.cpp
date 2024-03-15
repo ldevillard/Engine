@@ -22,18 +22,19 @@ void DebugMenu::Render()
    ImGui::NewFrame();
 
    float fps = 0;
-   if (*m_Parameters.DeltaTime > 0)
-      fps = 1.0f / *m_Parameters.DeltaTime;
+   if (*parameters.DeltaTime > 0)
+      fps = 1.0f / *parameters.DeltaTime;
 
-   if (*m_Parameters.Wireframe)
+   if (*parameters.Wireframe)
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
    else
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
    ImGui::Begin("Editor");
    ImGui::Text("FPS: %.1f", fps);
-   ImGui::Checkbox("Wireframe", &*m_Parameters.Wireframe);
-   ImGui::InputFloat("Camera Speed", m_Parameters.CameraSpeed);
+   ImGui::Checkbox("Wireframe", &*parameters.Wireframe);
+   ImGui::InputFloat("Camera Speed", parameters.CameraSpeed);
+   ImGui::DragFloat3("Light Position", &parameters.LightPosition->x, 0.025f);
    ImGui::End();
 
    ImGui::Render();
@@ -51,12 +52,12 @@ void DebugMenu::Terminate()
 
 void DebugMenu::SetParameters(DebugParameters params)
 {
-   m_Parameters = params;
+   parameters = params;
 }
 
 const DebugParameters& DebugMenu::GetParameters()
 {
-   return  m_Parameters;
+   return  parameters;
 }
 
 #pragma endregion
@@ -68,11 +69,11 @@ const DebugParameters& DebugMenu::GetParameters()
 
 bool DebugMenu::isNullParam()
 {
-   if (m_Parameters.CameraSpeed == nullptr)
+   if (parameters.CameraSpeed == nullptr)
       return true;
-   if (m_Parameters.Wireframe == nullptr)
+   if (parameters.Wireframe == nullptr)
       return true;
-   if (m_Parameters.DeltaTime == nullptr)
+   if (parameters.DeltaTime == nullptr)
       return true;
 
    return false;

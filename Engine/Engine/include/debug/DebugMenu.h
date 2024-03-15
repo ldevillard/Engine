@@ -7,11 +7,15 @@
 // openGL
 #include <glad/glad.h>
 
+// glm
+#include <glm/glm.hpp>
+
 struct DebugParameters
 {
 	bool* Wireframe = nullptr;
 	float* DeltaTime = nullptr;
 	float* CameraSpeed = nullptr;
+	glm::vec3* LightPosition = nullptr;
 };
 
 class DebugMenu
@@ -29,7 +33,7 @@ public:
 	const DebugParameters& GetParameters();
 
 private:
-	DebugParameters m_Parameters;
+	DebugParameters parameters;
 
 	bool isNullParam();
 };

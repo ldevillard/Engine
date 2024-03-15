@@ -30,7 +30,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 
 void Camera::ProcessKeyboard(CameraDirection direction, float deltaTime)
 {
-   float velocity = MovementSpeed * m_SpeedFactor * deltaTime;
+   float velocity = MovementSpeed * speedFactor * deltaTime;
    glm::vec3 targetPosition = Position;
 
    switch (direction)
@@ -97,7 +97,7 @@ glm::mat4 Camera::GetViewMatrix()
 
 void Camera::SetSpeedFactor(float factor) 
 {
-   m_SpeedFactor = factor;
+   speedFactor = factor;
 }
 
 #pragma endregion
