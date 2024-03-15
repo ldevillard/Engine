@@ -52,7 +52,7 @@ public:
    void ProcessMouseScroll(float yoffset);
 
 private:
-   float m_SpeedFactor = 1;
+   float speedFactor = 1;
 
    // calculates the front vector from the Camera's (updated) Euler Angles
    void updateCameraVectors();
