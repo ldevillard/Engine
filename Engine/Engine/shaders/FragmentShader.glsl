@@ -12,10 +12,13 @@ uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 viewPos;
 
-void main()
+uniform bool wireframe;
+uniform bool textured;
+
+void ComputeLighting()
 {
     // ambiant lighting
-    float ambientStrength = 0.1;
+    float ambientStrength = 0.3;
     vec3 ambient = ambientStrength * lightColor;
 
     vec3 norm = normalize(Normal);
@@ -26,12 +29,31 @@ void main()
     vec3 diffuse = diff * lightColor;
 
     // specular lighting
-    float specularStrength = 0.3;
+    float specularStrength = 0.8;
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specular = specularStrength * spec * lightColor;
 
-    vec3 result = (ambient + diffuse + specular) * objectColor * vec3(texture(texture_diffuse1, TexCoords).rgb);
+    vec3 textureColor = vec3(1.0);
+
+    if (textured)
+    {
+        textureColor = texture(texture_diffuse1, TexCoords).rgb;
+    }
+
+    vec3 result = (ambient + diffuse + specular) * objectColor * textureColor;
     FragColor = vec4(result, 1.0);
+}
+
+void main()
+{
+    if (!wireframe)
+    {
+        ComputeLighting();
+    }
+    else 
+    {
+        FragColor = vec4(0.75);
+    }
 }

@@ -18,8 +18,6 @@
 #include "Model.h"
 #include "debug/DebugMenu.h"
 
-// assimp
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -30,7 +28,7 @@ unsigned int SCR_WIDTH = 1280;
 unsigned int SCR_HEIGHT = 720;
 
 // camera
-Camera camera(glm::vec3(0.0f, .5f, 8.0f));
+Camera camera(glm::vec3(0.0f, 1.f, 10.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -40,7 +38,7 @@ float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 lightPos(0.f, -0.05f, 2.675f);
+glm::vec3 lightPos(0.f, 2.f, 2.675f);
 
 int main()
 {
@@ -77,8 +75,9 @@ int main()
     Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
 
     // load models
-    Model backPack("resources/models/backpack/backpack.obj");
-    
+    Model cube("resources/models/cube/cube.obj");
+    Model backpack("resources/models/backpack/backpack.obj");
+
     bool wireframeMode = false;
 
     // initialize and setup debug menu
@@ -110,13 +109,15 @@ int main()
         shader.Use();
 
         // fragment shader uniforms
-        shader.SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
+        shader.SetVec3("objectColor", 1.0f, 0.0f, 0.0f);
         shader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
         shader.SetVec3("lightPos", lightPos);
         shader.SetVec3("viewPos", camera.Position);
+        shader.SetBool("wireframe", wireframeMode);
+        shader.SetBool("textured", false);
 
         // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
         glm::mat4 view = camera.GetViewMatrix();
         shader.SetMat4("projection", projection);
         shader.SetMat4("view", view);
@@ -124,10 +125,28 @@ int main()
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.2f);	// it's a bit too big for our scene, so scale it down
         model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         shader.SetMat4("model", model);
-        backPack.Draw(shader);
+        cube.Draw(shader);
+
+        // second cube
+        model = glm::mat4(1.0f);
+        shader.SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
+        model = glm::translate(model, glm::vec3(3.0f, 1.0f, 2.0f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.1f);	// it's a bit too big for our scene, so scale it down
+        shader.SetMat4("model", model);
+        cube.Draw(shader);
+
+        // backpack
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -0.05f, 4.675f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.5f);	// it's a bit too big for our scene, so scale it down
+        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, .0f));
+        model = glm::rotate(model, glm::radians(10.0f) * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        shader.SetMat4("model", model);
+        shader.SetBool("textured", true);
+		backpack.Draw(shader);
 
         // render debug menu
         debugMenu.Render();
