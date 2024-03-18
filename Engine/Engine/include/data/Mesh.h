@@ -12,12 +12,13 @@ class Mesh
 {
 public:
     // mesh data
-    std::vector<Vertex>       Vertices;
-    std::vector<unsigned int> Indices;
-    std::vector<Texture>      Textures;
+    std::vector<Vertex>       Vertices = {};
+    std::vector<unsigned int> Indices = {};
+    std::vector<Texture>      Textures = {};
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     void Draw(Shader& shader);
+    int GetNumberOfTriangles() const;
 
 private:
     //  render data

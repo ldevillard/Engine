@@ -48,6 +48,11 @@ void Mesh::Draw(Shader& shader)
     glActiveTexture(GL_TEXTURE0);
 }
 
+int Mesh::GetNumberOfTriangles() const
+{
+   return Vertices.size() / 3;
+}
+
 #pragma endregion
 
 #pragma region Private Methods

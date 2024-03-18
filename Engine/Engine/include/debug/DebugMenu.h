@@ -16,6 +16,7 @@ struct DebugParameters
 	float* DeltaTime = nullptr;
 	float* CameraSpeed = nullptr;
 	glm::vec3* LightPosition = nullptr;
+	int* TrianglesNumber = nullptr;
 };
 
 class DebugMenu
