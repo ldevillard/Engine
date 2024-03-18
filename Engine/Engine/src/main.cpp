@@ -77,8 +77,7 @@ int main()
 
     // load models
     Model object("resources/models/cube/cube.obj");
-    Material material;
-    material.SetAsTurquoise();
+    Material material = Material::Prune;
 
     bool wireframeMode = false;
     int trianglesNumber = object.GetNumberOfTriangles();
