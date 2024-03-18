@@ -32,7 +32,8 @@ void DebugMenu::Render()
 
    ImGui::Begin("Editor");
    ImGui::Text("FPS: %.1f", fps);
-   ImGui::Checkbox("Wireframe", &*parameters.Wireframe);
+   ImGui::Text("Triangles: %d", *parameters.TrianglesNumber);
+   ImGui::Checkbox("Wireframe", parameters.Wireframe);
    ImGui::InputFloat("Camera Speed", parameters.CameraSpeed);
    ImGui::DragFloat3("Light Position", &parameters.LightPosition->x, 0.025f);
    ImGui::End();

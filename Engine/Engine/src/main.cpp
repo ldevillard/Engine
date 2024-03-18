@@ -14,6 +14,7 @@
 // user define
 #include "Shader.h"
 #include "data/Texture.h"
+#include "data/Material.h"
 #include "Camera.h"
 #include "Model.h"
 #include "debug/DebugMenu.h"
@@ -38,7 +39,7 @@ float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 lightPos(0.f, 2.f, 2.675f);
+glm::vec3 lightPos(0.f, 2.f, 10.f);
 
 int main()
 {
@@ -75,10 +76,12 @@ int main()
     Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
 
     // load models
-    Model cube("resources/models/cube/cube.obj");
-    Model backpack("resources/models/backpack/backpack.obj");
+    Model object("resources/models/cube/cube.obj");
+    Material material;
+    material.SetAsTurquoise();
 
     bool wireframeMode = false;
+    int trianglesNumber = object.GetNumberOfTriangles();
 
     // initialize and setup debug menu
     DebugMenu debugMenu(window);
@@ -87,6 +90,7 @@ int main()
     params.CameraSpeed = &camera.MovementSpeed;
     params.DeltaTime = &deltaTime;
     params.LightPosition = &lightPos;
+    params.TrianglesNumber = &trianglesNumber;
     debugMenu.SetParameters(params);
 
     // render loop
@@ -109,12 +113,17 @@ int main()
         shader.Use();
 
         // fragment shader uniforms
-        shader.SetVec3("objectColor", 1.0f, 0.0f, 0.0f);
+        shader.SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
         shader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
         shader.SetVec3("lightPos", lightPos);
         shader.SetVec3("viewPos", camera.Position);
         shader.SetBool("wireframe", wireframeMode);
-        shader.SetBool("textured", false);
+
+        //material uniforms
+        shader.SetVec3("material.ambient", material.Ambient);
+        shader.SetVec3("material.diffuse", material.Diffuse);
+        shader.SetVec3("material.specular", material.Specular);
+        shader.SetFloat("material.shininess", material.Shininess);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
@@ -122,31 +131,14 @@ int main()
         shader.SetMat4("projection", projection);
         shader.SetMat4("view", view);
 
-        // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.2f);	// it's a bit too big for our scene, so scale it down
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        shader.SetMat4("model", model);
-        cube.Draw(shader);
-
-        // second cube
-        model = glm::mat4(1.0f);
-        shader.SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
-        model = glm::translate(model, glm::vec3(3.0f, 1.0f, 2.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.1f);	// it's a bit too big for our scene, so scale it down
-        shader.SetMat4("model", model);
-        cube.Draw(shader);
-
-        // backpack
-        model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, -0.05f, 4.675f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.5f);	// it's a bit too big for our scene, so scale it down
-        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, .0f));
-        model = glm::rotate(model, glm::radians(10.0f) * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        //model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, .0f));
+        //model = glm::rotate(model, glm::radians(30.0f) * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
         shader.SetMat4("model", model);
-        shader.SetBool("textured", true);
-		backpack.Draw(shader);
+        //shader.SetBool("textured", true);
+		  object.Draw(shader);
 
         // render debug menu
         debugMenu.Render();

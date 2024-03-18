@@ -13,6 +13,18 @@ void Model::Draw(Shader& shader)
         Meshes[i].Draw(shader);
 }
 
+int Model::GetNumberOfTriangles() const
+{
+   int sum = 0;
+
+   for (Mesh mesh : Meshes)
+   {
+      sum += mesh.GetNumberOfTriangles();
+   }
+
+   return sum;
+}
+
 #pragma endregion
 
 #pragma region Private Methods
@@ -133,7 +145,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
         if (!skip)
         {   // if texture hasn't been loaded already, load it
             std::string filename = Directory + '/' + str.C_Str();
-            Texture texture(filename.c_str(), typeName, TextureParam {true, TextureFormat::RGB});
+            Texture texture(filename.c_str(), typeName, TextureParam {false, TextureFormat::RGB});
             texture.Path = str.C_Str();
             textures.push_back(texture);
             Textures.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.

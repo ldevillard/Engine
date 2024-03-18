@@ -16,6 +16,7 @@ public:
     Model(std::string path);
 
     void Draw(Shader& shader);
+    int GetNumberOfTriangles() const;
 
 private:
 
