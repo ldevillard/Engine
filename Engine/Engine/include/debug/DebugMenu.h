@@ -10,6 +10,8 @@
 // glm
 #include <glm/glm.hpp>
 
+#include "render/FrameBuffer.h"
+
 struct DebugParameters
 {
 	bool* Wireframe = nullptr;
@@ -27,7 +29,7 @@ public:
 	// free resources;
 	void Terminate();
 
-	void Render();
+	void Render(FrameBuffer& frameBuffer);
 
 	// utility
 	void SetParameters(DebugParameters params);

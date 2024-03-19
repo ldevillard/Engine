@@ -19,4 +19,6 @@ void main()
     FragPos = vec3(model * vec4(aPos, 1));
 	Normal = vec3(model * vec4(aNormal, 0));
     TexCoords = aTexCoords;
+
+    //gl_Position = vec4(0.5 * aPos.x, 0.5 * aPos.y, 0.5 * aPos.z, 1.0);
 }
