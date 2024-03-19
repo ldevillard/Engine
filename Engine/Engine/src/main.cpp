@@ -18,6 +18,7 @@
 #include "Camera.h"
 #include "Model.h"
 #include "debug/DebugMenu.h"
+#include "render/FrameBuffer.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -40,6 +41,9 @@ float lastFrame = 0.0f;
 
 // lighting
 glm::vec3 lightPos(0.f, 2.f, 10.f);
+
+// frame buffer pointer
+FrameBuffer* ptr = nullptr;
 
 int main()
 {
@@ -79,6 +83,9 @@ int main()
     Model object("resources/models/cube/cube.obj");
     Material material = Material::Prune;
 
+    FrameBuffer sceneBuffer = FrameBuffer(SCR_WIDTH / 2, SCR_HEIGHT / 2);
+    ptr = &sceneBuffer;
+
     bool wireframeMode = false;
     int trianglesNumber = object.GetNumberOfTriangles();
 
@@ -104,14 +111,13 @@ int main()
         processInput(window);
 
         // render
-        // ------
+        sceneBuffer.Bind(); // Lier le framebuffer
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // don't forget to enable shader before setting uniforms
+        // Utiliser le shader
         shader.Use();
 
-        // fragment shader uniforms
         shader.SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
         shader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
         shader.SetVec3("lightPos", lightPos);
@@ -137,17 +143,47 @@ int main()
         //model = glm::rotate(model, glm::radians(15.0f) * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
         shader.SetMat4("model", model);
         //shader.SetBool("textured", true);
-		  object.Draw(shader);
+        object.Draw(shader);
 
-        // render debug menu
-        debugMenu.Render();
+        // Unbind le framebuffer
+        sceneBuffer.Unbind();
+
+        // Rendering ImGui
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        // Nettoyer le framebuffer ImGui
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        ImGui::Begin("Scene");
+        {
+            ImGui::BeginChild("GameRender");
+
+            float width = ImGui::GetContentRegionAvail().x;
+            float height = ImGui::GetContentRegionAvail().y;
+
+            SCR_WIDTH = width;
+            SCR_HEIGHT = height;
+            ImGui::Image(
+                (ImTextureID)sceneBuffer.GetFrameTexture(),
+                ImGui::GetContentRegionAvail(),
+                ImVec2(0, 1),
+                ImVec2(1, 0)
+            );
+        }
+        ImGui::EndChild();
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    debugMenu.Terminate();
+    //debugMenu.Terminate();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     glfwTerminate();
@@ -229,5 +265,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
     SCR_HEIGHT = height;
     SCR_WIDTH = width;
+
+    if (ptr != nullptr)
+    {
+        ptr->RescaleFrameBuffer(width, height);
+    }
 }
 

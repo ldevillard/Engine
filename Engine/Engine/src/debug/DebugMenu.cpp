@@ -12,7 +12,7 @@ DebugMenu::DebugMenu(GLFWwindow* window)
    ImGui_ImplOpenGL3_Init("#version 330");
 }
 
-void DebugMenu::Render()
+void DebugMenu::Render(FrameBuffer& frameBuffer)
 {
    if (isNullParam())
       return;
