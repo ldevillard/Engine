@@ -134,7 +134,7 @@ int main()
         model = glm::translate(model, glm::vec3(0.0f, -0.05f, 4.675f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.5f);	// it's a bit too big for our scene, so scale it down
         //model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, .0f));
-        model = glm::rotate(model, glm::radians(15.0f) * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        //model = glm::rotate(model, glm::radians(15.0f) * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
         shader.SetMat4("model", model);
         //shader.SetBool("textured", true);
 		  object.Draw(shader);

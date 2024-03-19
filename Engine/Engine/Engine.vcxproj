@@ -27,6 +27,7 @@
     <ClCompile Include="..\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\data\Component.cpp" />
     <ClCompile Include="src\data\light\Light.cpp" />
     <ClCompile Include="src\data\Material.cpp" />
     <ClCompile Include="src\data\Mesh.cpp" />
@@ -37,6 +38,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\stb_image.cpp" />
     <ClCompile Include="src\data\Texture.cpp" />
+    <ClCompile Include="src\system\EntityManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\imgui\imconfig.h" />
@@ -49,6 +51,7 @@
     <ClInclude Include="..\imgui\imstb_textedit.h" />
     <ClInclude Include="..\imgui\imstb_truetype.h" />
     <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\data\Component.h" />
     <ClInclude Include="include\data\light\Light.h" />
     <ClInclude Include="include\data\Material.h" />
     <ClInclude Include="include\data\Mesh.h" />
@@ -61,6 +64,7 @@
     <ClInclude Include="include\Shader\Shader.h" />
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\data\Texture.h" />
+    <ClInclude Include="include\system\EntityManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\FragmentShader.glsl" />
