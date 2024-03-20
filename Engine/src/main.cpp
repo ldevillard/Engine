@@ -19,6 +19,7 @@
 #include "Model.h"
 #include "debug/DebugMenu.h"
 #include "render/FrameBuffer.h"
+#include "system/Editor.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -81,7 +82,7 @@ int main()
 
 	// load models
 	Model object("resources/models/cube/cube.obj");
-	Material material = Material::Emerald;
+	Material material = Material::Prune;
 
 	FrameBuffer sceneBuffer = FrameBuffer(SCR_WIDTH / 2, SCR_HEIGHT / 2);
 	ptr = &sceneBuffer;
@@ -89,28 +90,18 @@ int main()
 	bool wireframeMode = false;
 	int trianglesNumber = object.GetNumberOfTriangles();
 
+	// setup editor settings
+	EditorSettings settings;
+	settings.FrameBuffer = &sceneBuffer;
+	settings.SCR_WIDTH = &SCR_WIDTH;
+	settings.SCR_HEIGHT = &SCR_HEIGHT;
+	settings.Wireframe = &wireframeMode;
+	settings.DeltaTime = &deltaTime;
+	settings.CameraSpeed = &camera.MovementSpeed;
+	settings.LightPosition = &lightPos;
+	settings.TrianglesNumber = &trianglesNumber;
 
-	// initialize and setup
-	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
-
-	ImGui::StyleColorsDark();
-
-	ImGuiStyle& style = ImGui::GetStyle();
-	ImVec4* colors = style.Colors;
-	colors[ImGuiCol_TitleBg] = ImVec4(0.314f, 0.231f, 0.38f, 1.00f);
-	colors[ImGuiCol_TitleBgActive] = ImVec4(0.408f, 0.298f, 0.502f, 1.00f);
-	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.f, 0.f, 0.f, 1.00f);
-
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 330");
-
-	
+	Editor::CreateInstance(window, settings);
 
 	sceneBuffer.RescaleFrameBuffer(SCR_WIDTH, SCR_HEIGHT);
 
@@ -123,9 +114,9 @@ int main()
 		lastFrame = currentFrame;
 
 		if (wireframeMode)
-			 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	   else
-	       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		else
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		// input
 		processInput(window);
@@ -168,81 +159,16 @@ int main()
 		// Unbind le framebuffer
 		sceneBuffer.Unbind();
 
-		// Rendering ImGui
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
-
-		// Setup docking space
-		ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImGui::SetNextWindowPos(viewport->Pos);
-		ImGui::SetNextWindowSize(viewport->Size);
-		ImGui::Begin("DockSpace", nullptr,
-			ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
-			ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus |
-			ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDocking);		
-		ImGuiID dockspace_id = ImGui::GetID("DockSpace");
-		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
-		ImGui::End();
-
-		ImGui::SetNextWindowSizeConstraints(ImVec2(300, -1), ImVec2(600, -1));
-
-		// Nettoyer le framebuffer ImGui
-		glClear(GL_COLOR_BUFFER_BIT);
-		ImGui::Begin("Editor");
-		float fps = 0;
-		if (deltaTime > 0)
-			fps = 1.0f / deltaTime;
-		ImGui::Text("FPS: %.1f", fps);
-		ImGui::Text("Triangles: %d", trianglesNumber);
-		ImGui::Checkbox("Wireframe", &wireframeMode);
-		ImGui::End();
-
-		ImGui::Begin("Inspector");
-		ImGui::End();
-
-		ImGui::Begin("Scene", nullptr);
-		{
-			ImGui::BeginChild("GameRender");
-
-			float width = ImGui::GetContentRegionAvail().x;
-			float height = ImGui::GetContentRegionAvail().y;
-
-			SCR_WIDTH = width;
-			SCR_HEIGHT = height;
-			ImGui::Image(
-				(ImTextureID)sceneBuffer.GetFrameTexture(),
-				ImGui::GetContentRegionAvail(),
-				ImVec2(0, 1),
-				ImVec2(1, 0)
-			);
-		}
-		ImGui::EndChild();
-		ImGui::End();
-
-
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			GLFWwindow* backup_current_context = glfwGetCurrentContext();
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(backup_current_context);
-		}
+		// render
+		Editor::Get()->Render();
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	// Cleanup
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
+	// cleanup
+	Editor::DestroyInstance();
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	glfwDestroyWindow(window);
@@ -330,6 +256,11 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	if (ptr != nullptr)
 	{
 		ptr->RescaleFrameBuffer(width, height);
+	}
+
+	if (Editor::Get() != nullptr)
+	{
+		Editor::Get()->Render();
 	}
 }
 

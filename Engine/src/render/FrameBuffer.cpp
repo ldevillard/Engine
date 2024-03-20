@@ -6,7 +6,7 @@ FrameBuffer::FrameBuffer()
 {
 }
 
-FrameBuffer::FrameBuffer(float width, float height)
+FrameBuffer::FrameBuffer(GLsizei width, GLsizei height)
 {
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
