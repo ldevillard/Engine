@@ -55,7 +55,7 @@ void ComputeLighting()
 
 void main()
 {
-    if (!wireframe)
+    if (wireframe)
     {
         ComputeLighting();
     }
