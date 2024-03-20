@@ -30,7 +30,7 @@ unsigned int SCR_WIDTH = 1280;
 unsigned int SCR_HEIGHT = 720;
 
 // camera
-Camera camera(glm::vec3(0.0f, 1.f, 5.0f));
+Camera camera(glm::vec3(0.0f, 1.f, 15.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -81,7 +81,7 @@ int main()
 
 	// load models
 	Model object("resources/models/buddha/buddha.obj");
-	Material material = Material::None;
+	Material material = Material::Emerald;
 
 	FrameBuffer sceneBuffer = FrameBuffer(SCR_WIDTH / 2, SCR_HEIGHT / 2);
 	ptr = &sceneBuffer;
@@ -98,23 +98,19 @@ int main()
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
-//   io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 
 	ImGui::StyleColorsDark();
 
 	ImGuiStyle& style = ImGui::GetStyle();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-	}
+	ImVec4* colors = style.Colors;
+	colors[ImGuiCol_TitleBg] = ImVec4(0.314f, 0.231f, 0.38f, 1.00f);
+	colors[ImGuiCol_TitleBgActive] = ImVec4(0.408f, 0.298f, 0.502f, 1.00f);
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.f, 0.f, 0.f, 1.00f);
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	bool show_demo_window = true;
-	bool show_another_window = false;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	
 
 	sceneBuffer.RescaleFrameBuffer(SCR_WIDTH, SCR_HEIGHT);
 
@@ -176,14 +172,26 @@ int main()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
+
+		// Setup docking space
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->Pos);
+		ImGui::SetNextWindowSize(viewport->Size);
+		ImGui::Begin("DockSpace", nullptr,
+			ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus |
+			ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDocking);		
+		ImGuiID dockspace_id = ImGui::GetID("DockSpace");
+		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+		ImGui::End();
+
+		ImGui::SetNextWindowSizeConstraints(ImVec2(300, -1), ImVec2(600, -1));
 
 		// Nettoyer le framebuffer ImGui
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImGui::SetNextWindowSize(ImVec2(viewport->Size.x * 0.20f, viewport->Size.y));
-		ImGui::SetNextWindowPos(viewport->Pos);
-		ImGui::Begin("Editor", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+		ImGui::Begin("Editor");
 		float fps = 0;
 		if (deltaTime > 0)
 			fps = 1.0f / deltaTime;
@@ -192,16 +200,10 @@ int main()
 		ImGui::Checkbox("Wireframe", &wireframeMode);
 		ImGui::End();
 
-		float sceneWidth = viewport->Size.x * 0.80f;
-		float sceneHeight = viewport->Size.y;
+		ImGui::Begin("Inspector");
+		ImGui::End();
 
-		// Calculer la position de départ de la fenêtre "Scene" en fonction de la position de fin de la fenêtre "Editor"
-		float scenePosX = viewport->Pos.x + viewport->Size.x * 0.20f;
-
-		// Définir la taille et la position de la fenêtre "Scene"
-		ImGui::SetNextWindowSize(ImVec2(sceneWidth, sceneHeight));
-		ImGui::SetNextWindowPos(ImVec2(scenePosX, viewport->Pos.y));
-		ImGui::Begin("Scene", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+		ImGui::Begin("Scene", nullptr);
 		{
 			ImGui::BeginChild("GameRender");
 
