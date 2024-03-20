@@ -1,4 +1,4 @@
-# Blender 4.0.2 MTL File: 'None'
+# Blender 4.0.2 MTL File: 'RubiksCube.blend'
 # www.blender.org
 
 newmtl black
@@ -11,7 +11,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-newmtl blue
+newmtl blue.002
 Ns 96.078453
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.041289 0.640000
@@ -21,7 +21,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-newmtl green
+newmtl green.002
 Ns 96.078453
 Ka 1.000000 1.000000 1.000000
 Kd 0.005466 0.166332 0.009287
@@ -31,7 +31,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-newmtl orange
+newmtl orange.002
 Ns 96.078453
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.247801 0.000000
@@ -41,7 +41,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-newmtl red
+newmtl red.002
 Ns 96.078453
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.000000 0.007835
@@ -51,7 +51,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-newmtl white
+newmtl white.002
 Ns 96.078453
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -61,7 +61,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-newmtl yellow
+newmtl yellow.002
 Ns 96.078453
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.586140 0.000000

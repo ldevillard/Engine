@@ -566,7 +566,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\ldevillard\Desktop\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Engine\Engine\include;C:\Users\logan\Desktop\Engine\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\Engine\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\ldevillard\Desktop\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Engine\Engine\include;C:\Users\logan\Desktop\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

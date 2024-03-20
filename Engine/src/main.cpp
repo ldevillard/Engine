@@ -80,7 +80,7 @@ int main()
 	Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
 
 	// load models
-	Model object("resources/models/buddha/buddha.obj");
+	Model object("resources/models/cube/cube.obj");
 	Material material = Material::Emerald;
 
 	FrameBuffer sceneBuffer = FrameBuffer(SCR_WIDTH / 2, SCR_HEIGHT / 2);
@@ -162,7 +162,7 @@ int main()
 		//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, .0f));
 		//model = glm::rotate(model, glm::radians(15.0f) * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 		shader.SetMat4("model", model);
-		shader.SetBool("textured", true);
+		//shader.SetBool("textured", true);
 		object.Draw(shader);
 
 		// Unbind le framebuffer
