@@ -80,14 +80,15 @@ int main()
     Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
 
     // load models
-    Model object("resources/models/cube/cube.obj");
-    Material material = Material::Prune;
+    Model object("resources/models/buddha/buddha.obj");
+    Material material = Material::Gold;
 
     FrameBuffer sceneBuffer = FrameBuffer(SCR_WIDTH / 2, SCR_HEIGHT / 2);
     ptr = &sceneBuffer;
 
-    bool wireframeMode = false;
+    bool wireframeMode = true;
     int trianglesNumber = object.GetNumberOfTriangles();
+
 
     // initialize and setup debug menu
     DebugMenu debugMenu(window);

@@ -8,6 +8,8 @@ class Material
 {
 public:
 	// Default materials
+	const static Material None;
+
 	const static Material Emerald;
 	const static Material Chrome;
 	const static Material Turquoise;

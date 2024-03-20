@@ -2,6 +2,11 @@
 
 #pragma region Default Materials
 
+const Material Material::None(glm::vec3(1.f), // Ambient
+	glm::vec3(1.f), // Diffuse
+	glm::vec3(1.f), // Specular
+	.5f); // Shininess
+
 const Material Material::Emerald(glm::vec3(0.0215f, 0.1745f, 0.0215f), // Ambient
 	glm::vec3(0.07568f, 0.61424f, 0.07568f), // Diffuse
 	glm::vec3(0.633f, 0.727811f, 0.633f), // Specular
