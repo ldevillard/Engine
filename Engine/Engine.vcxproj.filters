@@ -93,6 +93,9 @@
     <ClCompile Include="src\debug\DebugMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\system\Editor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\glad\glad.h">
@@ -1032,6 +1035,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\debug\DebugMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system\Editor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

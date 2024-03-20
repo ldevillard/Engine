@@ -50,7 +50,7 @@ void Mesh::Draw(Shader& shader)
 
 int Mesh::GetNumberOfTriangles() const
 {
-   return Vertices.size() / 3;
+   return (int)Vertices.size() / 3;
 }
 
 #pragma endregion

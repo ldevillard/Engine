@@ -8,7 +8,7 @@ class FrameBuffer
 {
 public:
 	FrameBuffer();
-	FrameBuffer(float width, float height);
+	FrameBuffer(GLsizei width, GLsizei height);
 	~FrameBuffer();
 
 	unsigned int& GetFrameTexture();

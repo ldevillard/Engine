@@ -41,6 +41,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\stb_image.cpp" />
     <ClCompile Include="src\data\Texture.cpp" />
+    <ClCompile Include="src\system\Editor.cpp" />
     <ClCompile Include="src\system\EntityManager.cpp" />
     <ClCompile Include="src\testing\main_testing.cpp" />
   </ItemGroup>
@@ -357,6 +358,7 @@
     <ClInclude Include="include\Shader\Shader.h" />
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\data\Texture.h" />
+    <ClInclude Include="include\system\Editor.h" />
     <ClInclude Include="include\system\EntityManager.h" />
   </ItemGroup>
   <ItemGroup>
