@@ -28,6 +28,12 @@ EntityManager* EntityManager::Get()
 	return instance;
 }
 
+void EntityManager::ComputeEntities()
+{
+	for (Entity* e : entities)
+		e->Compute();
+}
+
 void EntityManager::RegisterEntity(Entity* e) 
 {
 	if (e == nullptr)

@@ -2,22 +2,17 @@
 
 #pragma region Public Methods
 
-Model::Model(std::string path) : Component()
+Model::Model(std::string path, Shader* sh) : Component()
 {
+    this->shader = sh;
 	loadModel(path);
-}
-
-void Model::Draw(Shader& shader)
-{
-    for (unsigned int i = 0; i < Meshes.size(); i++)
-        Meshes[i].Draw(shader);
 }
 
 int Model::GetNumberOfTriangles() const
 {
    int sum = 0;
 
-   for (Mesh mesh : Meshes)
+   for (Mesh mesh : meshes)
    {
       sum += mesh.GetNumberOfTriangles();
    }
@@ -25,9 +20,37 @@ int Model::GetNumberOfTriangles() const
    return sum;
 }
 
+void Model::Compute()
+{
+    // binding transform data
+    // /!\ this might be in the transform class
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, transform->Position);
+
+    float angleX = glm::radians(transform->Rotation.x);
+    float angleY = glm::radians(transform->Rotation.y);
+    float angleZ = glm::radians(transform->Rotation.z);
+
+    model = glm::rotate(model, angleX, glm::vec3(1.0f, 0.f, 0.f));
+    model = glm::rotate(model, angleY, glm::vec3(0.0f, 1.f, 0.f));
+    model = glm::rotate(model, angleZ, glm::vec3(0.0f, 0.f, 1.f));
+
+    model = glm::scale(model, transform->Scale);
+
+    shader->SetMat4("model", model);
+
+    draw();
+}
+
 #pragma endregion
 
 #pragma region Private Methods
+
+void Model::draw()
+{
+    for (unsigned int i = 0; i < meshes.size(); i++)
+        meshes[i].Draw(*shader);
+}
 
 void Model::loadModel(std::string path)
 {
@@ -39,7 +62,7 @@ void Model::loadModel(std::string path)
         std::cerr << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
         return;
     }
-    Directory = path.substr(0, path.find_last_of('/'));
+    directory = path.substr(0, path.find_last_of('/'));
 
     processNode(scene->mRootNode, scene);
 }
@@ -50,11 +73,15 @@ void Model::processNode(aiNode* node, const aiScene* scene)
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
     {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        Meshes.push_back(processMesh(mesh, scene));
+        meshes.push_back(processMesh(mesh, scene));
     }
     // then do the same for each of its children
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
+       /* if (i == 70)
+        {
+            std::cout << "pied";
+        }*/
         processNode(node->mChildren[i], scene);
     }
 }
@@ -133,22 +160,22 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
         mat->GetTexture(type, i, &str);
         // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
         bool skip = false;
-        for (unsigned int j = 0; j < Textures.size(); j++)
+        for (unsigned int j = 0; j < textures.size(); j++)
         {
-            if (std::strcmp(Textures[j].Path.data(), str.C_Str()) == 0)
+            if (std::strcmp(textures[j].Path.data(), str.C_Str()) == 0)
             {
-                textures.push_back(Textures[j]);
+                textures.push_back(textures[j]);
                 skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
                 break;
             }
         }
         if (!skip)
         {   // if texture hasn't been loaded already, load it
-            std::string filename = Directory + '/' + str.C_Str();
+            std::string filename = directory + '/' + str.C_Str();
             Texture texture(filename.c_str(), typeName, TextureParam {false, TextureFormat::RGB});
             texture.Path = str.C_Str();
             textures.push_back(texture);
-            Textures.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
+            textures.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
         }
     }
     return textures;

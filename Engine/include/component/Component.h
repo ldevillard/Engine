@@ -15,6 +15,8 @@ public:
 	void SetTransform(Transform* tr);
 	const Component::Type& GetType() const;
 
+	virtual void Compute() = 0;
+
 protected:
 	Transform* transform = nullptr;
 

@@ -16,10 +16,11 @@
 #include "data/Texture.h"
 #include "data/Material.h"
 #include "Camera.h"
-#include "Model.h"
+#include "component/Model.h"
 #include "debug/DebugMenu.h"
 #include "render/FrameBuffer.h"
 #include "system/Editor.h"
+#include "system/EntityManager.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -27,8 +28,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 // settings
-unsigned int SCR_WIDTH = 1280;
-unsigned int SCR_HEIGHT = 720;
+unsigned int SCR_WIDTH = 1920;
+unsigned int SCR_HEIGHT = 1080;
 
 // camera
 Camera camera(glm::vec3(0.0f, 1.f, 15.0f));
@@ -77,18 +78,28 @@ int main()
 	// configure global opengl state
 	glEnable(GL_DEPTH_TEST);
 
-	// build and compile shader programs
-	Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
-
-	// load models
-	Model object("resources/models/cube/cube.obj");
-	Material material = Material::Prune;
-
 	FrameBuffer sceneBuffer = FrameBuffer(SCR_WIDTH / 2, SCR_HEIGHT / 2);
 	ptr = &sceneBuffer;
 
+	// build and compile shader programs
+	Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
+
+	EntityManager::CreateInstance();
+
+	Entity entity1 = Entity("cube");
+	Model model1 = Model("resources/models/cube/cube.obj", &shader);
+	entity1.AddComponent(&model1);
+
+	Entity entity2 = Entity("cube2");
+	Model model2 = Model("resources/models/cube2/cube2.obj", &shader);
+	entity2.AddComponent(&model2);
+
+	// Have to handle materials in models
+	Material material = Material::Prune;
+
 	bool wireframeMode = false;
-	int trianglesNumber = object.GetNumberOfTriangles();
+	int trianglesNumber = model1.GetNumberOfTriangles();
+	trianglesNumber += model2.GetNumberOfTriangles();
 
 	// setup editor settings
 	EditorSettings settings;
@@ -102,6 +113,7 @@ int main()
 	settings.TrianglesNumber = &trianglesNumber;
 
 	Editor::CreateInstance(window, settings);
+	Editor::Get()->SelectEntity(&entity1);
 
 	sceneBuffer.RescaleFrameBuffer(SCR_WIDTH, SCR_HEIGHT);
 
@@ -147,14 +159,16 @@ int main()
 		shader.SetMat4("projection", projection);
 		shader.SetMat4("view", view);
 
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, -0.05f, 4.675f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.5f);	// it's a bit too big for our scene, so scale it down
-		//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, .0f));
-		//model = glm::rotate(model, glm::radians(15.0f) * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-		shader.SetMat4("model", model);
-		//shader.SetBool("textured", true);
-		object.Draw(shader);
+		//glm::mat4 model = glm::mat4(1.0f);
+		//model = glm::translate(model, glm::vec3(0.0f, -0.05f, 4.675f)); // translate it down so it's at the center of the scene
+		//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.5f);	// it's a bit too big for our scene, so scale it down
+		////model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, .0f));
+		////model = glm::rotate(model, glm::radians(15.0f) * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+		//shader.SetMat4("model", model);
+		////shader.SetBool("textured", true);
+		//object.Draw(shader);
+		
+		EntityManager::Get()->ComputeEntities();
 
 		// Unbind le framebuffer
 		sceneBuffer.Unbind();

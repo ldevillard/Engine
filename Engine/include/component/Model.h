@@ -9,22 +9,26 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-class Model : Component
+class Model : public Component
 {
 
 public:
 
-    Model(std::string path);
+    Model(std::string path, Shader* sh);
 
-    void Draw(Shader& shader);
     int GetNumberOfTriangles() const;
 
+    void Compute() override;
+
 private:
+    void draw();
 
     // model data
-    std::vector<Mesh> Meshes;
-    std::vector<Texture> Textures;
-    std::string Directory;
+    std::vector<Mesh> meshes;
+    std::vector<Texture> textures;
+    std::string directory;
+
+    Shader* shader = nullptr;
 
     void loadModel(std::string path);
     void processNode(aiNode* node, const aiScene* scene);
