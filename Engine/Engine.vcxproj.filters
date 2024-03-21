@@ -63,7 +63,7 @@
     <ClCompile Include="src\data\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Model.cpp">
+    <ClCompile Include="src\component\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\data\Material.cpp">
@@ -87,13 +87,16 @@
     <ClCompile Include="src\system\EntityManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\data\Component.cpp">
+    <ClCompile Include="src\component\Component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\debug\DebugMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\system\Editor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -152,7 +155,7 @@
     <ClInclude Include="include\data\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Model.h">
+    <ClInclude Include="include\component\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\data\Material.h">
@@ -1031,13 +1034,25 @@
     <ClInclude Include="include\glm\detail\type_vec4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\data\Component.h">
+    <ClInclude Include="include\component\Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\debug\DebugMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\system\Editor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

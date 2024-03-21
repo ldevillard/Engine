@@ -2,13 +2,14 @@
 
 // data
 #include "data/Mesh.h"
+#include "component/Component.h"
 
 // assimp
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-class Model
+class Model : Component
 {
 
 public:

@@ -1,8 +1,8 @@
-#include "Model.h"
+#include "component/Model.h"
 
 #pragma region Public Methods
 
-Model::Model(std::string path)
+Model::Model(std::string path) : Component()
 {
 	loadModel(path);
 }
