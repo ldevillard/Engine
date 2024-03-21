@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 
 #include "render/FrameBuffer.h"
+#include "Entity.h"
 
 struct EditorSettings
 {
@@ -44,6 +45,8 @@ public:
 
 	void Render();
 
+	void SelectEntity(Entity* entity);
+
 	// utility
 	//void SetParameters(EditorSettings params);
 	//const EditorSettings& GetParameters();
@@ -57,6 +60,9 @@ private:
 	// counter for frame rate
 	float frameCounter = 1.0f;
 	float frameRate = 60.0f;
+
+	// entity
+	Entity* selectedEntity = nullptr;
 
 	bool isNullParam();
 };
