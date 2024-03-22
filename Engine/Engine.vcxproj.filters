@@ -64,6 +64,12 @@
     <Filter Include="Header Files\render">
       <UniqueIdentifier>{4f93e058-4d98-46ed-9def-bfe295f290a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\utils">
+      <UniqueIdentifier>{bad095bd-8861-4704-9991-ebc6af020228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{dfa1a611-9fe5-4d8b-a167-1c9a9b34086f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -143,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="include\glm\detail\glm.cpp">
       <Filter>Source Files\glm</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\ImGui_Utils.cpp">
+      <Filter>Source Files\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1090,6 +1099,9 @@
     </ClInclude>
     <ClInclude Include="include\glm\gtx\wrap.hpp">
       <Filter>Header Files\other</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\ImGui_Utils.h">
+      <Filter>Header Files\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
