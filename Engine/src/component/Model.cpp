@@ -39,6 +39,9 @@ void Model::Compute()
 
     shader->SetMat4("model", model);
 
+    // check if the model has textures
+    shader->SetBool("textured", texturesLoaded.size() > 0);
+
     draw();
 }
 
@@ -78,10 +81,6 @@ void Model::processNode(aiNode* node, const aiScene* scene)
     // then do the same for each of its children
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
-       /* if (i == 70)
-        {
-            std::cout << "pied";
-        }*/
         processNode(node->mChildren[i], scene);
     }
 }
@@ -138,12 +137,20 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     if (mesh->mMaterialIndex >= 0)
     {
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        std::vector<Texture> diffuseMaps = loadMaterialTextures(material,
-            aiTextureType_DIFFUSE, "texture_diffuse");
+
+        // 1. diffuse maps
+        std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        std::vector<Texture> specularMaps = loadMaterialTextures(material,
-            aiTextureType_SPECULAR, "texture_specular");
+        // 2. specular maps
+        std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+        // 3. normal maps
+        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+        // 4. height maps
+        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+
     }
     // return a mesh object created from the extracted mesh data
     return Mesh(vertices, indices, textures);
@@ -160,11 +167,11 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
         mat->GetTexture(type, i, &str);
         // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
         bool skip = false;
-        for (unsigned int j = 0; j < textures.size(); j++)
+        for (unsigned int j = 0; j < texturesLoaded.size(); j++)
         {
-            if (std::strcmp(textures[j].Path.data(), str.C_Str()) == 0)
+            if (std::strcmp(texturesLoaded[j].Path.data(), str.C_Str()) == 0)
             {
-                textures.push_back(textures[j]);
+                textures.push_back(texturesLoaded[j]);
                 skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
                 break;
             }
@@ -172,10 +179,10 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
         if (!skip)
         {   // if texture hasn't been loaded already, load it
             std::string filename = directory + '/' + str.C_Str();
-            Texture texture(filename.c_str(), typeName, TextureParam {false, TextureFormat::RGB});
+            Texture texture(filename.c_str(), typeName, TextureParam {true, TextureFormat::RGB});
             texture.Path = str.C_Str();
             textures.push_back(texture);
-            textures.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
+            texturesLoaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
         }
     }
     return textures;

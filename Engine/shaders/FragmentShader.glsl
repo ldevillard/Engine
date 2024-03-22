@@ -59,7 +59,11 @@ void main()
     {
         ComputeLighting();
     }
-    else 
+    else if (textured)
+    {
+		FragColor = texture(texture_diffuse1, TexCoords);
+	}
+	else
     {
         FragColor = vec4(material.diffuse, 1);
     }

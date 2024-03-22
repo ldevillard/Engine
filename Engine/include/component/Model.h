@@ -25,7 +25,7 @@ private:
 
     // model data
     std::vector<Mesh> meshes;
-    std::vector<Texture> textures;
+    std::vector<Texture> texturesLoaded;
     std::string directory;
 
     Shader* shader = nullptr;
