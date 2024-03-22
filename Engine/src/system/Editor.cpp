@@ -26,6 +26,8 @@ Editor::Editor(GLFWwindow* window, EditorSettings params)
 
 	// setup
 	parameters = params;
+
+	setDarkTheme();
 }
 
 Editor::~Editor()
@@ -56,6 +58,15 @@ void Editor::DestroyInstance()
 Editor* Editor::Get()
 {
 	return instance;
+}
+
+void LabelWithColor(const char* label, ImGuiDataType data_type, float value)
+{
+	ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::HSV(data_type / ImGuiDataType_COUNT, 0.7f, 0.7f));
+	ImGui::Text(" %c", label[0]);
+	ImGui::PopStyleColor();
+	ImGui::SameLine();
+	ImGui::DragScalar(label, data_type, &value);
 }
 
 void Editor::Render()
@@ -144,5 +155,38 @@ void Editor::SelectEntity(Entity* entity)
 #pragma endregion
 
 #pragma region Private Methods
+
+void Editor::setDarkTheme()
+{
+	auto& colors = ImGui::GetStyle().Colors;
+	colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
+
+	// Headers
+	colors[ImGuiCol_Header] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
+	colors[ImGuiCol_HeaderHovered] = ImVec4{ 0.6f, 0.3f, 0.6f, 1.0f };
+	colors[ImGuiCol_HeaderActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
+
+	// Buttons
+	colors[ImGuiCol_Button] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
+	colors[ImGuiCol_ButtonHovered] = ImVec4{ 0.6f, 0.3f, 0.6f, 1.0f };
+	colors[ImGuiCol_ButtonActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
+
+	// Frame BG
+	colors[ImGuiCol_FrameBg] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
+	colors[ImGuiCol_FrameBgHovered] = ImVec4{ 0.6f, 0.3f, 0.6f, 1.0f };
+	colors[ImGuiCol_FrameBgActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
+
+	// Tabs
+	colors[ImGuiCol_Tab] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
+	colors[ImGuiCol_TabHovered] = ImVec4{ 0.75f, 0.38f, 0.75f, 1.0f };
+	colors[ImGuiCol_TabActive] = ImVec4{ 0.56f, 0.28f, 0.56f, 1.0f };
+	colors[ImGuiCol_TabUnfocused] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
+	colors[ImGuiCol_TabUnfocusedActive] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
+
+	// Title
+	colors[ImGuiCol_TitleBg] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
+	colors[ImGuiCol_TitleBgActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
+}
 
 #pragma endregion
