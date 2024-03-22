@@ -86,20 +86,22 @@ int main()
 
 	EntityManager::CreateInstance();
 
-	Entity entity1 = Entity("cube");
-	Model model1 = Model("resources/models/cube/cube.obj", &shader);
+	Entity entity1 = Entity("backpack");
+	Model model1 = Model("resources/models/backpack/backpack.obj", &shader);
 	entity1.AddComponent(&model1);
 
-	Entity entity2 = Entity("cube2");
-	Model model2 = Model("resources/models/cube2/cube2.obj", &shader);
+	Entity entity2 = Entity("cube");
+	Model model2 = Model("resources/models/cube/cube.obj", &shader);
 	entity2.AddComponent(&model2);
+	entity2.transform->Position = glm::vec3(0.f, -2.f, 5.f);
+	entity2.transform->Scale *= 0.25f;
 
 	// Have to handle materials in models
-	Material material = Material::Prune;
+	Material material = Material::None;
 
 	bool wireframeMode = false;
 	int trianglesNumber = model1.GetNumberOfTriangles();
-	trianglesNumber += model2.GetNumberOfTriangles();
+	//trianglesNumber += model2.GetNumberOfTriangles();
 
 	// setup editor settings
 	EditorSettings settings;
@@ -165,7 +167,6 @@ int main()
 		////model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, .0f));
 		////model = glm::rotate(model, glm::radians(15.0f) * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 		//shader.SetMat4("model", model);
-		////shader.SetBool("textured", true);
 		//object.Draw(shader);
 		
 		EntityManager::Get()->ComputeEntities();

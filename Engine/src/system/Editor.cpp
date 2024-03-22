@@ -104,7 +104,7 @@ void Editor::Render()
 	ImGui::Begin("Inspector");
 	if (selectedEntity != nullptr)
 	{
-		ImGui::Text(selectedEntity->Name.c_str());
+		ImGui::Text(std::string("Selected Entity : " + selectedEntity->Name).c_str());
 		ImGui::DragFloat3("Position", &selectedEntity->transform->Position.x, 0.025f);
 		ImGui::DragFloat3("Rotation", &selectedEntity->transform->Rotation.x, 0.025f);
 		ImGui::DragFloat3("Scale", &selectedEntity->transform->Scale.x, 0.025f);
