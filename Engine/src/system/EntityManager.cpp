@@ -1,5 +1,7 @@
-#include "system/EntityManager.h"
 #include <iostream>
+
+#include "system/EntityManager.h"
+#include "component/Model.h"
 
 // singleton instance
 EntityManager* EntityManager::instance = nullptr;
@@ -28,10 +30,26 @@ EntityManager* EntityManager::Get()
 	return instance;
 }
 
-void EntityManager::ComputeEntities()
+void EntityManager::ComputeEntities() const
 {
 	for (Entity* e : entities)
 		e->Compute();
+}
+
+const unsigned int EntityManager::GetNumberOfTriangles() const
+{
+	unsigned int sum = 0;
+
+	for (Entity* e : entities)
+	{
+		Model* model = nullptr;
+		if (e->TryGetComponent<Model>(model))
+		{
+			sum += model->GetNumberOfTriangles();
+		}
+	}
+
+	return sum;
 }
 
 void EntityManager::RegisterEntity(Entity* e) 

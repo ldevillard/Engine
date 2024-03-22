@@ -90,7 +90,7 @@ int main()
 	Model model1 = Model("resources/models/backpack/cube.obj", &shader);
 	entity1.AddComponent(&model1);
 
-	Entity entity2 = Entity("cube");
+	Entity entity2 = Entity("cube2");
 	Model model2 = Model("resources/models/cube/cube.obj", &shader);
 	entity2.AddComponent(&model2);
 	entity2.transform->Position = glm::vec3(0.f, -2.f, 5.f);
@@ -100,8 +100,7 @@ int main()
 	Material material = Material::None;
 
 	bool wireframeMode = false;
-	int trianglesNumber = model1.GetNumberOfTriangles();
-	//trianglesNumber += model2.GetNumberOfTriangles();
+	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();
 
 	// setup editor settings
 	EditorSettings settings;
