@@ -28,8 +28,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 // settings
-unsigned int SCR_WIDTH = 1920;
-unsigned int SCR_HEIGHT = 1080;
+unsigned int SCR_WIDTH = 1280;
+unsigned int SCR_HEIGHT = 720;
 
 // camera
 Camera camera(glm::vec3(0.0f, 1.f, 15.0f));
@@ -97,7 +97,7 @@ int main()
 	entity2.transform->Scale *= 0.25f;
 
 	// Have to handle materials in models
-	Material material = Material::None;
+	Material material = Material::Gold;
 
 	bool wireframeMode = false;
 	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();

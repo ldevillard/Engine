@@ -57,7 +57,6 @@
     <ClInclude Include="..\imgui\imstb_textedit.h" />
     <ClInclude Include="..\imgui\imstb_truetype.h" />
     <ClInclude Include="include\Camera.h" />
-    <ClInclude Include="include\data\Camera.h" />
     <ClInclude Include="include\component\Component.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\data\light\Light.h" />
@@ -357,10 +356,8 @@
     <ClInclude Include="include\glm\vector_relational.hpp" />
     <ClInclude Include="include\KHR\khrplatform.h" />
     <ClInclude Include="include\component\Model.h" />
-    <ClInclude Include="include\data\Model.h" />
     <ClInclude Include="include\render\FrameBuffer.h" />
     <ClInclude Include="include\Shader.h" />
-    <ClInclude Include="include\Shader\Shader.h" />
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\data\Texture.h" />
     <ClInclude Include="include\system\Editor.h" />
