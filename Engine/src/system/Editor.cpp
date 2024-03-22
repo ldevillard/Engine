@@ -1,3 +1,4 @@
+#include "utils/ImGui_Utils.h"
 #include "system/Editor.h"
 #include <glfw3.h>
 
@@ -15,19 +16,13 @@ Editor::Editor(GLFWwindow* window, EditorSettings params)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
 
-	/*ImGuiStyle& style = ImGui::GetStyle();
-	ImVec4* colors = style.Colors;
-	colors[ImGuiCol_TitleBg] = ImVec4(0.314f, 0.231f, 0.38f, 1.00f);
-	colors[ImGuiCol_TitleBgActive] = ImVec4(0.408f, 0.298f, 0.502f, 1.00f);
-	colors[ImGuiCol_MenuBarBg] = ImVec4(1.f, 0.f, 0.f, 1.00f);*/
+	ImGui_Utils::SetPurpleTheme();
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	// setup
 	parameters = params;
-
-	setDarkTheme();
 }
 
 Editor::~Editor()
@@ -67,72 +62,6 @@ void LabelWithColor(const char* label, ImGuiDataType data_type, float value)
 	ImGui::PopStyleColor();
 	ImGui::SameLine();
 	ImGui::DragScalar(label, data_type, &value);
-}
-
-static void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
-{
-	ImGuiIO& io = ImGui::GetIO();
-	auto boldFont = io.Fonts->Fonts[0];
-
-	ImGui::PushID(label.c_str());
-
-	ImGui::Columns(2);
-	ImGui::SetColumnWidth(0, columnWidth);
-	ImGui::Text(label.c_str());
-	ImGui::NextColumn();
-
-	ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
-
-	float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-	ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
-
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f });
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
-	ImGui::PushFont(boldFont);
-	if (ImGui::Button("X", buttonSize))
-		values.x = resetValue;
-	ImGui::PopFont();
-	ImGui::PopStyleColor(3);
-
-	ImGui::SameLine();
-	ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
-	ImGui::PopItemWidth();
-	ImGui::SameLine();
-
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.8f, 0.3f, 1.0f });
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
-	ImGui::PushFont(boldFont);
-	if (ImGui::Button("Y", buttonSize))
-		values.y = resetValue;
-	ImGui::PopFont();
-	ImGui::PopStyleColor(3);
-
-	ImGui::SameLine();
-	ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
-	ImGui::PopItemWidth();
-	ImGui::SameLine();
-
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f });
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
-	ImGui::PushFont(boldFont);
-	if (ImGui::Button("Z", buttonSize))
-		values.z = resetValue;
-	ImGui::PopFont();
-	ImGui::PopStyleColor(3);
-
-	ImGui::SameLine();
-	ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
-	ImGui::PopItemWidth();
-
-	ImGui::PopStyleVar();
-
-	ImGui::Columns(1);
-
-	ImGui::PopID();
 }
 
 void Editor::Render()
@@ -175,6 +104,7 @@ void Editor::Render()
 	ImGui::Text("Triangles: %d", *parameters.TrianglesNumber);
 	ImGui::Checkbox("Wireframe", parameters.Wireframe);
 	ImGui::InputFloat("Camera Speed", parameters.CameraSpeed);
+	//ImGui_Utils::DrawFloatControl("Camera Speed", *parameters.CameraSpeed, 3.0f);
 	ImGui::End();
 
 	// show selected entity properties
@@ -183,9 +113,9 @@ void Editor::Render()
 	{
 		ImGui::Text(std::string("Name : " + selectedEntity->Name).c_str());
 		ImGui::Separator();
-		DrawVec3Control("Position", selectedEntity->transform->Position, 0, 75);
-		DrawVec3Control("Rotation", selectedEntity->transform->Rotation, 0, 75);
-		DrawVec3Control("Scale", selectedEntity->transform->Scale, 1, 75);
+		ImGui_Utils::DrawVec3Control("Position", selectedEntity->transform->Position);
+		ImGui_Utils::DrawVec3Control("Rotation", selectedEntity->transform->Rotation);
+		ImGui_Utils::DrawVec3Control("Scale", selectedEntity->transform->Scale, 1);
 	}
 	ImGui::End();
 	//
@@ -217,43 +147,6 @@ void Editor::Render()
 void Editor::SelectEntity(Entity* entity)
 {
 	selectedEntity = entity;
-}
-
-#pragma endregion
-
-#pragma region Private Methods
-
-void Editor::setDarkTheme()
-{
-	auto& colors = ImGui::GetStyle().Colors;
-	colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
-
-	// Headers
-	colors[ImGuiCol_Header] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
-	colors[ImGuiCol_HeaderHovered] = ImVec4{ 0.6f, 0.3f, 0.6f, 1.0f };
-	colors[ImGuiCol_HeaderActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
-
-	// Buttons
-	colors[ImGuiCol_Button] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
-	colors[ImGuiCol_ButtonHovered] = ImVec4{ 0.6f, 0.3f, 0.6f, 1.0f };
-	colors[ImGuiCol_ButtonActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
-
-	// Frame BG
-	colors[ImGuiCol_FrameBg] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
-	colors[ImGuiCol_FrameBgHovered] = ImVec4{ 0.6f, 0.3f, 0.6f, 1.0f };
-	colors[ImGuiCol_FrameBgActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
-
-	// Tabs
-	colors[ImGuiCol_Tab] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
-	colors[ImGuiCol_TabHovered] = ImVec4{ 0.75f, 0.38f, 0.75f, 1.0f };
-	colors[ImGuiCol_TabActive] = ImVec4{ 0.56f, 0.28f, 0.56f, 1.0f };
-	colors[ImGuiCol_TabUnfocused] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
-	colors[ImGuiCol_TabUnfocusedActive] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
-
-	// Title
-	colors[ImGuiCol_TitleBg] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
-	colors[ImGuiCol_TitleBgActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
-	colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
 }
 
 #pragma endregion

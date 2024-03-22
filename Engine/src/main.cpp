@@ -86,18 +86,18 @@ int main()
 
 	EntityManager::CreateInstance();
 
-	Entity entity1 = Entity("cube");
-	Model model1 = Model("resources/models/backpack/cube.obj", &shader);
+	Entity entity1 = Entity("temple");
+	Model model1 = Model("resources/models/temple/Japanese_Temple.obj", &shader);
 	entity1.AddComponent(&model1);
+	entity1.transform->Position = glm::vec3(0.f, -2.f, 5.f);
+	entity1.transform->Scale *= 0.25f;
 
-	Entity entity2 = Entity("cube2");
-	Model model2 = Model("resources/models/cube/cube.obj", &shader);
+	Entity entity2 = Entity("crab");
+	Model model2 = Model("resources/models/crab/crab.obj", &shader);
 	entity2.AddComponent(&model2);
-	entity2.transform->Position = glm::vec3(0.f, -2.f, 5.f);
-	entity2.transform->Scale *= 0.25f;
 
 	// Have to handle materials in models
-	Material material = Material::Gold;
+	Material material = Material::None;
 
 	bool wireframeMode = false;
 	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();

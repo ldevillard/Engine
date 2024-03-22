@@ -64,6 +64,4 @@ private:
 
 	// entity
 	Entity* selectedEntity = nullptr;
-
-	void setDarkTheme();
 };
