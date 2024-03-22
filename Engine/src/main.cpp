@@ -86,8 +86,8 @@ int main()
 
 	EntityManager::CreateInstance();
 
-	Entity entity1 = Entity("backpack");
-	Model model1 = Model("resources/models/backpack/backpack.obj", &shader);
+	Entity entity1 = Entity("cube");
+	Model model1 = Model("resources/models/backpack/cube.obj", &shader);
 	entity1.AddComponent(&model1);
 
 	Entity entity2 = Entity("cube");
