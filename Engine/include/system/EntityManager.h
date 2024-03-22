@@ -12,7 +12,8 @@ public:
 	static void DestroyInstance();
 	static EntityManager* Get();
 
-	void ComputeEntities();
+	void ComputeEntities() const;
+	const unsigned int GetNumberOfTriangles() const;
 
 	void RegisterEntity(Entity* e);
 	void UnregisterEntity(Entity* e);
