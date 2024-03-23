@@ -1,4 +1,4 @@
-#include "system/Editor.h"
+#include "system/editor/Editor.h"
 
 #include <glfw3.h>
 

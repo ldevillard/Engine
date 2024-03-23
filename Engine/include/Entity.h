@@ -9,7 +9,7 @@
 class Entity
 {
 public:
-	Entity(const std::string &name);
+	Entity(const std::string &name, Shader* sh);
 	~Entity();
 
 	template<typename T>
@@ -27,6 +27,10 @@ public:
 	std::string Name;
 
 private:
+	void BindingTransform() const;
+
+	Shader* shader = nullptr;
+	
 	std::vector<Component*> components = {};
 };
 
