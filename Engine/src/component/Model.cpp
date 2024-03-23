@@ -2,7 +2,8 @@
 
 #pragma region Public Methods
 
-Model::Model(std::string path, Shader* sh) : Component()
+Model::Model(std::string path, Shader* sh, Material mat) : Component(),
+    material(mat)
 {
     this->shader = sh;
 	loadModel(path);
@@ -22,6 +23,12 @@ int Model::GetNumberOfTriangles() const
 
 void Model::Compute()
 {
+    // binding material data
+    shader->SetVec3("material.ambient", material.Ambient);
+    shader->SetVec3("material.diffuse", material.Diffuse);
+    shader->SetVec3("material.specular", material.Specular);
+    shader->SetFloat("material.shininess", material.Shininess);
+
     // binding transform data
     // /!\ this might be in the transform class
     glm::mat4 model = glm::mat4(1.0f);

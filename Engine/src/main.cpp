@@ -85,16 +85,14 @@ int main()
 
 	EntityManager::CreateInstance();
 
-	Entity entity1 = Entity("cube1");
-	Model model1 = Model("resources/models/primitive/cube.obj", &shader);
+	Entity entity1 = Entity("cube");
+	Model model1 = Model("resources/models/primitive/cube.obj", &shader, Material::Prune);
 	entity1.AddComponent(&model1);
 
 	Entity entity2 = Entity("cube2");
-	Model model2 = Model("resources/models/primitive/cube.obj", &shader);
+	Model model2 = Model("resources/models/primitive/cube.obj", &shader, Material::Turquoise);
 	entity2.AddComponent(&model2);
-
-	// Have to handle materials in models
-	Material material = Material::None;
+	entity2.transform->Position = glm::vec3(3.f, 2.f, 0.f);
 
 	bool wireframeMode = false;
 	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();
@@ -141,12 +139,6 @@ int main()
 		shader.SetVec3("lightPos", lightPos);
 		shader.SetVec3("viewPos", camera.Position);
 		shader.SetBool("wireframe", wireframeMode);
-
-		//material uniforms
-		shader.SetVec3("material.ambient", material.Ambient);
-		shader.SetVec3("material.diffuse", material.Diffuse);
-		shader.SetVec3("material.specular", material.Specular);
-		shader.SetFloat("material.shininess", material.Shininess);
 
 		// view/projection transformations
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
