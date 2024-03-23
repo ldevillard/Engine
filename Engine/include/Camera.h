@@ -34,7 +34,7 @@ public:
 
    // camera settings
    float MovementSpeed = 5.f;
-   float RotateSpeed = 25.f;
+   float RotateSpeed = 15.f;
    float Zoom = 45.0;
 
    // constructors

@@ -3,6 +3,7 @@
 // data
 #include "data/Mesh.h"
 #include "component/Component.h"
+#include "data/Material.h"
 
 // assimp
 #include <assimp/Importer.hpp>
@@ -14,7 +15,7 @@ class Model : public Component
 
 public:
 
-    Model(std::string path, Shader* sh);
+    Model(std::string path, Shader* sh, Material mat = Material::None);
 
     int GetNumberOfTriangles() const;
 
@@ -23,10 +24,12 @@ public:
 private:
     void draw();
 
-    // model data
+    // Model data
     std::vector<Mesh> meshes;
     std::vector<Texture> texturesLoaded;
     std::string directory;
+
+    Material material = Material::None;
 
     Shader* shader = nullptr;
 
