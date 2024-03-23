@@ -2,10 +2,9 @@
 
 #pragma region Public Methods
 
-Model::Model(std::string path, Shader* sh, Material mat) : Component(),
+Model::Model(std::string path, Material mat) : Component(),
     material(mat)
 {
-    this->shader = sh;
 	loadModel(path);
 }
 
@@ -28,23 +27,6 @@ void Model::Compute()
     shader->SetVec3("material.diffuse", material.Diffuse);
     shader->SetVec3("material.specular", material.Specular);
     shader->SetFloat("material.shininess", material.Shininess);
-
-    // binding transform data
-    // /!\ this might be in the transform class
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, transform->Position);
-
-    float angleX = glm::radians(transform->Rotation.x);
-    float angleY = glm::radians(transform->Rotation.y);
-    float angleZ = glm::radians(transform->Rotation.z);
-
-    model = glm::rotate(model, angleX, glm::vec3(1.0f, 0.f, 0.f));
-    model = glm::rotate(model, angleY, glm::vec3(0.0f, 1.f, 0.f));
-    model = glm::rotate(model, angleZ, glm::vec3(0.0f, 0.f, 1.f));
-
-    model = glm::scale(model, transform->Scale);
-
-    shader->SetMat4("model", model);
 
     // check if the model has textures
     shader->SetBool("textured", texturesLoaded.size() > 0);

@@ -19,7 +19,7 @@
 #include "component/Model.h"
 #include "debug/DebugMenu.h"
 #include "render/FrameBuffer.h"
-#include "system/Editor.h"
+#include "system/editor/Editor.h"
 #include "system/EntityManager.h"
 #include "system/Time.h"
 
@@ -85,12 +85,12 @@ int main()
 
 	EntityManager::CreateInstance();
 
-	Entity entity1 = Entity("cube");
-	Model model1 = Model("resources/models/primitive/cube.obj", &shader, Material::Prune);
+	Entity entity1 = Entity("cube", &shader);
+	Model model1 = Model("resources/models/primitive/cube.obj", Material::Prune);
 	entity1.AddComponent(&model1);
 
-	Entity entity2 = Entity("cube2");
-	Model model2 = Model("resources/models/primitive/cube.obj", &shader, Material::Turquoise);
+	Entity entity2 = Entity("cube2", &shader);
+	Model model2 = Model("resources/models/primitive/cube.obj", Material::Turquoise);
 	entity2.AddComponent(&model2);
 	entity2.transform->Position = glm::vec3(3.f, 2.f, 0.f);
 

@@ -42,7 +42,8 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\stb_image.cpp" />
     <ClCompile Include="src\data\Texture.cpp" />
-    <ClCompile Include="src\system\Editor.cpp" />
+    <ClCompile Include="src\system\editor\Editor.cpp" />
+    <ClCompile Include="src\system\editor\Inspector.cpp" />
     <ClCompile Include="src\system\EntityManager.cpp" />
     <ClCompile Include="src\system\Time.cpp" />
     <ClCompile Include="src\testing\main_testing.cpp" />
@@ -362,7 +363,8 @@
     <ClInclude Include="include\Shader.h" />
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\data\Texture.h" />
-    <ClInclude Include="include\system\Editor.h" />
+    <ClInclude Include="include\system\editor\Editor.h" />
+    <ClInclude Include="include\system\editor\Inspector.h" />
     <ClInclude Include="include\system\EntityManager.h" />
     <ClInclude Include="include\system\Time.h" />
     <ClInclude Include="include\utils\ImGui_Utils.h" />
