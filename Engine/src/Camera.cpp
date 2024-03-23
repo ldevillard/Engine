@@ -1,11 +1,12 @@
 #include "Camera.h"
 
+#include "system/Time.h"
+
 #pragma region Public Methods
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
    : Front(glm::vec3(0.0f, 0.0f, -1.0f))
    , MovementSpeed(SPEED)
-   , MouseSensitivity(SENSITIVITY)
    , Zoom(ZOOM)
 {
    Position = position;
@@ -18,7 +19,6 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
 Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)
    : Front(glm::vec3(0.0f, 0.0f, -1.0f))
    , MovementSpeed(SPEED)
-   , MouseSensitivity(SENSITIVITY)
    , Zoom(ZOOM)
 {
    Position = glm::vec3(posX, posY, posZ);
@@ -60,11 +60,10 @@ void Camera::ProcessKeyboard(CameraDirection direction, float deltaTime)
 
 void Camera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch)
 {
-   xoffset *= MouseSensitivity;
-   yoffset *= MouseSensitivity;
+   float deltaTime = Time::Get()->DeltaTime;
 
-   Yaw += xoffset;
-   Pitch += yoffset;
+   Yaw = std::lerp(Yaw, Yaw + xoffset, deltaTime * RotateSpeed);
+   Pitch = std::lerp(Pitch, Pitch + yoffset, deltaTime * RotateSpeed);
 
    // make sure that when pitch is out of bounds, screen doesn't get flipped
    if (constrainPitch)

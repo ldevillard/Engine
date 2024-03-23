@@ -16,8 +16,7 @@ enum CameraDirection
 
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 3.f;
-const float SENSITIVITY = 0.1f;
+const float SPEED = 5.f;
 const float ZOOM = 45.0f;
 
 class Camera
@@ -35,7 +34,7 @@ public:
 
    // camera settings
    float MovementSpeed = 5.f;
-   float MouseSensitivity = 0.1f;
+   float RotateSpeed = 25.f;
    float Zoom = 45.0;
 
    // constructors

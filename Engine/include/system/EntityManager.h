@@ -7,6 +7,8 @@
 class EntityManager
 {
 public:	
+	~EntityManager();
+
 	// singleton
 	static void CreateInstance();
 	static void DestroyInstance();
@@ -17,6 +19,8 @@ public:
 
 	void RegisterEntity(Entity* e);
 	void UnregisterEntity(Entity* e);
+
+	const std::vector<Entity*>& GetEntities() const;
 
 private:
 	// singleton
