@@ -15,7 +15,7 @@ class Model : public Component
 
 public:
 
-    Model(std::string path, Material mat = Material::None);
+    Model(std::string path, Material mat = Material::Default);
 
     int GetNumberOfTriangles() const;
 
@@ -29,7 +29,7 @@ private:
     std::vector<Texture> texturesLoaded;
     std::string directory;
 
-    Material material = Material::None;
+    Material material = Material::Default;
 
     void loadModel(std::string path);
     void processNode(aiNode* node, const aiScene* scene);

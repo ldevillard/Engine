@@ -11,6 +11,7 @@
 // glm
 #include <glm/glm.hpp>
 
+#include "system/editor/Inspector.h"
 #include "render/FrameBuffer.h"
 #include "Entity.h"
 
@@ -52,6 +53,7 @@ private:
 	static Editor* instance;
 
 	EditorSettings parameters;
+	Inspector inspector;
 
 	// counter for frame rate
 	float frameCounter = 1.0f;

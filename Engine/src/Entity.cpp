@@ -37,6 +37,11 @@ void Entity::AddComponent(Component* component)
     components.push_back(component);
 }
 
+const std::vector<Component*>& Entity::GetComponents() const
+{
+	return components;
+}
+
 void Entity::Compute()
 {
     BindingTransform();

@@ -3,12 +3,14 @@
 // glm
 #include <glm/glm.hpp>
 
+#include <string>
+
 // Phong model
 class Material
 {
 public:
 	// Default materials
-	const static Material None;
+	const static Material Default;
 
 	const static Material Emerald;
 	const static Material Chrome;
@@ -29,9 +31,9 @@ public:
 	// This impact the radius of the specular light
 	float Shininess = 0.6f;
 
-	// Operator to assign default materials
+	std::string Name;
 
 private:
 	// Private constructor to set up default materials
-	Material(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess);
+	Material(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess, std::string name = "Custom");
 };

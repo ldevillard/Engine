@@ -19,6 +19,7 @@ public:
 	bool TryGetComponent(T*& outComponent) const;
 
 	void AddComponent(Component* component);
+	const std::vector<Component*>& GetComponents() const;
 
 	Transform* transform = nullptr;
 
