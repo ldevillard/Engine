@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include <string>
+#include <vector>
 
 // Phong model
 class Material
@@ -22,6 +23,9 @@ public:
 	const static Material Sapphire;
 	const static Material Topaz;
 	const static Material Prune;
+
+	static const std::vector<const char*> Names;
+	static const Material& GetMaterialFromName(const std::string& name);
 
 	// These vectors are the colors of the different lights
 	glm::vec3 Ambient;

@@ -16,7 +16,7 @@ public:
 
 private:
 	void inspectTransform() const;
-	void inspectModel(const Model* model) const;
+	void inspectModel(Model* model) const;
 
 	const Entity* entity = nullptr;
 };

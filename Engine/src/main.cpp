@@ -85,8 +85,8 @@ int main()
 
 	EntityManager::CreateInstance();
 
-	Entity entity1 = Entity("cube", &shader);
-	Model model1 = Model("resources/models/primitive/cube.obj", Material::Prune);
+	Entity entity1 = Entity("pagode", &shader);
+	Model model1 = Model("resources/models/temple/Japanese_Temple.obj", Material::Prune);
 	entity1.AddComponent(&model1);
 
 	Entity entity2 = Entity("cube2", &shader);

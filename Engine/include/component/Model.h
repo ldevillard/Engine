@@ -18,8 +18,11 @@ public:
     Model(std::string path, Material mat = Material::Default);
 
     int GetNumberOfTriangles() const;
+    const Material& GetMaterial() const;
 
     void Compute() override;
+
+    void SetMaterialFromName(std::string name);
 
 private:
     void draw();
