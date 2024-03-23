@@ -18,7 +18,6 @@ struct EditorSettings
 {
 	// frame
 	FrameBuffer* FrameBuffer = nullptr;
-	float* DeltaTime = nullptr;
 	
 	// screen resolution
 	unsigned int* SCR_WIDTH = nullptr;
@@ -47,10 +46,6 @@ public:
 	void Render();
 
 	void SelectEntity(Entity* entity);
-
-	// utility
-	//void SetParameters(EditorSettings params);
-	//const EditorSettings& GetParameters();
 
 private:
 	// singleton

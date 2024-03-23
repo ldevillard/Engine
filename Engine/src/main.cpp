@@ -21,6 +21,7 @@
 #include "render/FrameBuffer.h"
 #include "system/Editor.h"
 #include "system/EntityManager.h"
+#include "system/Time.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -36,10 +37,6 @@ Camera camera(glm::vec3(0.0f, 1.f, 15.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
-
-// timing
-float deltaTime = 0.0f;	// time between current frame and last frame
-float lastFrame = 0.0f;
 
 // lighting
 glm::vec3 lightPos(0.f, 2.f, 10.f);
@@ -78,6 +75,8 @@ int main()
 	// configure global opengl state
 	glEnable(GL_DEPTH_TEST);
 
+	Time::CreateInstance();
+
 	FrameBuffer sceneBuffer = FrameBuffer(SCR_WIDTH / 2, SCR_HEIGHT / 2);
 	ptr = &sceneBuffer;
 
@@ -86,14 +85,12 @@ int main()
 
 	EntityManager::CreateInstance();
 
-	Entity entity1 = Entity("temple");
-	Model model1 = Model("resources/models/temple/Japanese_Temple.obj", &shader);
+	Entity entity1 = Entity("cube1");
+	Model model1 = Model("resources/models/primitive/cube.obj", &shader);
 	entity1.AddComponent(&model1);
-	entity1.transform->Position = glm::vec3(0.f, -2.f, 5.f);
-	entity1.transform->Scale *= 0.25f;
 
-	Entity entity2 = Entity("crab");
-	Model model2 = Model("resources/models/crab/crab.obj", &shader);
+	Entity entity2 = Entity("cube2");
+	Model model2 = Model("resources/models/primitive/cube.obj", &shader);
 	entity2.AddComponent(&model2);
 
 	// Have to handle materials in models
@@ -108,7 +105,6 @@ int main()
 	settings.SCR_WIDTH = &SCR_WIDTH;
 	settings.SCR_HEIGHT = &SCR_HEIGHT;
 	settings.Wireframe = &wireframeMode;
-	settings.DeltaTime = &deltaTime;
 	settings.CameraSpeed = &camera.MovementSpeed;
 	settings.LightPosition = &lightPos;
 	settings.TrianglesNumber = &trianglesNumber;
@@ -121,10 +117,8 @@ int main()
 	// render loop
 	while (!glfwWindowShouldClose(window))
 	{
-		// per-frame time logicw
-		float currentFrame = static_cast<float>(glfwGetTime());
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
+		// per-frame time logic
+		Time::Get()->Update();
 
 		if (wireframeMode)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -159,14 +153,6 @@ int main()
 		glm::mat4 view = camera.GetViewMatrix();
 		shader.SetMat4("projection", projection);
 		shader.SetMat4("view", view);
-
-		//glm::mat4 model = glm::mat4(1.0f);
-		//model = glm::translate(model, glm::vec3(0.0f, -0.05f, 4.675f)); // translate it down so it's at the center of the scene
-		//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.5f);	// it's a bit too big for our scene, so scale it down
-		////model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, .0f));
-		////model = glm::rotate(model, glm::radians(15.0f) * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-		//shader.SetMat4("model", model);
-		//object.Draw(shader);
 		
 		EntityManager::Get()->ComputeEntities();
 
@@ -183,6 +169,8 @@ int main()
 
 	// cleanup
 	Editor::DestroyInstance();
+	EntityManager::DestroyInstance();
+	Time::DestroyInstance();
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	glfwDestroyWindow(window);
@@ -194,6 +182,8 @@ int main()
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 void processInput(GLFWwindow* window)
 {
+	float deltaTime = Time::Get()->DeltaTime;
+
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 

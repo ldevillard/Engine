@@ -22,8 +22,10 @@ Entity::Entity(const std::string &name) :
 
 Entity::~Entity()
 {
-    EntityManager::Get()->UnregisterEntity(this);
-
+    if (EntityManager::Get())
+    {
+        EntityManager::Get()->UnregisterEntity(this);
+    }
 	delete transform;
 }
 

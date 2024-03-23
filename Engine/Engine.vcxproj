@@ -44,6 +44,7 @@
     <ClCompile Include="src\data\Texture.cpp" />
     <ClCompile Include="src\system\Editor.cpp" />
     <ClCompile Include="src\system\EntityManager.cpp" />
+    <ClCompile Include="src\system\Time.cpp" />
     <ClCompile Include="src\testing\main_testing.cpp" />
     <ClCompile Include="src\utils\ImGui_Utils.cpp" />
   </ItemGroup>
@@ -363,6 +364,7 @@
     <ClInclude Include="include\data\Texture.h" />
     <ClInclude Include="include\system\Editor.h" />
     <ClInclude Include="include\system\EntityManager.h" />
+    <ClInclude Include="include\system\Time.h" />
     <ClInclude Include="include\utils\ImGui_Utils.h" />
   </ItemGroup>
   <ItemGroup>

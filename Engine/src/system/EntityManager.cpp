@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #include "system/EntityManager.h"
 #include "component/Model.h"
@@ -7,6 +8,13 @@
 EntityManager* EntityManager::instance = nullptr;
 
 #pragma region Public Methods
+
+EntityManager::~EntityManager()
+{
+	std::for_each(entities.begin(), entities.end(),
+		[this](Entity* e) { UnregisterEntity(e); });
+	entities.clear();
+}
 
 void EntityManager::CreateInstance()
 {
@@ -82,6 +90,11 @@ void EntityManager::UnregisterEntity(Entity* e)
 		entities.erase(it);
 	else
 		std::cerr << "Couldn't not find Entity to unregister!" << std::endl;
+}
+
+const std::vector<Entity*>& EntityManager::GetEntities() const
+{
+	return entities;
 }
 
 #pragma endregion

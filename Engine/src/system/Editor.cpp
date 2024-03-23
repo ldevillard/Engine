@@ -1,6 +1,10 @@
-#include "utils/ImGui_Utils.h"
 #include "system/Editor.h"
+
 #include <glfw3.h>
+
+#include "system/Time.h"
+#include "system/EntityManager.h"
+#include "utils/ImGui_Utils.h"
 
 // singleton instance
 Editor* Editor::instance = nullptr;
@@ -90,21 +94,11 @@ void Editor::Render()
 	// Nettoyer le framebuffer ImGui
 	glClear(GL_COLOR_BUFFER_BIT);
 	ImGui::Begin("Editor");
-
-	frameCounter += *parameters.DeltaTime;
-
-	if (frameCounter >= .1f)
-	{
-		frameCounter = 0;
-		if (*parameters.DeltaTime > 0)
-			frameRate = 1.0f / *parameters.DeltaTime;
-	}
-
-	ImGui::Text("FPS: %.1f", frameRate);
+	ImGui::Text("FPS: %.1f", Time::Get()->GetFrameRate());
 	ImGui::Text("Triangles: %d", *parameters.TrianglesNumber);
-	ImGui::Checkbox("Wireframe", parameters.Wireframe);
-	ImGui::InputFloat("Camera Speed", parameters.CameraSpeed);
-	//ImGui_Utils::DrawFloatControl("Camera Speed", *parameters.CameraSpeed, 3.0f);
+	ImGui::Separator();
+	ImGui_Utils::DrawBoolControl("Wireframe", *parameters.Wireframe, 100.f);
+	ImGui_Utils::DrawFloatControl("Camera Speed", *parameters.CameraSpeed, 5.f, 100.f);
 	ImGui::End();
 
 	// show selected entity properties
@@ -119,6 +113,22 @@ void Editor::Render()
 	}
 	ImGui::End();
 	//
+
+	ImGui::Begin("Hierarchy");
+	{
+		EntityManager* manager = EntityManager::Get();
+		if (manager != nullptr)
+		{
+			for (Entity* entity : manager->GetEntities())
+			{
+				if (ImGui::Selectable(entity->Name.c_str(), selectedEntity == entity))
+				{
+					SelectEntity(entity);
+				}
+			}
+		}
+	}
+	ImGui::End();
 
 	ImGui::Begin("Scene", nullptr);
 	{
