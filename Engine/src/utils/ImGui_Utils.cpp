@@ -171,4 +171,53 @@ namespace ImGui_Utils
 		ImGui::PopID();
 	}
 
+	void DrawComboBoxControl(const std::string& label, int& selectedItem, const std::vector<const char*>& options, float columnWidth)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldFont = io.Fonts->Fonts[0];
+
+		ImGui::PushID(label.c_str());
+
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+
+		// Dessiner le label dans la première colonne
+		ImGui::Text(label.c_str());
+
+		// Enregistrer la position de début de la deuxième colonne
+		float posX = ImGui::GetCursorPosX();
+		ImGui::NextColumn();
+
+		ImGui::PushItemWidth(-1);
+
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+		if (ImGui::BeginCombo("", options[selectedItem], ImGuiComboFlags_None))
+		{
+			for (size_t i = 0; i < options.size(); ++i)
+			{
+				bool isSelected = (selectedItem == static_cast<int>(i));
+				if (ImGui::Selectable(options[i], isSelected))
+				{
+					selectedItem = static_cast<int>(i);
+				}
+				if (isSelected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		ImGui::PopItemWidth();
+
+		// Rétablir la position de début de la deuxième colonne
+		ImGui::SetCursorPosX(posX);
+
+		ImGui::Columns(1);
+
+		ImGui::PopID();
+	}
+
 }

@@ -20,6 +20,11 @@ int Model::GetNumberOfTriangles() const
    return sum;
 }
 
+const Material& Model::GetMaterial() const
+{
+	return material;
+}
+
 void Model::Compute()
 {
     // binding material data
@@ -32,6 +37,11 @@ void Model::Compute()
     shader->SetBool("textured", texturesLoaded.size() > 0);
 
     draw();
+}
+
+void Model::SetMaterialFromName(std::string name)
+{
+	material = Material::GetMaterialFromName(name);
 }
 
 #pragma endregion

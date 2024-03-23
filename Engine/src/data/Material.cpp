@@ -1,6 +1,48 @@
 #include "data/Material.h"
 
+#include <unordered_map>
+
 #pragma region Default Materials
+
+const std::vector<const char*> Material::Names = 
+{ 
+	"Default", 
+	"Emerald", 
+	"Chrome", 
+	"Turquoise", 
+	"Gold", 
+	"Silver", 
+	"Bronze", 
+	"Ruby", 
+	"Sapphire", 
+	"Topaz", 
+	"Prune",
+};
+
+const Material& Material::GetMaterialFromName(const std::string& name)
+{
+	static const std::unordered_map<std::string, const Material*> materialMap = {
+		{"Default", &Material::Default},
+		{"Emerald", &Material::Emerald},
+		{"Chrome", &Material::Chrome},
+		{"Turquoise", &Material::Turquoise},
+		{"Gold", &Material::Gold},
+		{"Silver", &Material::Silver},
+		{"Bronze", &Material::Bronze},
+		{"Ruby", &Material::Ruby},
+		{"Sapphire", &Material::Sapphire},
+		{"Topaz", &Material::Topaz},
+		{"Prune", &Material::Prune}
+	};
+
+	auto it = materialMap.find(name);
+	if (it != materialMap.end()) {
+		return *(it->second);
+	}
+	else {
+		return Material::Default;
+	}
+}
 
 const Material Material::Default(glm::vec3(.2f), // Ambient
 	glm::vec3(1.f), // Diffuse
@@ -42,7 +84,7 @@ const Material Material::Bronze(glm::vec3(0.2125f, 0.1275f, 0.054f), // Ambient
 	glm::vec3(0.714f, 0.4284f, 0.18144f), // Diffuse
 	glm::vec3(0.393548f, 0.271906f, 0.166721f), // Specular
 	0.2f, // Shininess
-	"Bronzes"); // Name
+	"Bronze"); // Name
 
 const Material Material::Ruby(glm::vec3(0.1745f, 0.01175f, 0.01175f), // Ambient
 	glm::vec3(0.61424f, 0.04136f, 0.04136f), // Diffuse
