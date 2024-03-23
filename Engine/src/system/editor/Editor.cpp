@@ -27,6 +27,7 @@ Editor::Editor(GLFWwindow* window, EditorSettings params)
 
 	// setup
 	parameters = params;
+	inspector = Inspector();
 }
 
 Editor::~Editor()
@@ -57,15 +58,6 @@ void Editor::DestroyInstance()
 Editor* Editor::Get()
 {
 	return instance;
-}
-
-void LabelWithColor(const char* label, ImGuiDataType data_type, float value)
-{
-	ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::HSV(data_type / ImGuiDataType_COUNT, 0.7f, 0.7f));
-	ImGui::Text(" %c", label[0]);
-	ImGui::PopStyleColor();
-	ImGui::SameLine();
-	ImGui::DragScalar(label, data_type, &value);
 }
 
 void Editor::Render()
@@ -105,11 +97,7 @@ void Editor::Render()
 	ImGui::Begin("Inspector");
 	if (selectedEntity != nullptr)
 	{
-		ImGui::Text(std::string("Name : " + selectedEntity->Name).c_str());
-		ImGui::Separator();
-		ImGui_Utils::DrawVec3Control("Position", selectedEntity->transform->Position);
-		ImGui_Utils::DrawVec3Control("Rotation", selectedEntity->transform->Rotation);
-		ImGui_Utils::DrawVec3Control("Scale", selectedEntity->transform->Scale, 1);
+		inspector.Inspect(selectedEntity);
 	}
 	ImGui::End();
 	//
