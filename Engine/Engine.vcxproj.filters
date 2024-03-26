@@ -117,9 +117,6 @@
     <ClCompile Include="src\component\Component.cpp">
       <Filter>Source Files\component</Filter>
     </ClCompile>
-    <ClCompile Include="src\system\Editor.cpp">
-      <Filter>Source Files\system</Filter>
-    </ClCompile>
     <ClCompile Include="src\debug\DebugMenu.cpp">
       <Filter>Source Files\debug</Filter>
     </ClCompile>
@@ -138,9 +135,6 @@
     <ClCompile Include="src\data\Texture.cpp">
       <Filter>Source Files\data</Filter>
     </ClCompile>
-    <ClCompile Include="src\data\Mesh.cpp">
-      <Filter>Source Files\data</Filter>
-    </ClCompile>
     <ClCompile Include="src\data\Material.cpp">
       <Filter>Source Files\data</Filter>
     </ClCompile>
@@ -154,6 +148,24 @@
       <Filter>Source Files\utils</Filter>
     </ClCompile>
     <ClCompile Include="src\system\Time.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data\mesh\Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\editor\Editor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\editor\Inspector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\Gizmo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data\mesh\WireCube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data\Color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -280,9 +292,6 @@
     </ClInclude>
     <ClInclude Include="include\debug\DebugMenu.h">
       <Filter>Header Files\debug</Filter>
-    </ClInclude>
-    <ClInclude Include="include\system\Editor.h">
-      <Filter>Header Files\system</Filter>
     </ClInclude>
     <ClInclude Include="include\system\EntityManager.h">
       <Filter>Header Files\system</Filter>
@@ -682,9 +691,6 @@
     </ClInclude>
     <ClInclude Include="include\glm\ext\matrix_uint4x4_sized.hpp">
       <Filter>Header Files\other</Filter>
-    </ClInclude>
-    <ClInclude Include="include\data\Mesh.h">
-      <Filter>Header Files\data</Filter>
     </ClInclude>
     <ClInclude Include="include\glm\gtx\mixed_product.hpp">
       <Filter>Header Files\other</Filter>
@@ -1109,6 +1115,30 @@
     <ClInclude Include="include\system\Time.h">
       <Filter>Header Files\system</Filter>
     </ClInclude>
+    <ClInclude Include="include\data\mesh\MeshData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\mesh\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system\editor\Editor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system\editor\Inspector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\Gizmo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\mesh\WireCube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system\GlobalSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\VertexShader.glsl" />
@@ -1531,6 +1561,8 @@
     <None Include="include\glm\gtx\wrap.inl">
       <Filter>Header Files\other</Filter>
     </None>
+    <None Include="shaders\gizmo\GizmoFragmentShader.glsl" />
+    <None Include="shaders\gizmo\GizmoVertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\awesomeface.png">

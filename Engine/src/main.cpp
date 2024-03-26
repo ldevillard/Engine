@@ -12,37 +12,23 @@
 #include <glm/gtc/type_ptr.hpp>
 
 // user define
+#include "system/GlobalSettings.h"
+
 #include "Shader.h"
 #include "data/Texture.h"
 #include "data/Material.h"
-#include "Camera.h"
 #include "component/Model.h"
 #include "debug/DebugMenu.h"
-#include "render/FrameBuffer.h"
 #include "system/editor/Editor.h"
 #include "system/EntityManager.h"
 #include "system/Time.h"
+#include "utils/Gizmo.h"
+#include "data/Color.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
-
-// settings
-unsigned int SCR_WIDTH = 1280;
-unsigned int SCR_HEIGHT = 720;
-
-// camera
-Camera camera(glm::vec3(0.0f, 1.f, 15.0f));
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
-
-// lighting
-glm::vec3 lightPos(0.f, 2.f, 10.f);
-
-// frame buffer pointer
-FrameBuffer* ptr = nullptr;
 
 int main()
 {
@@ -82,17 +68,20 @@ int main()
 
 	// build and compile shader programs
 	Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
+	Shader gizmoShader("shaders/gizmo/GizmoVertexShader.glsl", "shaders/gizmo/GizmoFragmentShader.glsl");
+
+	Gizmo::InitGizmos(&gizmoShader);
 
 	EntityManager::CreateInstance();
+	Model::LoadPrimitives();
 
-	Entity entity1 = Entity("pagode", &shader);
-	Model model1 = Model("resources/models/temple/Japanese_Temple.obj", Material::Prune);
+	Entity entity1 = Entity("cube1", &shader);
+	Model model1 = Model(PrimitiveType::CubePrimitive, Material::Prune);
 	entity1.AddComponent(&model1);
 
-	Entity entity2 = Entity("cube2", &shader);
-	Model model2 = Model("resources/models/primitive/cube.obj", Material::Turquoise);
-	entity2.AddComponent(&model2);
-	entity2.transform->Position = glm::vec3(3.f, 2.f, 0.f);
+	/*Entity entity2 = Entity("crab", &shader);
+	Model model2 = Model("resources/models/crab/crab.obj", Material::Prune);
+	entity2.AddComponent(&model2);*/
 
 	bool wireframeMode = false;
 	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();
@@ -108,7 +97,7 @@ int main()
 	settings.TrianglesNumber = &trianglesNumber;
 
 	Editor::CreateInstance(window, settings);
-	Editor::Get()->SelectEntity(&entity1);
+	//Editor::Get()->SelectEntity(&entity1);
 
 	sceneBuffer.RescaleFrameBuffer(SCR_WIDTH, SCR_HEIGHT);
 
@@ -119,9 +108,15 @@ int main()
 		Time::Get()->Update();
 
 		if (wireframeMode)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		{
+			glPolygonMode(GL_BACK, GL_LINE);
+			glPolygonMode(GL_FRONT, GL_LINE);
+		}
 		else
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		{
+			glPolygonMode(GL_FRONT, GL_FILL);
+			glPolygonMode(GL_BACK, GL_FILL);
+		}
 
 		// input
 		processInput(window);
@@ -131,6 +126,7 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		
 		// Utiliser le shader
 		shader.Use();
 
@@ -147,6 +143,9 @@ int main()
 		shader.SetMat4("view", view);
 		
 		EntityManager::Get()->ComputeEntities();
+
+		// render gizmos
+		Gizmo::DrawWireCube(Color::White, Transform(lightPos, glm::vec3(0), glm::vec3(0.1f)));	
 
 		// Unbind le framebuffer
 		sceneBuffer.Unbind();
