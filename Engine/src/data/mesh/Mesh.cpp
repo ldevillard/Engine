@@ -1,6 +1,10 @@
-#include "data/Mesh.h"
+#include "data/mesh/Mesh.h"
 
 #pragma region Public Methods
+
+Mesh::Mesh() : VAO(0), VBO(0), EBO(0)
+{
+}
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {
@@ -11,7 +15,16 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 	setupMesh();
 }
 
-void Mesh::Draw(Shader& shader)
+Mesh::Mesh(const Mesh& copy)
+{
+	this->Vertices = copy.Vertices;
+	this->Indices = copy.Indices;
+	this->Textures = copy.Textures;
+
+	setupMesh();
+}
+
+void Mesh::Draw(Shader* shader)
 {
     // bind appropriate textures
     unsigned int diffuseNr = 1;
@@ -34,7 +47,7 @@ void Mesh::Draw(Shader& shader)
             number = std::to_string(heightNr++); // transfer unsigned int to string
 
         // now set the sampler to the correct texture unit
-        glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
+        glUniform1i(glGetUniformLocation(shader->ID, (name + number).c_str()), i);
         // and finally bind the texture
         glBindTexture(GL_TEXTURE_2D, Textures[i].ID);
     }

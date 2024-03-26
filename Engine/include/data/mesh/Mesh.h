@@ -5,6 +5,7 @@
 // data
 #include "data/Vertex.h"
 #include "data/Texture.h"
+#include "data/mesh/MeshData.h"
 
 #include "Shader.h"
 
@@ -16,11 +17,14 @@ public:
     std::vector<unsigned int> Indices = {};
     std::vector<Texture>      Textures = {};
 
+    Mesh();
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-    void Draw(Shader& shader);
+    Mesh(const Mesh& copy);
+    
+    virtual void Draw(Shader* shader);
     int GetNumberOfTriangles() const;
 
-private:
+protected:
     //  render data
     unsigned int VAO, VBO, EBO;
 

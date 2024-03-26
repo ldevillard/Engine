@@ -1,5 +1,19 @@
 #include "component/Model.h"
 
+std::map<PrimitiveType, std::unique_ptr<Model>> Model::PrimitivesModels;
+
+#pragma region Static Methods
+
+void Model::LoadPrimitives()
+{
+	PrimitivesModels[CubePrimitive] = std::make_unique<Model>("resources/models/primitive/cube.obj", Material::Default);
+	/*PrimitivesModels[WireCube] = new Model("resources/models/primitive/wire_cube.obj", Material::Default);
+	PrimitivesModels[Sphere] = new Model("resources/models/primitive/sphere.obj", Material::Default);
+	PrimitivesModels[WireSphere] = new Model("resources/models/primitive/wire_sphere.obj", Material::Default);*/
+}
+
+#pragma endregion
+
 #pragma region Public Methods
 
 Model::Model(std::string path, Material mat) : Component(),
@@ -7,6 +21,29 @@ Model::Model(std::string path, Material mat) : Component(),
 {
 	loadModel(path);
 }
+
+Model::Model(PrimitiveType type, Material mat) : Component(),
+    material(mat)
+{
+    switch (type)
+    {
+        case CubePrimitive:
+            meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::CubePrimitive]->meshes[0]));
+            break;
+        case SpherePrimitive:
+            // load sphere mesh
+            break;
+        default:
+            break;
+    }
+}
+
+Model::Model(const Mesh& mesh, Material mat)
+    : Component(), material(mat)
+{
+    meshes.push_back(mesh);
+}
+
 
 int Model::GetNumberOfTriangles() const
 {
@@ -51,7 +88,7 @@ void Model::SetMaterialFromName(std::string name)
 void Model::draw()
 {
     for (unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].Draw(*shader);
+        meshes[i].Draw(shader);
 }
 
 void Model::loadModel(std::string path)
