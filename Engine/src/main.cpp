@@ -76,7 +76,7 @@ int main()
 	Model::LoadPrimitives();
 
 	Entity entity1 = Entity("cube1", &shader);
-	Model model1 = Model(PrimitiveType::CubePrimitive, Material::Prune);
+	Model model1 = Model(PrimitiveType::CubePrimitive, Material::Turquoise);
 	entity1.AddComponent(&model1);
 
 	/*Entity entity2 = Entity("crab", &shader);
@@ -97,7 +97,7 @@ int main()
 	settings.TrianglesNumber = &trianglesNumber;
 
 	Editor::CreateInstance(window, settings);
-	//Editor::Get()->SelectEntity(&entity1);
+	Editor::Get()->SelectEntity(&entity1);
 
 	sceneBuffer.RescaleFrameBuffer(SCR_WIDTH, SCR_HEIGHT);
 
@@ -145,7 +145,10 @@ int main()
 		EntityManager::Get()->ComputeEntities();
 
 		// render gizmos
-		Gizmo::DrawWireCube(Color::White, Transform(lightPos, glm::vec3(0), glm::vec3(0.1f)));	
+		Gizmo::DrawWireSphere(Color::White, Transform(lightPos, glm::vec3(0), glm::vec3(0.1f)));
+		Gizmo::DrawWireCube(Color::Green, *entity1.transform);
+		Transform tr = Transform(entity1.transform->Position, entity1.transform->Rotation, entity1.transform->Scale * 1.5f);
+		Gizmo::DrawWireSphere(Color::Blue, tr);
 
 		// Unbind le framebuffer
 		sceneBuffer.Unbind();
