@@ -63,7 +63,7 @@ void Mesh::Draw(Shader* shader)
 
 int Mesh::GetNumberOfTriangles() const
 {
-   return (int)Vertices.size() / 3;
+   return (int)Indices.size() / 3;
 }
 
 #pragma endregion

@@ -129,9 +129,6 @@
     <ClCompile Include="src\glad\glad.c">
       <Filter>Source Files\glad</Filter>
     </ClCompile>
-    <ClCompile Include="src\data\light\Light.cpp">
-      <Filter>Source Files\data\light</Filter>
-    </ClCompile>
     <ClCompile Include="src\data\Texture.cpp">
       <Filter>Source Files\data</Filter>
     </ClCompile>
@@ -169,6 +166,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\data\mesh\WireSphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\component\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data\Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -382,9 +385,6 @@
     </ClInclude>
     <ClInclude Include="include\KHR\khrplatform.h">
       <Filter>Header Files\other</Filter>
-    </ClInclude>
-    <ClInclude Include="include\data\light\Light.h">
-      <Filter>Header Files\data\light</Filter>
     </ClInclude>
     <ClInclude Include="include\glm\gtx\log_base.hpp">
       <Filter>Header Files\other</Filter>
@@ -1143,6 +1143,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\data\mesh\WireSphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\component\Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

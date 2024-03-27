@@ -24,6 +24,7 @@
 #include "system/Time.h"
 #include "utils/Gizmo.h"
 #include "data/Color.h"
+#include "component/Light.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -76,15 +77,19 @@ int main()
 	Model::LoadPrimitives();
 
 	Entity entity1 = Entity("plane", &shader);
-	Model model1 = Model("resources/models/primitive/plane.obj");
+	Model model1 = Model("resources/models/primitive/cube.obj");
 	entity1.AddComponent(&model1);
 
-	Entity entity2 = Entity("temple", &shader);
+	Entity lightEntity = Entity("light", &shader);
+	Light light = Light();
+	lightEntity.AddComponent(&light);
+
+	/*Entity entity2 = Entity("temple", &shader);
 	Model model2 = Model("resources/models/temple/Japanese_Temple.obj");
-	entity2.AddComponent(&model2);
+	entity2.AddComponent(&model2);*/
 
 	bool wireframeMode = false;
-	bool blinnPhong = false;
+	bool blinnPhong = true;
 	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();
 
 	// setup editor settings
@@ -133,8 +138,8 @@ int main()
 		shader.Use();
 
 		shader.SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
-		shader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		shader.SetVec3("lightPos", lightPos);
+		/*shader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
+		shader.SetVec3("lightPos", lightPos);*/
 		shader.SetVec3("viewPos", camera.Position);
 		shader.SetBool("wireframe", wireframeMode);
 		shader.SetBool("blinn", blinnPhong);
@@ -149,9 +154,6 @@ int main()
 
 		//// render gizmos
 		Gizmo::DrawWireSphere(Color::White, Transform(lightPos, glm::vec3(0), glm::vec3(0.1f)));
-		Gizmo::DrawWireCube(Color::Green, *entity1.transform);
-		//Transform tr = Transform(entity1.transform->Position, entity1.transform->Rotation, entity1.transform->Scale * 1.5f);
-		//Gizmo::DrawWireSphere(Color::Blue, tr);
 
 		// Unbind le framebuffer
 		sceneBuffer.Unbind();

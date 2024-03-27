@@ -1,11 +1,13 @@
 #include "utils/Gizmo.h"
 
 #include "system/GlobalSettings.h"
+#include "system/editor/Editor.h"
 
 #include "data/mesh/WireCube.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
 
 // initialize static variables
 std::map<GizmoType, std::unique_ptr<Mesh>> Gizmo::gizmos;
@@ -29,6 +31,9 @@ void Gizmo::DrawWireCube(const Color& color, const Transform& transform)
 		return;
 	}
 
+	if (!Editor::Get()->GetSettings().Gizmo)
+		return;
+
 	bindShader(color, transform);
 
 	gizmos[WireCubeGizmo]->Draw(shader);
@@ -41,6 +46,9 @@ void Gizmo::DrawWireSphere(const Color& color, const Transform& transform)
 		std::cerr << "Gizmo shader is not initialized" << std::endl;
 		return;
 	}
+
+	if (!Editor::Get()->GetSettings().Gizmo)
+		return;
 
 	bindShader(color, transform);
 
@@ -63,13 +71,12 @@ void Gizmo::bindShader(const Color& color, const Transform& transform)
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, transform.Position);
 
-	float angleX = glm::radians(transform.Rotation.x);
-	float angleY = glm::radians(transform.Rotation.y);
-	float angleZ = glm::radians(transform.Rotation.z);
-
-	model = glm::rotate(model, angleX, glm::vec3(1.0f, 0.f, 0.f));
-	model = glm::rotate(model, angleY, glm::vec3(0.0f, 1.f, 0.f));
-	model = glm::rotate(model, angleZ, glm::vec3(0.0f, 0.f, 1.f));
+	// get the rotation quaternion
+	glm::quat rotationQuaternion = transform.GetRotationQuaternion();
+	// convert the quaternion to a rotation matrix
+	glm::mat4 rotationMatrix = glm::mat4_cast(rotationQuaternion);
+	// apply the rotation matrix to the model matrix
+	model *= rotationMatrix;
 
 	model = glm::scale(model, transform.Scale);
 

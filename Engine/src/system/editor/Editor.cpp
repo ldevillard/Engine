@@ -60,6 +60,11 @@ Editor* Editor::Get()
 	return instance;
 }
 
+const EditorSettings& Editor::GetSettings() const
+{
+	return parameters;
+}
+
 void Editor::Render()
 {
 	// Rendering ImGui
@@ -91,6 +96,7 @@ void Editor::Render()
 	ImGui::Separator();
 	ImGui_Utils::DrawBoolControl("Wireframe", *parameters.Wireframe, 100.f);
 	ImGui_Utils::DrawBoolControl("BlinnPhong", *parameters.BlinnPhong, 100.f);
+	ImGui_Utils::DrawBoolControl("Gizmo", parameters.Gizmo, 100.f);
 	ImGui_Utils::DrawFloatControl("Camera Speed", *parameters.CameraSpeed, 5.f, 100.f);
 	ImGui::End();
 

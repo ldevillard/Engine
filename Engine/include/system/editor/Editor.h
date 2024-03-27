@@ -27,6 +27,7 @@ struct EditorSettings
 	// scene
 	bool* Wireframe = nullptr;
 	bool* BlinnPhong = nullptr;
+	bool Gizmo = true;
 	glm::vec3* LightPosition = nullptr;
 	int* TrianglesNumber = nullptr;
 	
@@ -44,6 +45,8 @@ public:
 	static void CreateInstance(GLFWwindow* window, EditorSettings params);
 	static void DestroyInstance();
 	static Editor* Get();
+
+	const EditorSettings& GetSettings() const;
 
 	void Render();
 

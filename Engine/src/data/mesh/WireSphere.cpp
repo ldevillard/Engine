@@ -31,7 +31,7 @@ WireSphere::WireSphere() : Mesh()
 void WireSphere::Draw(Shader* shader)
 {
     glBindVertexArray(VAO);
-    glLineWidth(5); // maybe set up in a constant file
+    glLineWidth(3); // maybe set up in a constant file
     glDrawElements(GL_LINES, (GLsizei)Indices.size(), GL_UNSIGNED_INT, 0);
     glLineWidth(1); // reset to default
     glBindVertexArray(0);
