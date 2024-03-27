@@ -4,6 +4,7 @@ enum PrimitiveType
 {
     CubePrimitive,
     SpherePrimitive,
+	PlanePrimitive,
 };
 
 enum GizmoType
