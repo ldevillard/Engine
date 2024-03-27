@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <iostream>
+#include <glm/gtc/quaternion.hpp>
 
 #include "Entity.h"
 #include "system/EntityManager.h"
@@ -60,13 +61,12 @@ void Entity::BindingTransform() const
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, transform->Position);
 
-    float angleX = glm::radians(transform->Rotation.x);
-    float angleY = glm::radians(transform->Rotation.y);
-    float angleZ = glm::radians(transform->Rotation.z);
-
-    model = glm::rotate(model, angleX, glm::vec3(1.0f, 0.f, 0.f));
-    model = glm::rotate(model, angleY, glm::vec3(0.0f, 1.f, 0.f));
-    model = glm::rotate(model, angleZ, glm::vec3(0.0f, 0.f, 1.f));
+    // get the rotation quaternion
+    glm::quat rotationQuaternion = transform->GetRotationQuaternion();
+    // convert the quaternion to a rotation matrix
+    glm::mat4 rotationMatrix = glm::mat4_cast(rotationQuaternion);
+    // apply the rotation matrix to the model matrix
+    model *= rotationMatrix;
 
     model = glm::scale(model, transform->Scale);
 
