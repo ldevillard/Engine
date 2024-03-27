@@ -26,6 +26,7 @@ struct EditorSettings
 
 	// scene
 	bool* Wireframe = nullptr;
+	bool* BlinnPhong = nullptr;
 	glm::vec3* LightPosition = nullptr;
 	int* TrianglesNumber = nullptr;
 	

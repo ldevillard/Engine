@@ -7,9 +7,8 @@ std::map<PrimitiveType, std::unique_ptr<Model>> Model::PrimitivesModels;
 void Model::LoadPrimitives()
 {
 	PrimitivesModels[CubePrimitive] = std::make_unique<Model>("resources/models/primitive/cube.obj", Material::Default);
-	/*PrimitivesModels[WireCube] = new Model("resources/models/primitive/wire_cube.obj", Material::Default);
-	PrimitivesModels[Sphere] = new Model("resources/models/primitive/sphere.obj", Material::Default);
-	PrimitivesModels[WireSphere] = new Model("resources/models/primitive/wire_sphere.obj", Material::Default);*/
+	PrimitivesModels[SpherePrimitive] = std::make_unique<Model>("resources/models/primitive/sphere.obj", Material::Default);
+    PrimitivesModels[PlanePrimitive] = std::make_unique<Model>("resources/models/primitive/plane.obj", Material::Default);
 }
 
 #pragma endregion
@@ -31,9 +30,13 @@ Model::Model(PrimitiveType type, Material mat) : Component(),
             meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::CubePrimitive]->meshes[0]));
             break;
         case SpherePrimitive:
-            // load sphere mesh
+            meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::SpherePrimitive]->meshes[0]));
+            break;
+        case PlanePrimitive:
+            meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::PlanePrimitive]->meshes[0]));
             break;
         default:
+            std::cerr << "Primitive type not found" << std::endl;
             break;
     }
 }

@@ -75,15 +75,16 @@ int main()
 	EntityManager::CreateInstance();
 	Model::LoadPrimitives();
 
-	Entity entity1 = Entity("cube1", &shader);
-	Model model1 = Model(PrimitiveType::CubePrimitive, Material::Turquoise);
+	Entity entity1 = Entity("plane", &shader);
+	Model model1 = Model("resources/models/primitive/plane.obj");
 	entity1.AddComponent(&model1);
 
-	/*Entity entity2 = Entity("crab", &shader);
-	Model model2 = Model("resources/models/crab/crab.obj", Material::Prune);
-	entity2.AddComponent(&model2);*/
+	Entity entity2 = Entity("temple", &shader);
+	Model model2 = Model("resources/models/temple/Japanese_Temple.obj");
+	entity2.AddComponent(&model2);
 
 	bool wireframeMode = false;
+	bool blinnPhong = false;
 	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();
 
 	// setup editor settings
@@ -92,6 +93,7 @@ int main()
 	settings.SCR_WIDTH = &SCR_WIDTH;
 	settings.SCR_HEIGHT = &SCR_HEIGHT;
 	settings.Wireframe = &wireframeMode;
+	settings.BlinnPhong = &blinnPhong;
 	settings.CameraSpeed = &camera.MovementSpeed;
 	settings.LightPosition = &lightPos;
 	settings.TrianglesNumber = &trianglesNumber;
@@ -135,6 +137,7 @@ int main()
 		shader.SetVec3("lightPos", lightPos);
 		shader.SetVec3("viewPos", camera.Position);
 		shader.SetBool("wireframe", wireframeMode);
+		shader.SetBool("blinn", blinnPhong);
 
 		// view/projection transformations
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
@@ -144,11 +147,11 @@ int main()
 		
 		EntityManager::Get()->ComputeEntities();
 
-		// render gizmos
+		//// render gizmos
 		Gizmo::DrawWireSphere(Color::White, Transform(lightPos, glm::vec3(0), glm::vec3(0.1f)));
 		Gizmo::DrawWireCube(Color::Green, *entity1.transform);
-		Transform tr = Transform(entity1.transform->Position, entity1.transform->Rotation, entity1.transform->Scale * 1.5f);
-		Gizmo::DrawWireSphere(Color::Blue, tr);
+		//Transform tr = Transform(entity1.transform->Position, entity1.transform->Rotation, entity1.transform->Scale * 1.5f);
+		//Gizmo::DrawWireSphere(Color::Blue, tr);
 
 		// Unbind le framebuffer
 		sceneBuffer.Unbind();

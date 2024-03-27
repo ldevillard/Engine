@@ -24,6 +24,7 @@ uniform vec3 viewPos;
 
 uniform bool wireframe;
 uniform bool textured;
+uniform bool blinn;
 
 void ComputeLighting()
 {
@@ -39,7 +40,16 @@ void ComputeLighting()
     // specular lighting
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess * 128);
+    float spec = 0.0;
+    if (blinn)
+    {
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+        spec = pow(max(dot(halfwayDir, reflectDir), 0.0), material.shininess * 128);
+    }
+    else
+    {
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess * 128);
+    }
     vec3 specular = spec * lightColor * material.specular;
 
     vec3 textureColor = vec3(1.0);
