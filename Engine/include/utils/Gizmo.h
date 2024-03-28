@@ -17,6 +17,8 @@ public:
 
 	static void DrawWireCube(const Color& color = Color(), const Transform& transform = Transform());
 	static void DrawWireSphere(const Color& color = Color(), const Transform& transform = Transform());
+	static void DrawWireCone(const Color& color = Color(), const Transform& transform = Transform());
+	static void DrawArrow(const Color& color = Color(), Transform transform = Transform());
 
 private:
 	static void bindShader(const Color& color, const Transform& transform);
