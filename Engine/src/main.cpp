@@ -81,6 +81,7 @@ int main()
 	entity1.AddComponent(&model1);
 
 	Entity lightEntity = Entity("light", &shader);
+	lightEntity.transform->Position = lightPos;
 	Light light = Light();
 	lightEntity.AddComponent(&light);
 
@@ -151,9 +152,6 @@ int main()
 		shader.SetMat4("view", view);
 		
 		EntityManager::Get()->ComputeEntities();
-
-		//// render gizmos
-		Gizmo::DrawWireSphere(Color::White, Transform(lightPos, glm::vec3(0), glm::vec3(0.1f)));
 
 		// Unbind le framebuffer
 		sceneBuffer.Unbind();
