@@ -76,18 +76,18 @@ int main()
 	EntityManager::CreateInstance();
 	Model::LoadPrimitives();
 
-	Entity entity1 = Entity("plane", &shader);
+	/*Entity entity1 = Entity("cube", &shader);
 	Model model1 = Model(PrimitiveType::CubePrimitive);
-	entity1.AddComponent(&model1);
+	entity1.AddComponent(&model1);*/
 
 	Entity lightEntity = Entity("light", &shader);
 	lightEntity.transform->Position = lightPos;
 	Light light = Light();
 	lightEntity.AddComponent(&light);
 
-	/*Entity entity2 = Entity("temple", &shader);
-	Model model2 = Model("resources/models/temple/Japanese_Temple.obj");
-	entity2.AddComponent(&model2);*/
+	Entity templeEntity = Entity("temple", &shader);
+	Model templeModel = Model("resources/models/temple/Japanese_Temple.obj");
+	templeEntity.AddComponent(&templeModel);
 
 	bool wireframeMode = false;
 	bool blinnPhong = true;
@@ -105,7 +105,7 @@ int main()
 	settings.TrianglesNumber = &trianglesNumber;
 
 	Editor::CreateInstance(window, settings);
-	Editor::Get()->SelectEntity(&entity1);
+	Editor::Get()->SelectEntity(&lightEntity);
 
 	sceneBuffer.RescaleFrameBuffer(SCR_WIDTH, SCR_HEIGHT);
 
@@ -139,8 +139,6 @@ int main()
 		shader.Use();
 
 		shader.SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
-		/*shader.SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		shader.SetVec3("lightPos", lightPos);*/
 		shader.SetVec3("viewPos", camera.Position);
 		shader.SetBool("wireframe", wireframeMode);
 		shader.SetBool("blinn", blinnPhong);

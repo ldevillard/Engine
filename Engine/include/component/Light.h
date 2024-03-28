@@ -17,10 +17,11 @@ public:
 
 	void Compute() override;
 
-private:
 	LightType lightType;
 	Color	  color;
+	float	  Intensity = 1.0f;
 
+private:
 	void computeDirectional();
 	void computePoint();
 	void computeSpot();

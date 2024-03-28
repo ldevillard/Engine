@@ -67,6 +67,8 @@ const Material& Model::GetMaterial() const
 
 void Model::Compute()
 {
+    shader->Use();
+
     // binding material data
     shader->SetVec3("material.ambient", material.Ambient);
     shader->SetVec3("material.diffuse", material.Diffuse);

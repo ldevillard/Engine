@@ -12,6 +12,7 @@ class Material
 public:
 	// Default materials
 	const static Material Default;
+	const static Material BlackPlastic;
 
 	const static Material Emerald;
 	const static Material Chrome;

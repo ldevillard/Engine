@@ -57,6 +57,8 @@ void Entity::Compute()
 
 void Entity::BindingTransform() const
 {
+    shader->Use();
+
     // binding transform data
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, transform->Position);
