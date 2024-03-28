@@ -109,7 +109,7 @@ int main()
 	lightEntity2.transform->SetPosition({ 4.90f, 2.6f, 9.1f });
 	lightEntity2.AddComponent(&light2);
 
-	Entity lightEntity3 = Entity("PointLight", &shader);
+	Entity lightEntity3 = Entity("PointLight2", &shader);
 	Light light3 = Light(Light::Point);
 	light3.Intensity = 5.1f;
 	light3.Radius = .3f;
