@@ -20,6 +20,7 @@ struct Light
     vec3 position;
     vec3 direction;
     vec3 color;
+    float intensity;
 };
 
 
@@ -67,7 +68,7 @@ void ComputeDirectionalLighting()
         textureColor = texture(texture_diffuse1, TexCoords).rgb;
     }
 
-    vec3 result = (ambient + diffuse + specular) * objectColor * textureColor;
+    vec3 result = (ambient + diffuse + specular) * objectColor * textureColor * light.intensity;
     FragColor = vec4(result, 1.0);
 }
 

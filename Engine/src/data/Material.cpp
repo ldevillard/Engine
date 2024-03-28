@@ -7,6 +7,7 @@
 const std::vector<const char*> Material::Names = 
 { 
 	"Default", 
+	"Black Plastic",
 	"Emerald", 
 	"Chrome", 
 	"Turquoise", 
@@ -23,6 +24,7 @@ const Material& Material::GetMaterialFromName(const std::string& name)
 {
 	static const std::unordered_map<std::string, const Material*> materialMap = {
 		{"Default", &Material::Default},
+		{"Black Plastic", &Material::BlackPlastic},
 		{"Emerald", &Material::Emerald},
 		{"Chrome", &Material::Chrome},
 		{"Turquoise", &Material::Turquoise},
@@ -49,6 +51,12 @@ const Material Material::Default(glm::vec3(.2f), // Ambient
 	glm::vec3(1.f), // Specular
 	0.6f, // Shininess
 	"Default"); // Name
+
+const Material Material::BlackPlastic(glm::vec3(0.025f), // Ambient
+	glm::vec3(0.025f), // Diffuse
+	glm::vec3(0.5f), // Specular
+	0.25f, // Shininess
+	"Black Plastic"); // Name
 
 const Material Material::Emerald(glm::vec3(0.0215f, 0.1745f, 0.0215f), // Ambient
 	glm::vec3(0.07568f, 0.61424f, 0.07568f), // Diffuse

@@ -33,9 +33,11 @@ void Light::Compute()
 
 void Light::computeDirectional()
 {
+	shader->Use();
 	// binding light data
 	shader->SetVec3("light.direction", transform->GetForwardVector());
 	shader->SetVec3("light.color", color.Value);
+	shader->SetFloat("light.intensity", Intensity);
 	
 	// draw gizmo
 	Transform tr(*transform);

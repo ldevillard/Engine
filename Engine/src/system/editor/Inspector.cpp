@@ -32,9 +32,15 @@ void Inspector::Inspect(const Entity* e)
 	// inspect components
 	for (Component* c : entity->GetComponents())
 	{
+		ImGui::Spacing();
+
 		if (typeid(*c) == typeid(Model))
 		{
 			inspectModel(static_cast<Model*>(c));
+		}
+		if (typeid(*c) == typeid(Light))
+		{
+			inspectLight(static_cast<Light*>(c));
 		}
 	}
 
@@ -80,6 +86,17 @@ void Inspector::inspectModel(Model* model) const
 		model->SetMaterialFromName(Material::Names[currentItem]);
 		ImGui::TreePop();
 	}	
+}
+
+void Inspector::inspectLight(Light* light) const
+{
+	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	if (ImGui::TreeNode("Light"))
+	{
+		ImGui_Utils::DrawColorControl("Color", light->color.Value);
+		ImGui_Utils::DrawFloatControl("Intensity", light->Intensity, 1.f);
+		ImGui::TreePop();
+	}
 }
 
 #pragma endregion

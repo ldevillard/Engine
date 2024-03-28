@@ -5,6 +5,7 @@
 
 // components
 #include "component/Model.h"
+#include "component/Light.h"
 
 class Inspector
 {
@@ -17,6 +18,7 @@ public:
 private:
 	void inspectTransform() const;
 	void inspectModel(Model* model) const;
+	void inspectLight(Light* light) const;
 
 	const Entity* entity = nullptr;
 };

@@ -220,4 +220,49 @@ namespace ImGui_Utils
 		ImGui::PopID();
 	}
 
+	void DrawColorControl(const std::string& label, glm::vec3& color, float columnWidth)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldFont = io.Fonts->Fonts[0];
+
+		ImGui::PushID(label.c_str());
+
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
+
+		ImGui::PushItemWidth(-1);
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
+
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = { lineHeight + 100.0f, lineHeight };
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ color.r, color.g, color.b, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ color.r + 0.1f, color.g + 0.1f, color.b + 0.1f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ color.r - 0.1f, color.g - 0.1f, color.b - 0.1f, 1.0f });
+		ImGui::PushFont(boldFont);
+		if (ImGui::Button("", buttonSize))
+		{
+			ImGui::OpenPopup("ColorPicker");
+		}
+		ImGui::PopFont();
+		ImGui::PopStyleColor(3);
+
+		if (ImGui::BeginPopup("ColorPicker"))
+		{
+			ImGui::ColorPicker3("##ColorPicker", &color.r);
+			ImGui::EndPopup();
+		}
+
+		ImGui::PopItemWidth();
+
+		ImGui::PopStyleVar();
+
+		ImGui::Columns(1);
+
+		ImGui::PopID();
+	}
+
 }
