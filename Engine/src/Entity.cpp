@@ -36,6 +36,8 @@ void Entity::AddComponent(Component* component)
     component->SetTransform(transform);
     component->SetShader(shader);
     components.push_back(component);
+
+    EntityManager::Get()->UpdateLightsIndex();
 }
 
 const std::vector<Component*>& Entity::GetComponents() const

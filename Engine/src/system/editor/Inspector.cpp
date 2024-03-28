@@ -93,8 +93,20 @@ void Inspector::inspectLight(Light* light) const
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::TreeNode("Light"))
 	{
+		int currentItem = static_cast<int>(light->lightType);
+
+		ImGui_Utils::DrawComboBoxControl("Type", currentItem, Light::Names);
 		ImGui_Utils::DrawColorControl("Color", light->color.Value);
 		ImGui_Utils::DrawFloatControl("Intensity", light->Intensity, 1.f);
+		light->SetLightTypeFromString(Light::Names[currentItem]);
+		
+		switch (light->lightType)
+		{
+			case Light::Point:
+				ImGui_Utils::DrawFloatControl("Radius", light->Radius, 1.f);
+				break;
+		}
+		
 		ImGui::TreePop();
 	}
 }
