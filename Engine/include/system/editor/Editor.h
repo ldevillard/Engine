@@ -28,7 +28,6 @@ struct EditorSettings
 	bool* Wireframe = nullptr;
 	bool* BlinnPhong = nullptr;
 	bool Gizmo = true;
-	glm::vec3* LightPosition = nullptr;
 	int* TrianglesNumber = nullptr;
 	
 	// camera

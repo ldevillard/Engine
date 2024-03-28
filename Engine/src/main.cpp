@@ -73,21 +73,52 @@ int main()
 
 	Gizmo::InitGizmos(&gizmoShader);
 
-	EntityManager::CreateInstance();
+	EntityManager::CreateInstance(&shader);
 	Model::LoadPrimitives();
 
-	/*Entity entity1 = Entity("cube", &shader);
-	Model model1 = Model(PrimitiveType::CubePrimitive);
-	entity1.AddComponent(&model1);*/
+	Entity entity1 = Entity("Plane", &shader);
+	Model model1 = Model("resources/models/primitive/plane.obj", Material::Silver);
+	entity1.transform->SetScale({ 25.f, 1.f, 25.f });
+	entity1.AddComponent(&model1);
 
-	Entity lightEntity = Entity("light", &shader);
-	lightEntity.transform->Position = lightPos;
-	Light light = Light();
+	Entity entity2 = Entity("Car", &shader);
+	Model model2 = Model("resources/models/car/car.obj", Material::Turquoise);
+	entity2.transform->SetPosition({ 0.f, 0.f, 0.f });
+	entity2.transform->SetScale({ 0.05f, 0.05f, 0.05f });
+	entity2.transform->SetRotation({ 0.f, 45.f, 0.f });
+	entity2.AddComponent(&model2);
+
+	/*Entity entity2 = Entity("car", &shader);
+	Model model2 = Model("resources/models/car2/Nisssa_Figaro_1991_OBJ.obj");
+	entity2.transform->SetPosition({ 0.f, 0.f, 0.f });
+	entity2.transform->SetScale({ 0.05f, 0.05f, 0.05f });
+	entity2.transform->SetRotation({ 0.f, 45.f, 0.f });
+	entity2.AddComponent(&model2);*/
+
+	Entity lightEntity = Entity("DirectionalLight", &shader);
+	Light light = Light(Light::Directional, Color::Blue);
+	light.Intensity = 0.15f;
+	lightEntity.transform->SetPosition({ 0.f, 7.5f, 15.f });
+	lightEntity.transform->SetRotation({ -45.f, 0.f, 0.f });
 	lightEntity.AddComponent(&light);
 
-	Entity templeEntity = Entity("temple", &shader);
+	Entity lightEntity2 = Entity("PointLight", &shader);
+	Light light2 = Light(Light::Point);
+	light2.Intensity = 5.1f;
+	light2.Radius = .3f;
+	lightEntity2.transform->SetPosition({ 4.90f, 2.6f, 9.1f });
+	lightEntity2.AddComponent(&light2);
+
+	Entity lightEntity3 = Entity("PointLight", &shader);
+	Light light3 = Light(Light::Point);
+	light3.Intensity = 5.1f;
+	light3.Radius = .3f;
+	lightEntity3.transform->SetPosition({ 9.f, 2.6f, 5.f });
+	lightEntity3.AddComponent(&light3);
+
+	/*Entity templeEntity = Entity("temple", &shader);
 	Model templeModel = Model("resources/models/temple/Japanese_Temple.obj");
-	templeEntity.AddComponent(&templeModel);
+	templeEntity.AddComponent(&templeModel);*/
 
 	bool wireframeMode = false;
 	bool blinnPhong = true;
@@ -101,7 +132,6 @@ int main()
 	settings.Wireframe = &wireframeMode;
 	settings.BlinnPhong = &blinnPhong;
 	settings.CameraSpeed = &camera.MovementSpeed;
-	settings.LightPosition = &lightPos;
 	settings.TrianglesNumber = &trianglesNumber;
 
 	Editor::CreateInstance(window, settings);
@@ -117,11 +147,13 @@ int main()
 
 		if (wireframeMode)
 		{
+			glDisable(GL_CULL_FACE);
 			glPolygonMode(GL_BACK, GL_LINE);
 			glPolygonMode(GL_FRONT, GL_LINE);
 		}
 		else
 		{
+			glEnable(GL_CULL_FACE);
 			glPolygonMode(GL_FRONT, GL_FILL);
 			glPolygonMode(GL_BACK, GL_FILL);
 		}
@@ -138,7 +170,6 @@ int main()
 		// Utiliser le shader
 		shader.Use();
 
-		shader.SetVec3("objectColor", 1.0f, 1.0f, 1.0f);
 		shader.SetVec3("viewPos", camera.Position);
 		shader.SetBool("wireframe", wireframeMode);
 		shader.SetBool("blinn", blinnPhong);

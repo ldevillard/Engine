@@ -1,6 +1,12 @@
 #include "component/Light.h"
 #include "utils/Gizmo.h"
 
+#pragma region Static Variables
+
+const std::vector<const char*> Light::Names = { "Directional", "Point", "Spot" };
+
+#pragma endregion
+
 #pragma region Public Methods
 
 Light::Light(const LightType& type, const Color& color) : Component(),
@@ -11,7 +17,7 @@ Light::Light(const LightType& type, const Color& color) : Component(),
 
 void Light::Compute()
 {
-	shader->SetInt("light.type", static_cast<int>(lightType));
+	shader->SetInt("lights[" + std::to_string(index) + "].type", static_cast<int>(lightType));
 
 	switch (lightType)
 	{
@@ -27,6 +33,21 @@ void Light::Compute()
 	}
 }
 
+void Light::SetLightTypeFromString(const std::string& type)
+{
+	if (type == "Directional")
+		lightType = LightType::Directional;
+	else if (type == "Point")
+		lightType = LightType::Point;
+	else if (type == "Spot")
+		lightType = LightType::Spot;
+}
+
+void Light::SetIndex(unsigned int i)
+{
+	index = i;
+}
+
 #pragma endregion
 
 #pragma region Private Methods
@@ -35,9 +56,9 @@ void Light::computeDirectional()
 {
 	shader->Use();
 	// binding light data
-	shader->SetVec3("light.direction", transform->GetForwardVector());
-	shader->SetVec3("light.color", color.Value);
-	shader->SetFloat("light.intensity", Intensity);
+	shader->SetVec3("lights[" + std::to_string(index) + "].direction", transform->GetForwardVector());
+	shader->SetVec3("lights[" + std::to_string(index) + "].color", color.Value);
+	shader->SetFloat("lights[" + std::to_string(index) + "].intensity", Intensity);
 	
 	// draw gizmo
 	Transform tr(*transform);
@@ -47,6 +68,19 @@ void Light::computeDirectional()
 
 void Light::computePoint()
 {
+	shader->Use();
+	// binding light data
+	shader->SetVec3("lights[" + std::to_string(index) + "].position", transform->Position);
+	shader->SetVec3("lights[" + std::to_string(index) + "].color", color.Value);
+	shader->SetFloat("lights[" + std::to_string(index) + "].intensity", Intensity * 10);
+
+	// attenuation
+	shader->SetFloat("lights[" + std::to_string(index) + "].radius", Radius);
+
+	// draw gizmo
+	Transform tr(*transform);
+	tr.Scale = glm::vec3(Radius);
+	Gizmo::DrawWireSphere(Color::Cyan, tr);
 
 }
 

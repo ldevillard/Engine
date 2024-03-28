@@ -45,4 +45,19 @@ glm::vec3 Transform::GetForwardVector() const
 	return glm::vec3(forwardVector);
 }
 
+void Transform::SetPosition(const glm::vec3& position)
+{
+	Position = position;
+}
+
+void Transform::SetRotation(const glm::vec3& rotation)
+{
+	Rotation = rotation;
+}
+
+void Transform::SetScale(const glm::vec3& scale)
+{
+	Scale = scale;
+}
+
 #pragma endregion
