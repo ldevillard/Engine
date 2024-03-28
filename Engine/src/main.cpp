@@ -77,7 +77,7 @@ int main()
 	Model::LoadPrimitives();
 
 	Entity entity1 = Entity("plane", &shader);
-	Model model1 = Model("resources/models/primitive/cube.obj");
+	Model model1 = Model(PrimitiveType::CubePrimitive);
 	entity1.AddComponent(&model1);
 
 	Entity lightEntity = Entity("light", &shader);

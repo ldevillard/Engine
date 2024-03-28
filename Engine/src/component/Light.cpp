@@ -36,11 +36,11 @@ void Light::computeDirectional()
 	// binding light data
 	shader->SetVec3("light.direction", transform->GetForwardVector());
 	shader->SetVec3("light.color", color.Value);
-
+	
 	// draw gizmo
-	glm::vec3 scale = glm::vec3(0.1f, 0.1f, 1);
-	Transform tr(transform->Position, transform->Rotation, scale);
-	Gizmo::DrawWireCube(Color::Yellow, tr);
+	Transform tr(*transform);
+	tr.Scale *= 0.5f;
+	Gizmo::DrawArrow(Color::Yellow, tr);
 }
 
 void Light::computePoint()

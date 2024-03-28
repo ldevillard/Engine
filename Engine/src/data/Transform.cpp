@@ -19,6 +19,14 @@ Transform::Transform(const glm::vec3& position, const glm::vec3& rotation, const
 
 }
 
+Transform::Transform(const Transform& other) :
+	Position(other.Position),
+	Rotation(other.Rotation),
+	Scale(other.Scale)
+{
+
+}
+
 glm::quat Transform::GetRotationQuaternion() const
 {
 	return glm::quat(glm::radians(Rotation));

@@ -31,6 +31,7 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\component\Component.cpp" />
     <ClCompile Include="src\component\Light.cpp" />
+    <ClCompile Include="src\data\mesh\WireCone.cpp" />
     <ClCompile Include="src\data\mesh\WireCube.cpp" />
     <ClCompile Include="src\data\mesh\WireSphere.cpp" />
     <ClCompile Include="src\data\Transform.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="include\component\Component.h" />
     <ClInclude Include="include\component\Light.h" />
     <ClInclude Include="include\data\mesh\MeshData.h" />
+    <ClInclude Include="include\data\mesh\WireCone.h" />
     <ClInclude Include="include\data\mesh\WireCube.h" />
     <ClInclude Include="include\data\mesh\WireSphere.h" />
     <ClInclude Include="include\Entity.h" />

@@ -3,10 +3,13 @@
 #include "system/GlobalSettings.h"
 #include "system/editor/Editor.h"
 
-#include "data/mesh/WireCube.h"
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+// mesh includes
+#include "data/mesh/WireCube.h"
+#include "data/mesh/WireSphere.h"
+#include "data/mesh/WireCone.h"
 
 
 // initialize static variables
@@ -20,6 +23,7 @@ void Gizmo::InitGizmos(Shader* s)
 	shader = s;
 	gizmos[WireCubeGizmo] = std::make_unique<WireCube>();
 	gizmos[WireSphereGizmo] = std::make_unique<WireSphere>();
+	gizmos[WireConeGizmo] = std::make_unique<WireCone>();
 }
 
 // Need to make a function for shader binding
@@ -53,6 +57,42 @@ void Gizmo::DrawWireSphere(const Color& color, const Transform& transform)
 	bindShader(color, transform);
 
 	gizmos[WireSphereGizmo]->Draw(shader);
+}
+
+void Gizmo::DrawWireCone(const Color& color, const Transform& transform)
+{
+	if (!shader)
+	{
+		std::cerr << "Gizmo shader is not initialized" << std::endl;
+		return;
+	}
+
+	if (!Editor::Get()->GetSettings().Gizmo)
+		return;
+
+	bindShader(color, transform);
+
+	gizmos[WireConeGizmo]->Draw(shader);
+}
+
+void Gizmo::DrawArrow(const Color& color, Transform transform)
+{
+	if (!shader)
+	{
+		std::cerr << "Gizmo shader is not initialized" << std::endl;
+		return;
+	}
+
+	if (!Editor::Get()->GetSettings().Gizmo)
+		return;
+
+	Transform tr(transform.Position, transform.Rotation, glm::vec3(0.001f, 0.001f, .5f));
+	DrawWireCube(color, tr);
+
+	// rotate 90 degrees around the x-axis
+	transform.Rotation.x += -90.0f;
+	transform.Position = tr.Position + tr.GetForwardVector() * 0.5f;
+	DrawWireCone(color, transform);
 }
 
 #pragma endregion
