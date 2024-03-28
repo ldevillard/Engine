@@ -27,13 +27,14 @@ glm::quat Transform::GetRotationQuaternion() const
 glm::vec3 Transform::GetForwardVector() const 
 {
 	// rotation matrix from euler angles
-	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+	rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 
+	// apply the rotation to the forward vector
 	glm::vec4 forwardVector = rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 
-    return glm::vec3(forwardVector);
+	return glm::vec3(forwardVector);
 }
 
 #pragma endregion
