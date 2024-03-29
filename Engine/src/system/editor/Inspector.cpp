@@ -105,6 +105,10 @@ void Inspector::inspectLight(Light* light) const
 			case Light::Point:
 				ImGui_Utils::DrawFloatControl("Radius", light->Radius, 1.f);
 				break;
+			case Light::Spot:
+				ImGui_Utils::DrawFloatControl("CutOff", light->CutOff, 1.f);
+				ImGui_Utils::DrawFloatControl("OutCutOff", light->OutCutOff, 1.f);
+				break;
 		}
 		
 		ImGui::TreePop();

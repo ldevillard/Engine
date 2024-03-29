@@ -86,7 +86,19 @@ void Light::computePoint()
 
 void Light::computeSpot()
 {
+	shader->Use();
+	// binding light data
+	shader->SetVec3("lights[" + std::to_string(index) + "].position", transform->Position);
+	shader->SetVec3("lights[" + std::to_string(index) + "].direction", transform->GetForwardVector());
+	shader->SetVec3("lights[" + std::to_string(index) + "].color", color.Value);
+	shader->SetFloat("lights[" + std::to_string(index) + "].intensity", Intensity);
 
+	// spot light
+	shader->SetFloat("lights[" + std::to_string(index) + "].cutOff", glm::cos(glm::radians(CutOff)));
+	shader->SetFloat("lights[" + std::to_string(index) + "].outCutOff", glm::cos(glm::radians(OutCutOff)));
+
+	// draw gizmo
+	Gizmo::DrawWireSphere(Color::White, *transform);
 }
 
 #pragma endregion

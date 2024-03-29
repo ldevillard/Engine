@@ -26,6 +26,10 @@ struct Light
 
     // point light
     float radius;
+
+    // spot light
+    float cutOff;
+    float outCutOff;
 };
 
 
@@ -72,10 +76,10 @@ vec3 ComputeDirectionalLighting(Light light)
 vec3 ComputePointLighting(Light light)
 {
     float distance = length(light.position - FragPos);
-    float radius = light.radius; // Rayon de la lumière en unités de distance
+    float radius = light.radius;
     float constant = 1.0;
-    float linear = 2.0 / (radius * 0.7); // Ajustement linéaire en fonction du rayon
-    float quadratic = 1.0 / (radius * radius); // Ajustement quadratique en fonction du rayon
+    float linear = 2.0 / (radius * 0.7);
+    float quadratic = 1.0 / (radius * radius);
     float attenuation = 1.0 / (constant + linear * distance + quadratic * distance * distance);
 
     // ambiant lighting
@@ -107,7 +111,45 @@ vec3 ComputePointLighting(Light light)
 
 vec3 ComputeSpotLighting(Light light)
 {
-    return vec3(0.0);
+    vec3 lightDir = normalize(light.position - FragPos);
+    float theta = dot(lightDir, normalize(-light.direction));
+
+    // outerCutOff is used to make a fade edge of the spot
+    float epsilon = light.cutOff - light.outCutOff;
+    float intensity = clamp((theta - light.outCutOff) / epsilon, 0.0, 1.0);
+
+    // attenuation
+    float distance = length(light.position - FragPos);
+    float constant = 1.0;
+    float linear = 0.09;
+    float quadratic = 0.032;
+    float attenuation = 1.0 / (constant + linear * distance + quadratic * distance * distance);
+
+
+    // ambiant lighting
+    vec3 ambient = light.color * material.ambient * attenuation * intensity;
+
+    // diffuse lighting
+    vec3 norm = normalize(Normal);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = diff * light.color * material.diffuse * intensity * attenuation;
+
+    // specular lighting
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, norm);
+    float spec = 0.0;
+    if (blinn)
+    {
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+        spec = pow(max(dot(halfwayDir, reflectDir), 0.0), material.shininess * 128);
+    }
+    else
+    {
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess * 128);
+    }
+    vec3 specular = spec * light.color * material.specular * intensity * attenuation;
+
+    return (ambient + diffuse + specular) * light.intensity;
 }
 
 vec3 ComputeLighting(Light light)

@@ -31,6 +31,10 @@ public:
 	// point light
 	float	  Radius = 1.0f;
 
+	// spot light
+	float	  CutOff = 12.5f;
+	float	  OutCutOff = 17.5f;
+
 private:
 	unsigned int index = 0;
 

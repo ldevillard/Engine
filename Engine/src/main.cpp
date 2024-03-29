@@ -116,6 +116,19 @@ int main()
 	lightEntity3.transform->SetPosition({ 9.f, 2.6f, 5.f });
 	lightEntity3.AddComponent(&light3);
 
+	Entity lightEntity4 = Entity("SpotLight", &shader);
+	Light light4 = Light(Light::Spot);
+	lightEntity4.transform->SetPosition({ -1.9f, 0.9f, -2.3f });
+	lightEntity4.transform->SetRotation({ -170.f, 45.f, 0.f });
+	light4.CutOff = 19.f;
+	light4.OutCutOff = 30.f;
+	light4.Intensity = 43.6f;
+	lightEntity4.AddComponent(&light4);
+
+	Entity lightEntity5 = Entity("SpotLight2", &shader);
+	Light light5 = Light(Light::Spot);
+	lightEntity5.AddComponent(&light5);
+
 	/*Entity templeEntity = Entity("temple", &shader);
 	Model templeModel = Model("resources/models/temple/Japanese_Temple.obj");
 	templeEntity.AddComponent(&templeModel);*/
