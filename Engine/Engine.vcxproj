@@ -32,6 +32,7 @@
     <ClCompile Include="src\component\Component.cpp" />
     <ClCompile Include="src\component\Light.cpp" />
     <ClCompile Include="src\data\mesh\WireCone.cpp" />
+    <ClCompile Include="src\data\mesh\WireConeFrustum.cpp" />
     <ClCompile Include="src\data\mesh\WireCube.cpp" />
     <ClCompile Include="src\data\mesh\WireSphere.cpp" />
     <ClCompile Include="src\data\Transform.cpp" />
@@ -70,6 +71,7 @@
     <ClInclude Include="include\component\Light.h" />
     <ClInclude Include="include\data\mesh\MeshData.h" />
     <ClInclude Include="include\data\mesh\WireCone.h" />
+    <ClInclude Include="include\data\mesh\WireConeFrustum.h" />
     <ClInclude Include="include\data\mesh\WireCube.h" />
     <ClInclude Include="include\data\mesh\WireSphere.h" />
     <ClInclude Include="include\Entity.h" />

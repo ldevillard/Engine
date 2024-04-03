@@ -98,7 +98,7 @@ void Light::computeSpot()
 	shader->SetFloat("lights[" + std::to_string(index) + "].outCutOff", glm::cos(glm::radians(OutCutOff)));
 
 	// draw gizmo
-	Gizmo::DrawWireSphere(Color::White, *transform);
+	Gizmo::DrawWireConeFrustum(Color::White, *transform);
 }
 
 #pragma endregion

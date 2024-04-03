@@ -10,7 +10,7 @@
 #include "data/mesh/WireCube.h"
 #include "data/mesh/WireSphere.h"
 #include "data/mesh/WireCone.h"
-
+#include "data/mesh/WireConeFrustum.h"
 
 // initialize static variables
 std::map<GizmoType, std::unique_ptr<Mesh>> Gizmo::gizmos;
@@ -24,6 +24,7 @@ void Gizmo::InitGizmos(Shader* s)
 	gizmos[WireCubeGizmo] = std::make_unique<WireCube>();
 	gizmos[WireSphereGizmo] = std::make_unique<WireSphere>();
 	gizmos[WireConeGizmo] = std::make_unique<WireCone>();
+	gizmos[WireConeFrustumGizmo] = std::make_unique<WireConeFrustum>();
 }
 
 // Need to make a function for shader binding
@@ -93,6 +94,26 @@ void Gizmo::DrawArrow(const Color& color, Transform transform)
 	transform.Rotation.x += -90.0f;
 	transform.Position = tr.Position + tr.GetForwardVector() * 0.5f;
 	DrawWireCone(color, transform);
+}
+
+void Gizmo::DrawWireConeFrustum(const Color& color, const Transform& transform)
+{
+	if (!shader)
+	{
+		std::cerr << "Gizmo shader is not initialized" << std::endl;
+		return;
+	}
+
+	if (!Editor::Get()->GetSettings().Gizmo)
+		return;
+
+	Transform tr(transform);
+	tr.Rotation.x += -90.0f;
+	tr.Scale = glm::vec3(0.5f);
+
+	bindShader(color, tr);
+
+	gizmos[WireConeFrustumGizmo]->Draw(shader);
 }
 
 #pragma endregion

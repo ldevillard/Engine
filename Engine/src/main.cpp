@@ -88,16 +88,9 @@ int main()
 	entity2.transform->SetRotation({ 0.f, 45.f, 0.f });
 	entity2.AddComponent(&model2);
 
-	/*Entity entity2 = Entity("car", &shader);
-	Model model2 = Model("resources/models/car2/Nisssa_Figaro_1991_OBJ.obj");
-	entity2.transform->SetPosition({ 0.f, 0.f, 0.f });
-	entity2.transform->SetScale({ 0.05f, 0.05f, 0.05f });
-	entity2.transform->SetRotation({ 0.f, 45.f, 0.f });
-	entity2.AddComponent(&model2);*/
-
 	Entity lightEntity = Entity("DirectionalLight", &shader);
 	Light light = Light(Light::Directional, Color::Blue);
-	light.Intensity = 0.15f;
+	light.Intensity = .15f;
 	lightEntity.transform->SetPosition({ 0.f, 7.5f, 15.f });
 	lightEntity.transform->SetRotation({ -45.f, 0.f, 0.f });
 	lightEntity.AddComponent(&light);
@@ -118,20 +111,13 @@ int main()
 
 	Entity lightEntity4 = Entity("SpotLight", &shader);
 	Light light4 = Light(Light::Spot);
-	lightEntity4.transform->SetPosition({ -1.9f, 0.9f, -2.3f });
-	lightEntity4.transform->SetRotation({ -170.f, 45.f, 0.f });
+	lightEntity4.transform->SetPosition({ 3.f, 9.8f, 3.f });
+	lightEntity4.transform->SetRotation({ -160.f, 45.f, 0.f });
 	light4.CutOff = 19.f;
 	light4.OutCutOff = 30.f;
-	light4.Intensity = 43.6f;
+	light4.Intensity = 3.5f;
 	lightEntity4.AddComponent(&light4);
 
-	Entity lightEntity5 = Entity("SpotLight2", &shader);
-	Light light5 = Light(Light::Spot);
-	lightEntity5.AddComponent(&light5);
-
-	/*Entity templeEntity = Entity("temple", &shader);
-	Model templeModel = Model("resources/models/temple/Japanese_Temple.obj");
-	templeEntity.AddComponent(&templeModel);*/
 
 	bool wireframeMode = false;
 	bool blinnPhong = true;

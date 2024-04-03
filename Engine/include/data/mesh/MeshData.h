@@ -12,4 +12,5 @@ enum GizmoType
 	WireCubeGizmo,
 	WireSphereGizmo,
 	WireConeGizmo,
+	WireConeFrustumGizmo,
 };
