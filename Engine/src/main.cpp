@@ -134,7 +134,7 @@ int main()
 	settings.TrianglesNumber = &trianglesNumber;
 
 	Editor::CreateInstance(window, settings);
-	Editor::Get()->SelectEntity(&lightEntity);
+	Editor::Get()->SelectEntity(&entity2);
 
 	sceneBuffer.RescaleFrameBuffer(SCR_WIDTH, SCR_HEIGHT);
 

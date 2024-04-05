@@ -7,6 +7,7 @@
 #include "component/Component.h"
 #include "data/Material.h"
 #include "data/mesh/MeshData.h"
+#include "data/BoundingBox.h"
 
 // assimp
 #include <assimp/Importer.hpp>
@@ -39,9 +40,11 @@ private:
     std::vector<Mesh> meshes;
     std::vector<Texture> texturesLoaded;
     std::string directory;
+    BoundingBox obb;
 
     Material material = Material::Default;
 
+    void processOBB();
     void loadModel(std::string path);
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);

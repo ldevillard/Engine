@@ -1,5 +1,10 @@
 #include "component/Model.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "utils/Gizmo.h"
+
 std::map<PrimitiveType, std::unique_ptr<Model>> Model::PrimitivesModels;
 
 #pragma region Static Methods
@@ -19,6 +24,7 @@ Model::Model(std::string path, Material mat) : Component(),
     material(mat)
 {
 	loadModel(path);
+    processOBB();
 }
 
 Model::Model(PrimitiveType type, Material mat) : Component(),
@@ -39,12 +45,14 @@ Model::Model(PrimitiveType type, Material mat) : Component(),
             std::cerr << "Primitive type not found" << std::endl;
             break;
     }
+    processOBB();
 }
 
 Model::Model(const Mesh& mesh, Material mat)
     : Component(), material(mat)
 {
     meshes.push_back(mesh);
+    processOBB();
 }
 
 
@@ -94,6 +102,21 @@ void Model::draw()
 {
     for (unsigned int i = 0; i < meshes.size(); i++)
         meshes[i].Draw(shader);
+
+    obb.ApplyTransform(*transform);
+}
+
+void Model::processOBB()
+{
+    for (Mesh mesh : meshes)
+    {
+        for (const Vertex& vertex : mesh.Vertices)
+        {
+            obb.Min = glm::min(obb.Min, vertex.Position);
+            obb.Max = glm::max(obb.Max, vertex.Position);
+		}
+	}
+    obb.Center = (obb.Min + obb.Max) * 0.5f;
 }
 
 void Model::loadModel(std::string path)

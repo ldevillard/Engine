@@ -180,6 +180,9 @@
     <ClCompile Include="src\data\mesh\WireConeFrustum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\data\BoundingBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\imgui\imconfig.h">
@@ -1158,6 +1161,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\data\mesh\WireConeFrustum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\BoundingBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
