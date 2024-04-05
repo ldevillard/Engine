@@ -27,12 +27,12 @@ Transform::Transform(const Transform& other) :
 
 }
 
-glm::quat Transform::GetRotationQuaternion() const
+const glm::quat& Transform::GetRotationQuaternion() const
 {
 	return glm::quat(glm::radians(Rotation));
 }
 
-glm::vec3 Transform::GetForwardVector() const 
+const glm::vec3& Transform::GetForwardVector() const 
 {
 	// rotation matrix from euler angles
 	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -43,6 +43,15 @@ glm::vec3 Transform::GetForwardVector() const
 	glm::vec4 forwardVector = rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 1.0f);
 
 	return glm::vec3(forwardVector);
+}
+
+const glm::mat4& Transform::GetTransformMatrix() const
+{
+	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), Position);
+	glm::mat4 rotationMatrix = glm::mat4_cast(GetRotationQuaternion());
+	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), Scale);
+
+	return translationMatrix * rotationMatrix * scaleMatrix;
 }
 
 void Transform::SetPosition(const glm::vec3& position)

@@ -42,7 +42,8 @@ public:
    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
    // getters
-   glm::mat4 GetViewMatrix();
+   const glm::mat4& GetViewMatrix();
+   const glm::mat4& GetProjectionMatrix(float width, float height);
    void SetSpeedFactor(float factor);
 
    // inputs processing

@@ -89,9 +89,14 @@ void Camera::ProcessMouseScroll(float yoffset)
 
 #pragma region Utility
 
-glm::mat4 Camera::GetViewMatrix()
+const glm::mat4& Camera::GetViewMatrix()
 {
    return glm::lookAt(Position, Position + Front, Up);
+}
+
+const glm::mat4& Camera::GetProjectionMatrix(float width, float height)
+{
+   return glm::perspective(glm::radians(Zoom), width / height, 0.1f, 1000.0f);
 }
 
 void Camera::SetSpeedFactor(float factor) 

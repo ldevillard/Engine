@@ -5,6 +5,10 @@
 #include "system/Time.h"
 #include "system/EntityManager.h"
 #include "utils/ImGui_Utils.h"
+#include "ImGuizmo.h"
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/matrix_decompose.hpp>
 
 // singleton instance
 Editor* Editor::instance = nullptr;
@@ -88,17 +92,28 @@ void Editor::Render()
 
 	ImGui::SetNextWindowSizeConstraints(ImVec2(300, -1), ImVec2(600, -1));
 
-	// Nettoyer le framebuffer ImGui
+	// Clean the screen
 	glClear(GL_COLOR_BUFFER_BIT);
-	ImGui::Begin("Editor");
-	ImGui::Text("FPS: %.1f", Time::Get()->GetFrameRate());
-	ImGui::Text("Triangles: %d", *parameters.TrianglesNumber);
-	ImGui::Separator();
-	ImGui_Utils::DrawBoolControl("Wireframe", *parameters.Wireframe, 100.f);
-	ImGui_Utils::DrawBoolControl("BlinnPhong", *parameters.BlinnPhong, 100.f);
-	ImGui_Utils::DrawBoolControl("Gizmo", parameters.Gizmo, 100.f);
-	ImGui_Utils::DrawFloatControl("Camera Speed", *parameters.CameraSpeed, 5.f, 100.f);
-	ImGui::End();
+	
+	// Show Editor
+	{
+		ImGui::Begin("Editor");
+		ImGui::Text("FPS: %.1f", Time::Get()->GetFrameRate());
+		ImGui::Text("Triangles: %d", *parameters.TrianglesNumber);
+		ImGui::Separator();
+		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+		if (ImGui::TreeNode("Gizmos"))
+		{
+			ImGui_Utils::DrawBoolControl("Light", parameters.Gizmo, 100.f);
+			ImGui_Utils::DrawBoolControl("Bounding Box", parameters.BoundingBoxGizmo, 100.f);
+			ImGui::TreePop();
+		}
+		ImGui::Separator();
+		ImGui_Utils::DrawBoolControl("Wireframe", *parameters.Wireframe, 100.f);
+		ImGui_Utils::DrawBoolControl("BlinnPhong", *parameters.BlinnPhong, 100.f);
+		ImGui_Utils::DrawFloatControl("Camera Speed", *parameters.CameraSpeed, 5.f, 100.f);
+		ImGui::End();
+	}
 
 	// show selected entity properties
 	ImGui::Begin("Inspector");
@@ -140,6 +155,12 @@ void Editor::Render()
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+	
+		// Render Editor Gizmo
+		if (selectedEntity != nullptr)
+		{
+			drawEditorGizmo();
+		}
 	}
 	ImGui::EndChild();
 	ImGui::End();
@@ -152,6 +173,50 @@ void Editor::Render()
 void Editor::SelectEntity(Entity* entity)
 {
 	selectedEntity = entity;
+}
+
+void Editor::SetCamera(Camera* camera)
+{
+	editorCamera = camera;
+}
+
+#pragma endregion
+
+#pragma region Private Methods
+
+void Editor::drawEditorGizmo()
+{
+	ImGuizmo::BeginFrame();
+	ImGuizmo::SetOrthographic(false);
+	ImGuizmo::SetDrawlist();
+	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, *parameters.SCR_WIDTH, *parameters.SCR_HEIGHT);
+
+	glm::mat4 projection = editorCamera->GetProjectionMatrix(*parameters.SCR_WIDTH, *parameters.SCR_HEIGHT);
+	glm::mat4 view = editorCamera->GetViewMatrix();
+	glm::mat4 model = selectedEntity->transform->GetTransformMatrix();
+
+
+	ImGuizmo::Manipulate(glm::value_ptr(view), glm::value_ptr(projection), 
+		ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::LOCAL, 
+		glm::value_ptr(model));
+
+	if (ImGuizmo::IsUsing())
+	{
+		// Decompose the model matrix
+		glm::vec3 scale;
+		glm::quat rotation;
+		glm::vec3 translation;
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		
+		glm::decompose(model, scale, rotation, translation, skew, perspective);
+
+		glm::vec3 deltaRotation = glm::eulerAngles(rotation) - glm::radians(selectedEntity->transform->Rotation);
+
+		selectedEntity->transform->Position = translation;
+		selectedEntity->transform->Rotation += glm::degrees(deltaRotation);
+		selectedEntity->transform->Scale = scale;	
+	}
 }
 
 #pragma endregion

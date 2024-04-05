@@ -19,13 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\imgui\imgui.cpp" />
-    <ClCompile Include="..\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\imgui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\ThirdPartyLibs\ImGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="..\ThirdPartyLibs\ImGuizmo\ImGradient.cpp" />
+    <ClCompile Include="..\ThirdPartyLibs\ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="..\ThirdPartyLibs\ImGuizmo\ImSequencer.cpp" />
+    <ClCompile Include="..\ThirdPartyLibs\ImGui\imgui.cpp" />
+    <ClCompile Include="..\ThirdPartyLibs\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="..\ThirdPartyLibs\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="..\ThirdPartyLibs\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\ThirdPartyLibs\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\ThirdPartyLibs\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="..\ThirdPartyLibs\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="include\glm\glm.cppm" />
     <ClCompile Include="src\Camera.cpp" />
@@ -595,7 +599,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\ldevillard\Desktop\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Engine\Engine\include;C:\Users\logan\Desktop\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGuizmo;C:\Users\ldevillard\Desktop\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Engine\Engine\include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGui;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -646,7 +650,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ldevillard\Desktop\Engine\imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGui</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>

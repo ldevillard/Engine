@@ -88,35 +88,41 @@ int main()
 	entity2.transform->SetRotation({ 0.f, 45.f, 0.f });
 	entity2.AddComponent(&model2);
 
+	/*Entity cubeEntity = Entity("Cube", &shader);
+	Model cubeModel = Model(PrimitiveType::CubePrimitive, Material::Gold);
+	cubeEntity.AddComponent(&cubeModel);
+	cubeEntity.transform->SetPosition({ 0.f, 4.f, 0.f });
+	cubeEntity.transform->SetScale({ 3.f, 1.f, 1.f });*/
+
+
 	Entity lightEntity = Entity("DirectionalLight", &shader);
-	Light light = Light(Light::Directional, Color::Blue);
-	light.Intensity = .15f;
+	Light light = Light(Light::Directional, Color::White);
 	lightEntity.transform->SetPosition({ 0.f, 7.5f, 15.f });
 	lightEntity.transform->SetRotation({ -45.f, 0.f, 0.f });
 	lightEntity.AddComponent(&light);
 
-	Entity lightEntity2 = Entity("PointLight", &shader);
-	Light light2 = Light(Light::Point);
-	light2.Intensity = 5.1f;
-	light2.Radius = .3f;
-	lightEntity2.transform->SetPosition({ 4.90f, 2.6f, 9.1f });
-	lightEntity2.AddComponent(&light2);
+	//Entity lightEntity2 = Entity("PointLight", &shader);
+	//Light light2 = Light(Light::Point);
+	//light2.Intensity = 5.1f;
+	//light2.Radius = .3f;
+	//lightEntity2.transform->SetPosition({ 4.90f, 2.6f, 9.1f });
+	//lightEntity2.AddComponent(&light2);
 
-	Entity lightEntity3 = Entity("PointLight2", &shader);
-	Light light3 = Light(Light::Point);
-	light3.Intensity = 5.1f;
-	light3.Radius = .3f;
-	lightEntity3.transform->SetPosition({ 9.f, 2.6f, 5.f });
-	lightEntity3.AddComponent(&light3);
+	//Entity lightEntity3 = Entity("PointLight2", &shader);
+	//Light light3 = Light(Light::Point);
+	//light3.Intensity = 5.1f;
+	//light3.Radius = .3f;
+	//lightEntity3.transform->SetPosition({ 9.f, 2.6f, 5.f });
+	//lightEntity3.AddComponent(&light3);
 
-	Entity lightEntity4 = Entity("SpotLight", &shader);
-	Light light4 = Light(Light::Spot);
-	lightEntity4.transform->SetPosition({ 3.f, 9.8f, 3.f });
-	lightEntity4.transform->SetRotation({ -160.f, 45.f, 0.f });
-	light4.CutOff = 19.f;
-	light4.OutCutOff = 30.f;
-	light4.Intensity = 3.5f;
-	lightEntity4.AddComponent(&light4);
+	//Entity lightEntity4 = Entity("SpotLight", &shader);
+	//Light light4 = Light(Light::Spot);
+	//lightEntity4.transform->SetPosition({ 3.f, 9.8f, 3.f });
+	//lightEntity4.transform->SetRotation({ -160.f, 45.f, 0.f });
+	//light4.CutOff = 19.f;
+	//light4.OutCutOff = 30.f;
+	//light4.Intensity = 3.5f;
+	//lightEntity4.AddComponent(&light4);
 
 
 	bool wireframeMode = false;
@@ -134,7 +140,8 @@ int main()
 	settings.TrianglesNumber = &trianglesNumber;
 
 	Editor::CreateInstance(window, settings);
-	Editor::Get()->SelectEntity(&entity2);
+	Editor::Get()->SelectEntity(&entity1);
+	Editor::Get()->SetCamera(&camera);
 
 	sceneBuffer.RescaleFrameBuffer(SCR_WIDTH, SCR_HEIGHT);
 
@@ -174,7 +181,7 @@ int main()
 		shader.SetBool("blinn", blinnPhong);
 
 		// view/projection transformations
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+		glm::mat4 projection = camera.GetProjectionMatrix(SCR_WIDTH, SCR_HEIGHT);
 		glm::mat4 view = camera.GetViewMatrix();
 		shader.SetMat4("projection", projection);
 		shader.SetMat4("view", view);

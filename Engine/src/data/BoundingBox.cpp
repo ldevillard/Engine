@@ -1,5 +1,6 @@
 #include "data/BoundingBox.h"
 #include "utils/Gizmo.h"
+#include "system/editor/Editor.h"
 
 #pragma Public Methods
 
@@ -37,5 +38,6 @@ void BoundingBox::ApplyTransform(const Transform& transform)
 
     tr.Position = obbCenter;
 
-    Gizmo::DrawWireCube(Color::Green, tr);
+    if (Editor::Get()->GetSettings().BoundingBoxGizmo)
+        Gizmo::DrawWireCube(Color::Green, tr);
 }

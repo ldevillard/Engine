@@ -14,6 +14,7 @@
 #include "system/editor/Inspector.h"
 #include "render/FrameBuffer.h"
 #include "Entity.h"
+#include "Camera.h"
 
 struct EditorSettings
 {
@@ -27,11 +28,13 @@ struct EditorSettings
 	// scene
 	bool* Wireframe = nullptr;
 	bool* BlinnPhong = nullptr;
-	bool Gizmo = true;
 	int* TrianglesNumber = nullptr;
 	
 	// camera
 	float* CameraSpeed = nullptr;
+	
+	bool Gizmo = true;
+	bool BoundingBoxGizmo = true;
 };
 
 class Editor
@@ -50,10 +53,13 @@ public:
 	void Render();
 
 	void SelectEntity(Entity* entity);
+	void SetCamera(Camera* camera);
 
 private:
 	// singleton
 	static Editor* instance;
+
+	void drawEditorGizmo();
 
 	EditorSettings parameters;
 	Inspector inspector;
@@ -64,4 +70,7 @@ private:
 
 	// entity
 	Entity* selectedEntity = nullptr;
+
+	// camera
+	Camera* editorCamera = nullptr;
 };
