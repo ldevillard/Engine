@@ -5,7 +5,6 @@
 #include "system/Time.h"
 #include "system/EntityManager.h"
 #include "utils/ImGui_Utils.h"
-#include "ImGuizmo.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
@@ -95,76 +94,11 @@ void Editor::Render()
 	// Clean the screen
 	glClear(GL_COLOR_BUFFER_BIT);
 	
-	// Show Editor
-	{
-		ImGui::Begin("Editor");
-		ImGui::Text("FPS: %.1f", Time::Get()->GetFrameRate());
-		ImGui::Text("Triangles: %d", *parameters.TrianglesNumber);
-		ImGui::Separator();
-		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-		if (ImGui::TreeNode("Gizmos"))
-		{
-			ImGui_Utils::DrawBoolControl("Light", parameters.Gizmo, 100.f);
-			ImGui_Utils::DrawBoolControl("Bounding Box", parameters.BoundingBoxGizmo, 100.f);
-			ImGui::TreePop();
-		}
-		ImGui::Separator();
-		ImGui_Utils::DrawBoolControl("Wireframe", *parameters.Wireframe, 100.f);
-		ImGui_Utils::DrawBoolControl("BlinnPhong", *parameters.BlinnPhong, 100.f);
-		ImGui_Utils::DrawFloatControl("Camera Speed", *parameters.CameraSpeed, 5.f, 100.f);
-		ImGui::End();
-	}
-
-	// show selected entity properties
-	ImGui::Begin("Inspector");
-	if (selectedEntity != nullptr)
-	{
-		inspector.Inspect(selectedEntity);
-	}
-	ImGui::End();
-	//
-
-	ImGui::Begin("Hierarchy");
-	{
-		EntityManager* manager = EntityManager::Get();
-		if (manager != nullptr)
-		{
-			for (Entity* entity : manager->GetEntities())
-			{
-				if (ImGui::Selectable(entity->Name.c_str(), selectedEntity == entity))
-				{
-					SelectEntity(entity);
-				}
-			}
-		}
-	}
-	ImGui::End();
-
-	ImGui::Begin("Scene", nullptr);
-	{
-		ImGui::BeginChild("GameRender");
-
-		float width = ImGui::GetContentRegionAvail().x;
-		float height = ImGui::GetContentRegionAvail().y;
-
-		*parameters.SCR_WIDTH = width;
-		*parameters.SCR_HEIGHT = height;
-		ImGui::Image(
-			(ImTextureID)parameters.FrameBuffer->GetFrameTexture(),
-			ImGui::GetContentRegionAvail(),
-			ImVec2(0, 1),
-			ImVec2(1, 0)
-		);
-	
-		// Render Editor Gizmo
-		if (selectedEntity != nullptr)
-		{
-			drawEditorGizmo();
-		}
-	}
-	ImGui::EndChild();
-	ImGui::End();
-
+	// Render the scene and the UI
+	renderSettings();
+	renderHierarchy();
+	renderInspector();
+	renderScene();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -184,7 +118,85 @@ void Editor::SetCamera(Camera* camera)
 
 #pragma region Private Methods
 
-void Editor::drawEditorGizmo()
+void Editor::renderScene()
+{
+	ImGui::Begin("Scene", nullptr);
+	{
+		ImGui::BeginChild("GameRender");
+
+		float width = ImGui::GetContentRegionAvail().x;
+		float height = ImGui::GetContentRegionAvail().y;
+
+		*parameters.SCR_WIDTH = width;
+		*parameters.SCR_HEIGHT = height;
+		ImGui::Image(
+			(ImTextureID)parameters.FrameBuffer->GetFrameTexture(),
+			ImGui::GetContentRegionAvail(),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+	}
+	transformGizmo();
+	ImGui::EndChild();
+	ImGui::End();
+}
+
+void Editor::renderInspector()
+{
+	ImGui::Begin("Inspector");
+	if (selectedEntity != nullptr)
+	{
+		inspector.Inspect(selectedEntity);
+	}
+	ImGui::End();
+}
+
+void Editor::renderHierarchy()
+{
+	ImGui::Begin("Hierarchy");
+	{
+		EntityManager* manager = EntityManager::Get();
+		if (manager != nullptr)
+		{
+			for (Entity* entity : manager->GetEntities())
+			{
+				if (ImGui::Selectable(entity->Name.c_str(), selectedEntity == entity))
+				{
+					SelectEntity(entity);
+				}
+			}
+		}
+	}
+	ImGui::End();
+}
+
+void Editor::renderSettings()
+{
+	ImGui::Begin("Editor");
+	ImGui::Text("FPS: %.1f", Time::Get()->GetFrameRate());
+	ImGui::Text("Triangles: %d", *parameters.TrianglesNumber);
+	ImGui::Separator();
+	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	if (ImGui::TreeNode("Gizmos"))
+	{
+		ImGui_Utils::DrawBoolControl("Gizmos", parameters.Gizmo, 100.f);
+		ImGui_Utils::DrawBoolControl("Bounding Box", parameters.BoundingBoxGizmo, 100.f);
+
+		int transformControl = static_cast<int>(gizmoOperation); // ImGuizmo::OPERATION::TRANSLATE
+		ImGui_Utils::DrawComboBoxControl("Transform", transformControl, gizmoOperations, 100.f);
+		gizmoOperation = static_cast<ImGuizmo::OPERATION>(transformControl);
+
+		ImGui::TreePop();
+	}
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui_Utils::DrawBoolControl("Wireframe", *parameters.Wireframe, 100.f);
+	ImGui_Utils::DrawBoolControl("BlinnPhong", *parameters.BlinnPhong, 100.f);
+	ImGui_Utils::DrawFloatControl("Camera Speed", *parameters.CameraSpeed, 5.f, 100.f);
+	ImGui::End();
+}
+
+void Editor::transformGizmo()
 {
 	ImGuizmo::BeginFrame();
 	ImGuizmo::SetOrthographic(false);
@@ -197,7 +209,7 @@ void Editor::drawEditorGizmo()
 
 
 	ImGuizmo::Manipulate(glm::value_ptr(view), glm::value_ptr(projection), 
-		ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::LOCAL, 
+		gizmoOperation, ImGuizmo::MODE::LOCAL,
 		glm::value_ptr(model));
 
 	if (ImGuizmo::IsUsing())
@@ -215,7 +227,7 @@ void Editor::drawEditorGizmo()
 
 		selectedEntity->transform->Position = translation;
 		selectedEntity->transform->Rotation += glm::degrees(deltaRotation);
-		selectedEntity->transform->Scale = scale;	
+		selectedEntity->transform->Scale = scale;
 	}
 }
 

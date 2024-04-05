@@ -4,6 +4,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_internal.h"
+#include "ImGuizmo.h"
 
 // openGL
 #include <glad/glad.h>
@@ -59,7 +60,13 @@ private:
 	// singleton
 	static Editor* instance;
 
-	void drawEditorGizmo();
+	// UI
+	void renderScene();
+	void renderInspector();
+	void renderHierarchy();
+	void renderSettings();
+
+	void transformGizmo();
 
 	EditorSettings parameters;
 	Inspector inspector;
@@ -70,6 +77,10 @@ private:
 
 	// entity
 	Entity* selectedEntity = nullptr;
+
+	// selected gizmo
+	ImGuizmo::OPERATION	gizmoOperation = ImGuizmo::TRANSLATE;
+	const std::vector<const char*> gizmoOperations = { "Translate", "Rotate", "Scale" };
 
 	// camera
 	Camera* editorCamera = nullptr;

@@ -140,7 +140,7 @@ int main()
 	settings.TrianglesNumber = &trianglesNumber;
 
 	Editor::CreateInstance(window, settings);
-	Editor::Get()->SelectEntity(&entity1);
+	Editor::Get()->SelectEntity(&entity2);
 	Editor::Get()->SetCamera(&camera);
 
 	sceneBuffer.RescaleFrameBuffer(SCR_WIDTH, SCR_HEIGHT);
