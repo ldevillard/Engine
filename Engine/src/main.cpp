@@ -181,7 +181,7 @@ int main()
 		shader.SetBool("blinn", blinnPhong);
 
 		// view/projection transformations
-		glm::mat4 projection = camera.GetProjectionMatrix(SCR_WIDTH, SCR_HEIGHT);
+		glm::mat4 projection = camera.GetProjectionMatrix(static_cast<float>(SCR_WIDTH), static_cast<float>(SCR_HEIGHT));
 		glm::mat4 view = camera.GetViewMatrix();
 		shader.SetMat4("projection", projection);
 		shader.SetMat4("view", view);

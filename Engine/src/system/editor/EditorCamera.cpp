@@ -89,12 +89,12 @@ void EditorCamera::ProcessMouseScroll(float yoffset)
 
 #pragma region Utility
 
-const glm::mat4& EditorCamera::GetViewMatrix()
+const glm::mat4 EditorCamera::GetViewMatrix() const
 {
    return glm::lookAt(Position, Position + Front, Up);
 }
 
-const glm::mat4& EditorCamera::GetProjectionMatrix(float width, float height)
+const glm::mat4 EditorCamera::GetProjectionMatrix(float width, float height) const
 {
    return glm::perspective(glm::radians(Zoom), width / height, 0.1f, 1000.0f);
 }

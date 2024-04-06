@@ -61,12 +61,12 @@ private:
 	static Editor* instance;
 
 	// UI
-	void renderScene();
+	void renderScene(float width, float height);
 	void renderInspector();
 	void renderHierarchy();
 	void renderSettings();
 
-	void transformGizmo();
+	void transformGizmo(float width, float height);
 
 	EditorSettings parameters;
 	Inspector inspector;

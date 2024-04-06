@@ -32,7 +32,7 @@ void WireCube::Draw(Shader* shader)
 {
 	glBindVertexArray(VAO);
     glLineWidth(3); // maybe set up in a constant file
-	glDrawElements(GL_LINES, Indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_LINES, static_cast<GLsizei>(Indices.size()), GL_UNSIGNED_INT, 0);
 	glLineWidth(1); // reset to default
     glBindVertexArray(0);
 }

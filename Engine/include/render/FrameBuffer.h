@@ -13,7 +13,7 @@ public:
 
 	unsigned int& GetFrameTexture();
 
-	void RescaleFrameBuffer(float width, float height);
+	void RescaleFrameBuffer(unsigned int width, unsigned int height);
 	void Bind() const;
 	void Unbind() const;
 

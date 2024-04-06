@@ -68,7 +68,7 @@ int getMaterialIndex(const Material& material)
 	auto it = std::find(Material::Names.begin(), Material::Names.end(), material.Name);
 	if (it != Material::Names.end())
 	{
-		return std::distance(Material::Names.begin(), it);
+		return static_cast<int>(std::distance(Material::Names.begin(), it));
 	}
 	else
 	{

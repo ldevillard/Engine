@@ -10,9 +10,10 @@ public:
 	Transform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
 	Transform(const Transform& other);
 
-	const glm::quat& GetRotationQuaternion() const;
-	const glm::vec3& GetForwardVector() const;
-	const glm::mat4& GetTransformMatrix() const;
+	// maybe store these members and return them as references
+	const glm::quat GetRotationQuaternion() const;
+	const glm::vec3 GetForwardVector() const;
+	const glm::mat4 GetTransformMatrix() const;
 
 	void SetPosition(const glm::vec3& position);
 	void SetRotation(const glm::vec3& rotation);

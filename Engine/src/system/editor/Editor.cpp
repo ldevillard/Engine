@@ -70,11 +70,14 @@ const EditorSettings& Editor::GetSettings() const
 
 void Editor::Render()
 {
+	float w = static_cast<float>(*parameters.SCR_WIDTH);
+	float h = static_cast<float>(*parameters.SCR_HEIGHT);
+
 	// Rendering ImGui
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-	ImGui::SetNextWindowSize(ImVec2(*parameters.SCR_WIDTH, *parameters.SCR_HEIGHT));
+	ImGui::SetNextWindowSize(ImVec2(w, h));
 
 	// Setup docking space
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -98,7 +101,7 @@ void Editor::Render()
 	renderSettings();
 	renderHierarchy();
 	renderInspector();
-	renderScene();
+	renderScene(w, h);
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -118,7 +121,7 @@ void Editor::SetCamera(EditorCamera* camera)
 
 #pragma region Private Methods
 
-void Editor::renderScene()
+void Editor::renderScene(float width, float height)
 {
 	ImGui::Begin("Scene", nullptr);
 	{
@@ -127,16 +130,16 @@ void Editor::renderScene()
 		float width = ImGui::GetContentRegionAvail().x;
 		float height = ImGui::GetContentRegionAvail().y;
 
-		*parameters.SCR_WIDTH = width;
-		*parameters.SCR_HEIGHT = height;
+		*parameters.SCR_WIDTH = static_cast<unsigned int>(width);
+		*parameters.SCR_HEIGHT = static_cast<unsigned int>(height);;
 		ImGui::Image(
-			(ImTextureID)parameters.FrameBuffer->GetFrameTexture(),
+			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(parameters.FrameBuffer->GetFrameTexture())),
 			ImGui::GetContentRegionAvail(),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
 	}
-	transformGizmo();
+	transformGizmo(width, height);
 	ImGui::EndChild();
 	ImGui::End();
 }
@@ -196,14 +199,14 @@ void Editor::renderSettings()
 	ImGui::End();
 }
 
-void Editor::transformGizmo()
+void Editor::transformGizmo(float width, float height)
 {
 	ImGuizmo::BeginFrame();
 	ImGuizmo::SetOrthographic(false);
 	ImGuizmo::SetDrawlist();
-	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, *parameters.SCR_WIDTH, *parameters.SCR_HEIGHT);
+	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, width, height);
 
-	glm::mat4 projection = editorCamera->GetProjectionMatrix(*parameters.SCR_WIDTH, *parameters.SCR_HEIGHT);
+	glm::mat4 projection = editorCamera->GetProjectionMatrix(width, height);
 	glm::mat4 view = editorCamera->GetViewMatrix();
 	glm::mat4 model = selectedEntity->transform->GetTransformMatrix();
 

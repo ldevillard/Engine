@@ -42,8 +42,8 @@ public:
    EditorCamera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
    // getters
-   const glm::mat4& GetViewMatrix();
-   const glm::mat4& GetProjectionMatrix(float width, float height);
+   const glm::mat4 GetViewMatrix() const;
+   const glm::mat4 GetProjectionMatrix(float width, float height) const;
    void SetSpeedFactor(float factor);
 
    // inputs processing
