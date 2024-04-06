@@ -3,11 +3,11 @@
 #include <glfw3.h>
 
 #include "system/Time.h"
-#include "system/EntityManager.h"
+#include "system/entity/EntityManager.h"
 #include "utils/ImGui_Utils.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/matrix_decompose.hpp>
+#include <maths/glm/gtx/matrix_decompose.hpp>
 
 // singleton instance
 Editor* Editor::instance = nullptr;
@@ -109,7 +109,7 @@ void Editor::SelectEntity(Entity* entity)
 	selectedEntity = entity;
 }
 
-void Editor::SetCamera(Camera* camera)
+void Editor::SetCamera(EditorCamera* camera)
 {
 	editorCamera = camera;
 }
@@ -223,11 +223,14 @@ void Editor::transformGizmo()
 		
 		glm::decompose(model, scale, rotation, translation, skew, perspective);
 
-		glm::vec3 deltaRotation = glm::eulerAngles(rotation) - glm::radians(selectedEntity->transform->Rotation);
+		if (scale.x > 0 && scale.y > 0 && scale.z > 0)
+		{
+			glm::vec3 deltaRotation = glm::eulerAngles(rotation) - glm::radians(selectedEntity->transform->Rotation);
 
-		selectedEntity->transform->Position = translation;
-		selectedEntity->transform->Rotation += glm::degrees(deltaRotation);
-		selectedEntity->transform->Scale = scale;
+			selectedEntity->transform->Position = translation;
+			selectedEntity->transform->Rotation += glm::degrees(deltaRotation);
+			selectedEntity->transform->Scale = scale;
+		}
 	}
 }
 

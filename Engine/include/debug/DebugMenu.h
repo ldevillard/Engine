@@ -5,10 +5,10 @@
 #include "imgui_impl_opengl3.h"
 
 // openGL
-#include <glad/glad.h>
+#include <utils/glad/glad.h>
 
 // glm
-#include <glm/glm.hpp>
+#include <maths/glm/glm.hpp>
 
 #include "render/FrameBuffer.h"
 

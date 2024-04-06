@@ -1,8 +1,8 @@
 #include "data/BoundingBox.h"
-#include "utils/Gizmo.h"
+#include "system/editor/Gizmo.h"
 #include "system/editor/Editor.h"
 
-#pragma Public Methods
+#pragma region Public Methods
 
 BoundingBox::BoundingBox() :
 	Min(glm::vec3(0.0f)),
@@ -41,3 +41,5 @@ void BoundingBox::ApplyTransform(const Transform& transform)
     if (Editor::Get()->GetSettings().BoundingBoxGizmo)
         Gizmo::DrawWireCube(Color::Green, tr);
 }
+
+#pragma endregion

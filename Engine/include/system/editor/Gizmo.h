@@ -8,7 +8,7 @@
 #include "data/Transform.h"
 #include "data/Color.h"
 
-#include "Shader.h"
+#include "render/Shader.h"
 
 class Gizmo
 {

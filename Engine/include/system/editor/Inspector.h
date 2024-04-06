@@ -1,7 +1,7 @@
 #pragma once
 
 #include "utils/ImGui_Utils.h"
-#include "Entity.h"
+#include "system/entity/Entity.h"
 
 // components
 #include "component/Model.h"

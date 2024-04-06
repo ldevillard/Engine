@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include <maths/glm/glm.hpp>
 
 class Color
 {

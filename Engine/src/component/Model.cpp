@@ -1,9 +1,9 @@
 #include "component/Model.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <maths/glm/glm.hpp>
+#include <maths/glm/gtc/matrix_transform.hpp>
 
-#include "utils/Gizmo.h"
+#include "system/editor/Gizmo.h"
 
 std::map<PrimitiveType, std::unique_ptr<Model>> Model::PrimitivesModels;
 

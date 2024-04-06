@@ -1,7 +1,7 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
+#include <maths/glm/glm.hpp>
+#include <maths/glm/gtc/quaternion.hpp>
 
 class Transform
 {

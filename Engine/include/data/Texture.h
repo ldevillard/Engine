@@ -1,6 +1,6 @@
 #pragma once
-#include <glad/glad.h> // include glad to get all the required OpenGL headers
-#include <stb_image.h>
+#include <utils/glad/glad.h> // include glad to get all the required OpenGL headers
+#include <render/stb_image.h>
 
 #include <string>
 #include <fstream>

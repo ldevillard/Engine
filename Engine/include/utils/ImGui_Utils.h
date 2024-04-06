@@ -8,7 +8,7 @@
 #include "imgui_impl_opengl3.h"
 #include "imgui_internal.h"
 
-#include <glm/glm.hpp>
+#include <maths/glm/glm.hpp>
 
 namespace ImGui_Utils
 {

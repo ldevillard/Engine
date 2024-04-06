@@ -1,7 +1,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "system/EntityManager.h"
+#include "system/entity/EntityManager.h"
 #include "component/Model.h"
 #include "component/Light.h"
 

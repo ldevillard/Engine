@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <glad/glad.h>
-#include <glm/glm.hpp>
+#include <utils/glad/glad.h>
+#include <maths/glm/glm.hpp>
 
 class FrameBuffer
 {

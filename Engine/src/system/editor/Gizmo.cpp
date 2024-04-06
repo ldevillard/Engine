@@ -1,10 +1,10 @@
-#include "utils/Gizmo.h"
+#include "system/editor/Gizmo.h"
 
 #include "system/GlobalSettings.h"
 #include "system/editor/Editor.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <maths/glm/glm.hpp>
+#include <maths/glm/gtc/matrix_transform.hpp>
 
 // mesh includes
 #include "data/mesh/WireCube.h"

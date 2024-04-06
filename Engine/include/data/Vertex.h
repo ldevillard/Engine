@@ -1,7 +1,7 @@
 #pragma once
 
 // glm
-#include <glm/glm.hpp>
+#include <maths/glm/glm.hpp>
 
 struct Vertex
 {

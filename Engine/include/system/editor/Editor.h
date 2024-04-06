@@ -7,15 +7,15 @@
 #include "ImGuizmo.h"
 
 // openGL
-#include <glad/glad.h>
+#include <utils/glad/glad.h>
 
 // glm
-#include <glm/glm.hpp>
+#include <maths/glm/glm.hpp>
 
 #include "system/editor/Inspector.h"
 #include "render/FrameBuffer.h"
-#include "Entity.h"
-#include "Camera.h"
+#include "system/entity/Entity.h"
+#include "system/editor/EditorCamera.h"
 
 struct EditorSettings
 {
@@ -54,7 +54,7 @@ public:
 	void Render();
 
 	void SelectEntity(Entity* entity);
-	void SetCamera(Camera* camera);
+	void SetCamera(EditorCamera* camera);
 
 private:
 	// singleton
@@ -83,5 +83,5 @@ private:
 	const std::vector<const char*> gizmoOperations = { "Translate", "Rotate", "Scale" };
 
 	// camera
-	Camera* editorCamera = nullptr;
+	EditorCamera* editorCamera = nullptr;
 };

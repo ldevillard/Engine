@@ -2,27 +2,27 @@
 #include <iostream>
 
 // libs
-#include <glad/glad.h>
+#include <utils/glad/glad.h>
 #include <glfw3.h>
-#include <stb_image.h>
+#include <render/stb_image.h>
 
 // glm
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <maths/glm/glm.hpp>
+#include <maths/glm/gtc/matrix_transform.hpp>
+#include <maths/glm/gtc/type_ptr.hpp>
 
 // user define
 #include "system/GlobalSettings.h"
 
-#include "Shader.h"
+#include "render/Shader.h"
 #include "data/Texture.h"
 #include "data/Material.h"
 #include "component/Model.h"
 #include "debug/DebugMenu.h"
 #include "system/editor/Editor.h"
-#include "system/EntityManager.h"
+#include "system/entity/EntityManager.h"
 #include "system/Time.h"
-#include "utils/Gizmo.h"
+#include "system/editor/Gizmo.h"
 #include "data/Color.h"
 #include "component/Light.h"
 

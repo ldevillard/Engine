@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <utils/glad/glad.h>
+#include <maths/glm/glm.hpp>
+#include <maths/glm/gtc/matrix_transform.hpp>
 
 enum CameraDirection
 {
@@ -19,7 +19,7 @@ const float PITCH = 0.0f;
 const float SPEED = 5.f;
 const float ZOOM = 45.0f;
 
-class Camera
+class EditorCamera
 {
 public:
    glm::vec3 Position;
@@ -38,8 +38,8 @@ public:
    float Zoom = 45.0;
 
    // constructors
-   Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
-   Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
+   EditorCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
+   EditorCamera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
    // getters
    const glm::mat4& GetViewMatrix();

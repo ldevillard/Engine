@@ -1,7 +1,7 @@
 #pragma once
 
 #include "data/Transform.h"
-#include "Shader.h"
+#include "render/Shader.h"
 
 class Component
 {

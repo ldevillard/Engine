@@ -7,7 +7,7 @@
 #include "data/Texture.h"
 #include "data/mesh/MeshData.h"
 
-#include "Shader.h"
+#include "render/Shader.h"
 
 class Mesh
 {

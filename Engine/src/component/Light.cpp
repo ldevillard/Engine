@@ -1,5 +1,5 @@
 #include "component/Light.h"
-#include "utils/Gizmo.h"
+#include "system/editor/Gizmo.h"
 
 #pragma region Static Variables
 

@@ -1,9 +1,9 @@
 #include <stdexcept>
 #include <iostream>
-#include <glm/gtc/quaternion.hpp>
+#include <maths/glm/gtc/quaternion.hpp>
 
-#include "Entity.h"
-#include "system/EntityManager.h"
+#include "system/entity/Entity.h"
+#include "system/entity/EntityManager.h"
 
 #pragma region Public Methods
 

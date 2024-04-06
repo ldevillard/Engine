@@ -1,10 +1,10 @@
-#include "Camera.h"
+#include "system/editor/EditorCamera.h"
 
 #include "system/Time.h"
 
 #pragma region Public Methods
 
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
+EditorCamera::EditorCamera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
    : Front(glm::vec3(0.0f, 0.0f, -1.0f))
    , MovementSpeed(SPEED)
    , Zoom(ZOOM)
@@ -16,7 +16,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
    updateCameraVectors();
 }
 
-Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)
+EditorCamera::EditorCamera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)
    : Front(glm::vec3(0.0f, 0.0f, -1.0f))
    , MovementSpeed(SPEED)
    , Zoom(ZOOM)
@@ -28,7 +28,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
    updateCameraVectors();
 }
 
-void Camera::ProcessKeyboard(CameraDirection direction, float deltaTime)
+void EditorCamera::ProcessKeyboard(CameraDirection direction, float deltaTime)
 {
    float velocity = MovementSpeed * speedFactor * deltaTime;
    glm::vec3 targetPosition = Position;
@@ -58,7 +58,7 @@ void Camera::ProcessKeyboard(CameraDirection direction, float deltaTime)
    Position = targetPosition;
 }
 
-void Camera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch)
+void EditorCamera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch)
 {
    float deltaTime = Time::Get()->DeltaTime;
 
@@ -78,7 +78,7 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constr
    updateCameraVectors();
 }
 
-void Camera::ProcessMouseScroll(float yoffset)
+void EditorCamera::ProcessMouseScroll(float yoffset)
 {
    Zoom -= (float)yoffset;
    if (Zoom < 1.0f)
@@ -89,17 +89,17 @@ void Camera::ProcessMouseScroll(float yoffset)
 
 #pragma region Utility
 
-const glm::mat4& Camera::GetViewMatrix()
+const glm::mat4& EditorCamera::GetViewMatrix()
 {
    return glm::lookAt(Position, Position + Front, Up);
 }
 
-const glm::mat4& Camera::GetProjectionMatrix(float width, float height)
+const glm::mat4& EditorCamera::GetProjectionMatrix(float width, float height)
 {
    return glm::perspective(glm::radians(Zoom), width / height, 0.1f, 1000.0f);
 }
 
-void Camera::SetSpeedFactor(float factor) 
+void EditorCamera::SetSpeedFactor(float factor)
 {
    speedFactor = factor;
 }
@@ -110,7 +110,7 @@ void Camera::SetSpeedFactor(float factor)
 
 #pragma region Private Methods
 
-void Camera::updateCameraVectors()
+void EditorCamera::updateCameraVectors()
 {
    // calculate the new Front vector
    glm::vec3 front;
