@@ -52,6 +52,8 @@ const std::vector<Component*>& Entity::GetComponents() const
 void Entity::Compute()
 {
     transform->Compute(shader);
+    editorCollider->ApplyTransform(*transform);
+
     for (Component* c : components)
         c->Compute();
 }
