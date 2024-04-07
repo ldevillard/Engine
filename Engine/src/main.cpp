@@ -12,17 +12,18 @@
 #include <maths/glm/gtc/type_ptr.hpp>
 
 // engine
-#include "render/Shader.h"
+#include "system/Input.h"
+#include "system/Time.h"
+#include "system/editor/Gizmo.h"
+#include "system/editor/Editor.h"
+#include "system/entity/EntityManager.h"
 #include "data/Texture.h"
 #include "data/Material.h"
 #include "component/Model.h"
-#include "debug/DebugMenu.h"
-#include "system/editor/Editor.h"
-#include "system/entity/EntityManager.h"
-#include "system/Time.h"
-#include "system/editor/Gizmo.h"
-#include "data/Color.h"
 #include "component/Light.h"
+#include "data/Color.h"
+#include "render/Shader.h"
+#include "debug/DebugMenu.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -48,6 +49,7 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+	Input::Initialize(window);
 
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -58,8 +60,6 @@ int main()
 
 	// configure global opengl state
 	glEnable(GL_DEPTH_TEST);
-
-	Time::CreateInstance();
 
 	// build and compile shader programs
 	Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
@@ -72,21 +72,20 @@ int main()
 
 	Entity entity1 = Entity("Plane", &shader);
 	Model model1 = Model("resources/models/primitive/plane.obj", Material::Silver);
-	entity1.transform->SetScale({ 25.f, 1.f, 25.f });
+	entity1.transform->SetScale({ 5.f, 1.f, 5.f });
 	entity1.AddComponent(&model1);
 
-	Entity entity2 = Entity("Car", &shader);
+	/*Entity entity2 = Entity("Car", &shader);
 	Model model2 = Model("resources/models/car/car.obj", Material::Turquoise);
 	entity2.transform->SetPosition({ 0.f, 0.f, 0.f });
 	entity2.transform->SetScale({ 0.05f, 0.05f, 0.05f });
 	entity2.transform->SetRotation({ 0.f, 45.f, 0.f });
-	entity2.AddComponent(&model2);
+	entity2.AddComponent(&model2);*/
 
-	/*Entity cubeEntity = Entity("Cube", &shader);
+	Entity cubeEntity = Entity("Cube", &shader);
 	Model cubeModel = Model(PrimitiveType::CubePrimitive, Material::Gold);
 	cubeEntity.AddComponent(&cubeModel);
 	cubeEntity.transform->SetPosition({ 0.f, 4.f, 0.f });
-	cubeEntity.transform->SetScale({ 3.f, 1.f, 1.f });*/
 
 
 	Entity lightEntity = Entity("DirectionalLight", &shader);
@@ -129,13 +128,13 @@ int main()
 	settings.TrianglesNumber = &trianglesNumber;
 
 	Editor::CreateInstance(window, settings);
-	Editor::Get()->SelectEntity(&entity2);
+	Editor::Get()->SelectEntity(&cubeEntity);
 
 	// render loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// per-frame time logic
-		Time::Get()->Update();
+		Time::Update();
 
 		if (wireframeMode)
 		{
@@ -173,7 +172,6 @@ int main()
 	// cleanup
 	Editor::DestroyInstance();
 	EntityManager::DestroyInstance();
-	Time::DestroyInstance();
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	glfwDestroyWindow(window);

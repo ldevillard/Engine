@@ -48,6 +48,7 @@
     <ClCompile Include="src\component\Model.cpp" />
     <ClCompile Include="src\render\FrameBuffer.cpp" />
     <ClCompile Include="src\render\Shader.cpp" />
+    <ClCompile Include="src\system\Input.cpp" />
     <ClCompile Include="src\utils\glad\glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\render\stb_image.cpp" />
@@ -85,6 +86,7 @@
     <ClInclude Include="include\component\Transform.h" />
     <ClInclude Include="include\data\Vertex.h" />
     <ClInclude Include="include\debug\DebugMenu.h" />
+    <ClInclude Include="include\system\Input.h" />
     <ClInclude Include="include\utils\glad\glad.h" />
     <ClInclude Include="include\maths\glm\common.hpp" />
     <ClInclude Include="include\maths\glm\detail\compute_common.hpp" />

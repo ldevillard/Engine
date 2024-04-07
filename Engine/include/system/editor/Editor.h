@@ -81,7 +81,9 @@ private:
 
 	// selected gizmo
 	ImGuizmo::OPERATION	gizmoOperation = ImGuizmo::TRANSLATE;
+	ImGuizmo::MODE		gizmoSpace = ImGuizmo::LOCAL;
 	const std::vector<const char*> gizmoOperations = { "Translate", "Rotate", "Scale" };
+	const std::vector<const char*> gizmoSpaces = { "Local", "World" };
 
 	// mouse and screen settings
 	float lastX = SCR_WIDTH / 2.0f;

@@ -60,7 +60,7 @@ void EditorCamera::ProcessKeyboard(CameraDirection direction, float deltaTime)
 
 void EditorCamera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch)
 {
-   float deltaTime = Time::Get()->DeltaTime;
+   float deltaTime = Time::DeltaTime;
 
    Yaw = std::lerp(Yaw, Yaw + xoffset, deltaTime * RotateSpeed);
    Pitch = std::lerp(Pitch, Pitch + yoffset, deltaTime * RotateSpeed);

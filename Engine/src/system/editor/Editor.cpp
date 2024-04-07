@@ -3,6 +3,7 @@
 #include <glfw3.h>
 
 #include "system/Time.h"
+#include "system/Input.h"
 #include "system/entity/EntityManager.h"
 #include "utils/ImGui_Utils.h"
 
@@ -48,6 +49,8 @@ Editor::~Editor()
 	delete sceneBuffer;
 }
 
+#pragma region Singleton Methods
+
 void Editor::CreateInstance(GLFWwindow* window, EditorSettings params)
 {
 	if (instance == nullptr)
@@ -70,6 +73,10 @@ Editor* Editor::Get()
 	return instance;
 }
 
+#pragma endregion
+
+#pragma region Getters
+
 const EditorSettings& Editor::GetSettings() const
 {
 	return parameters;
@@ -84,6 +91,10 @@ const FrameBuffer* Editor::GetSceneBuffer() const
 {
 	return sceneBuffer;
 }
+
+#pragma endregion
+
+#pragma region Rendering
 
 void Editor::RenderCamera(Shader* shader)
 {
@@ -137,32 +148,9 @@ void Editor::RenderEditor()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Editor::ProcessInputs()
-{
-	// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-	float deltaTime = Time::Get()->DeltaTime;
+#pragma endregion
 
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		editorCamera->ProcessKeyboard(FORWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		editorCamera->ProcessKeyboard(BACKWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		editorCamera->ProcessKeyboard(LEFT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		editorCamera->ProcessKeyboard(RIGHT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		editorCamera->ProcessKeyboard(DOWN, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		editorCamera->ProcessKeyboard(UP, deltaTime);
-
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		editorCamera->SetSpeedFactor(2);
-	else
-		editorCamera->SetSpeedFactor(1);
-}
+#pragma region Callbacks
 
 void Editor::MouseCallback(double xposIn, double yposIn)
 {
@@ -214,6 +202,44 @@ void Editor::FramebufferSizeCallback(int width, int height)
 void Editor::ScrollCallback(double xoffset, double yoffset)
 {
 	editorCamera->ProcessMouseScroll(static_cast<float>(yoffset));
+}
+
+#pragma endregion
+
+// maybe make an input manager with KeyPressed, KeyReleased
+void Editor::ProcessInputs()
+{
+	// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+	float deltaTime = Time::DeltaTime;
+
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	if (Input::GetKey(GLFW_KEY_W))
+		editorCamera->ProcessKeyboard(FORWARD, deltaTime);
+	if (Input::GetKey(GLFW_KEY_S))
+		editorCamera->ProcessKeyboard(BACKWARD, deltaTime);
+	if (Input::GetKey(GLFW_KEY_A))
+		editorCamera->ProcessKeyboard(LEFT, deltaTime);
+	if (Input::GetKey(GLFW_KEY_D))
+		editorCamera->ProcessKeyboard(RIGHT, deltaTime);
+	if (Input::GetKey(GLFW_KEY_Q))
+		editorCamera->ProcessKeyboard(DOWN, deltaTime);
+	if (Input::GetKey(GLFW_KEY_E))
+		editorCamera->ProcessKeyboard(UP, deltaTime);
+
+	if (Input::GetKey(GLFW_KEY_LEFT_SHIFT)) // shift key
+		editorCamera->SetSpeedFactor(2);
+	else
+		editorCamera->SetSpeedFactor(1);
+
+	// gizmos shortcuts
+	if (Input::GetKeyDown(GLFW_KEY_1))
+		gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+	if (Input::GetKeyDown(GLFW_KEY_2))
+		gizmoOperation = ImGuizmo::OPERATION::ROTATE;
+	if (Input::GetKeyDown(GLFW_KEY_3))
+		gizmoOperation = ImGuizmo::OPERATION::SCALE;
 }
 
 void Editor::SelectEntity(Entity* entity)
@@ -280,7 +306,7 @@ void Editor::renderHierarchy()
 void Editor::renderSettings()
 {
 	ImGui::Begin("Editor");
-	ImGui::Text("FPS: %.1f", Time::Get()->GetFrameRate());
+	ImGui::Text("FPS: %.1f", Time::FrameRate());
 	ImGui::Text("Triangles: %d", *parameters.TrianglesNumber);
 	ImGui::Separator();
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
@@ -289,9 +315,19 @@ void Editor::renderSettings()
 		ImGui_Utils::DrawBoolControl("Gizmos", parameters.Gizmo, 100.f);
 		ImGui_Utils::DrawBoolControl("Bounding Box", parameters.BoundingBoxGizmo, 100.f);
 
-		int transformControl = static_cast<int>(gizmoOperation); // ImGuizmo::OPERATION::TRANSLATE
-		ImGui_Utils::DrawComboBoxControl("Transform", transformControl, gizmoOperations, 100.f);
-		gizmoOperation = static_cast<ImGuizmo::OPERATION>(transformControl);
+		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+		if (ImGui::TreeNode("Transform"))
+		{
+			int transformControl = static_cast<int>(gizmoOperation); // ImGuizmo::OPERATION::TRANSLATE
+			ImGui_Utils::DrawComboBoxControl("Mode", transformControl, gizmoOperations, 100.f);
+			gizmoOperation = static_cast<ImGuizmo::OPERATION>(transformControl);
+			
+			int spaceControl = static_cast<int>(gizmoSpace); // ImGuizmo::MODE::LOCAL
+			ImGui_Utils::DrawComboBoxControl("Space", spaceControl, gizmoSpaces, 100.f);
+			gizmoSpace = static_cast<ImGuizmo::MODE>(spaceControl);
+
+			ImGui::TreePop();
+		}
 
 		ImGui::TreePop();
 	}
@@ -314,10 +350,19 @@ void Editor::transformGizmo(float width, float height)
 	glm::mat4 view = editorCamera->GetViewMatrix();
 	glm::mat4 model = selectedEntity->transform->GetTransformMatrix();
 
+	// snapping
+	bool snap = Input::GetKey(GLFW_KEY_LEFT_CONTROL);
+	float snapValue = 0.5f; // Snap to 0.5m for translation and scale
+
+	if (gizmoOperation == ImGuizmo::OPERATION::ROTATE)
+		snapValue = 22.5f; // Snap to 22.5 degrees for rotation
+
+	float snapValues[3] = { snapValue, snapValue, snapValue };
 
 	ImGuizmo::Manipulate(glm::value_ptr(view), glm::value_ptr(projection), 
-		gizmoOperation, ImGuizmo::MODE::LOCAL,
-		glm::value_ptr(model));
+		gizmoOperation, gizmoSpace,
+		glm::value_ptr(model),
+		nullptr, snap ? snapValues : nullptr);
 
 	if (ImGuizmo::IsUsing())
 	{

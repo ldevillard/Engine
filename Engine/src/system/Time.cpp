@@ -2,46 +2,26 @@
 
 #include <glfw3.h>
 
-// singleton instance
-Time* Time::instance = nullptr;
-
-#pragma region Public Methods
-
-void Time::CreateInstance()
+namespace Time
 {
-	if (instance == nullptr)
+	float CurrentTime = 0.0f;
+	float DeltaTime = 0.0f;
+
+	float lastFrame = 0.0f;
+	float currentFrame = 0.0f;
+
+	void Update()
 	{
-		instance = new Time();
+		CurrentTime = static_cast<float>(glfwGetTime());
+		currentFrame = CurrentTime;
+		DeltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+	}
+	
+	const float FrameRate()
+	{
+		if (DeltaTime == 0.0f)
+			return 0.0f;
+		return 1.0f / DeltaTime;
 	}
 }
-
-void Time::DestroyInstance()
-{
-	if (instance != nullptr)
-	{
-		delete instance;
-		instance = nullptr;
-	}
-}
-
-Time* Time::Get()
-{
-	return instance;
-}
-
-void Time::Update()
-{
-	CurrentTime = static_cast<float>(glfwGetTime());
-	currentFrame = CurrentTime;
-	DeltaTime = currentFrame - lastFrame;
-	lastFrame = currentFrame;
-}
-
-const float Time::GetFrameRate() const
-{
-	if (DeltaTime == 0.0f)
-		return 0.0f;
-	return 1.0f / DeltaTime;
-}
-
-#pragma endregion
