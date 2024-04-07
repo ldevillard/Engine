@@ -12,6 +12,7 @@ Entity::Entity(const std::string &name, Shader* sh) :
     Name(name)
 {
 	transform = new Transform();
+    editorCollider = new EditorCollider(this);
 
     EntityManager* manager = EntityManager::Get();
     if (manager == nullptr)
@@ -29,10 +30,12 @@ Entity::~Entity()
         EntityManager::Get()->UnregisterEntity(this);
     }
 	delete transform;
+    delete editorCollider;
 }
 
 void Entity::AddComponent(Component* component)
 {
+    component->SetEditorCollider(editorCollider);
     component->SetTransform(transform);
     component->SetEntity(this);
     component->SetShader(shader);

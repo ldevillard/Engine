@@ -1,17 +1,17 @@
-#include "data/BoundingBox.h"
+#include "data/OBoundingBox.h"
 #include "system/editor/Gizmo.h"
 #include "system/editor/Editor.h"
 
 #pragma region Public Methods
 
-BoundingBox::BoundingBox() :
-	Min(glm::vec3(0.0f)),
-	Max(glm::vec3(0.0f)),
+OBoundingBox::OBoundingBox() :
+	Min(glm::vec3(0.5f)),
+	Max(glm::vec3(-0.5f)),
 	Center(glm::vec3(0.0f))
 {
 }
 
-BoundingBox::BoundingBox(const glm::vec3& min, const glm::vec3& max) :
+OBoundingBox::OBoundingBox(const glm::vec3& min, const glm::vec3& max) :
 	Min(min),
 	Max(max),
 	Center((min + max) * 0.5f)
@@ -19,7 +19,7 @@ BoundingBox::BoundingBox(const glm::vec3& min, const glm::vec3& max) :
 }
 
 // Apply the transformation to the bounding box and draw it
-void BoundingBox::ApplyTransform(const Transform& transform)
+void OBoundingBox::ApplyTransform(const Transform& transform)
 {
     Transform tr(transform);
 

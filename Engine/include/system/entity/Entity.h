@@ -5,8 +5,10 @@
 
 #include "component/Component.h"
 #include "component/Transform.h"
+#include "component/physics/EditorCollider.h"
 
 class Component;
+class EditorCollider;
 
 class Entity
 {
@@ -30,6 +32,7 @@ public:
 	std::string Name;
 
 private:
+	EditorCollider* editorCollider = nullptr;
 	Shader* shader = nullptr;
 	
 	std::vector<Component*> components = {};

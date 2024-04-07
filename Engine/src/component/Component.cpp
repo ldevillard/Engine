@@ -2,6 +2,11 @@
 
 #pragma region Public Methods
 
+void Component::SetEditorCollider(EditorCollider* cl)
+{
+	editorCollider = cl;
+}
+
 void Component::SetTransform(Transform*tr)
 {
 	transform = tr;

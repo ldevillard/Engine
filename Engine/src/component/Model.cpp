@@ -24,7 +24,6 @@ Model::Model(std::string path, Material mat) : Component(),
     material(mat)
 {
 	loadModel(path);
-    processOBB();
 }
 
 Model::Model(PrimitiveType type, Material mat) : Component(),
@@ -45,14 +44,12 @@ Model::Model(PrimitiveType type, Material mat) : Component(),
             std::cerr << "Primitive type not found" << std::endl;
             break;
     }
-    processOBB();
 }
 
 Model::Model(const Mesh& mesh, Material mat)
     : Component(), material(mat)
 {
     meshes.push_back(mesh);
-    processOBB();
 }
 
 
@@ -94,6 +91,12 @@ void Model::SetMaterialFromName(std::string name)
 	material = Material::GetMaterialFromName(name);
 }
 
+void Model::SetEditorCollider(EditorCollider* cl)
+{
+    Component::SetEditorCollider(cl);
+	processOBB();
+}
+
 #pragma endregion
 
 #pragma region Private Methods
@@ -103,11 +106,12 @@ void Model::draw()
     for (unsigned int i = 0; i < meshes.size(); i++)
         meshes[i].Draw(shader);
 
-    obb.ApplyTransform(*transform);
+    editorCollider->ApplyTransform(*transform);
 }
 
 void Model::processOBB()
 {
+    OBoundingBox obb = editorCollider->GetBoundingBox();
     for (Mesh mesh : meshes)
     {
         for (const Vertex& vertex : mesh.Vertices)
@@ -117,6 +121,7 @@ void Model::processOBB()
 		}
 	}
     obb.Center = (obb.Min + obb.Max) * 0.5f;
+    editorCollider->SetBoundingBox(obb);
 }
 
 void Model::loadModel(std::string path)

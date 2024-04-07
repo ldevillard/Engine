@@ -7,7 +7,7 @@
 #include "component/Component.h"
 #include "data/Material.h"
 #include "data/mesh/MeshData.h"
-#include "data/BoundingBox.h"
+#include "data/OBoundingBox.h"
 
 // assimp
 #include <assimp/Importer.hpp>
@@ -28,6 +28,7 @@ public:
     void Compute() override;
 
     void SetMaterialFromName(std::string name);
+    void SetEditorCollider(EditorCollider* cl) override;
 
     // static models
     static void LoadPrimitives();
@@ -40,7 +41,6 @@ private:
     std::vector<Mesh> meshes;
     std::vector<Texture> texturesLoaded;
     std::string directory;
-    BoundingBox obb;
 
     Material material = Material::Default;
 
