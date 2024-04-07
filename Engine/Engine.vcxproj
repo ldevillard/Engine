@@ -383,7 +383,6 @@
     <ClInclude Include="include\system\editor\Editor.h" />
     <ClInclude Include="include\system\editor\Inspector.h" />
     <ClInclude Include="include\system\entity\EntityManager.h" />
-    <ClInclude Include="include\system\GlobalSettings.h" />
     <ClInclude Include="include\system\Time.h" />
     <ClInclude Include="include\data\Color.h" />
     <ClInclude Include="include\system\editor\Gizmo.h" />

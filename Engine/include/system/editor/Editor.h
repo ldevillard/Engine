@@ -17,22 +17,15 @@
 #include "system/entity/Entity.h"
 #include "system/editor/EditorCamera.h"
 
+inline unsigned int SCR_WIDTH = 1280;
+inline unsigned int SCR_HEIGHT = 720;
+
 struct EditorSettings
 {
-	// frame
-	FrameBuffer* FrameBuffer = nullptr;
-	
-	// screen resolution
-	unsigned int* SCR_WIDTH = nullptr;
-	unsigned int* SCR_HEIGHT = nullptr;
-
 	// scene
 	bool* Wireframe = nullptr;
 	bool* BlinnPhong = nullptr;
 	int* TrianglesNumber = nullptr;
-	
-	// camera
-	float* CameraSpeed = nullptr;
 	
 	bool Gizmo = true;
 	bool BoundingBoxGizmo = true;
@@ -45,28 +38,39 @@ public:
 	~Editor();
 
 	// singleton
-	static void CreateInstance(GLFWwindow* window, EditorSettings params);
+	static void CreateInstance(GLFWwindow* win, EditorSettings params);
 	static void DestroyInstance();
 	static Editor* Get();
 
 	const EditorSettings& GetSettings() const;
+	const EditorCamera* GetCamera() const;
+	const FrameBuffer* GetSceneBuffer() const;
 
-	void Render();
+	void RenderCamera(Shader* shader);
+	void RenderEditor();
+	void ProcessInputs();
+	void ScrollCallback(double xoffset, double yoffset);
+	void MouseCallback(double xposIn, double yposIn);
+	void FramebufferSizeCallback(int width, int height);
 
 	void SelectEntity(Entity* entity);
-	void SetCamera(EditorCamera* camera);
 
 private:
 	// singleton
 	static Editor* instance;
 
-	// UI
+	// render functions
 	void renderScene(float width, float height);
 	void renderInspector();
 	void renderHierarchy();
 	void renderSettings();
-
 	void transformGizmo(float width, float height);
+
+	// member references
+	Entity* selectedEntity = nullptr;
+	EditorCamera* editorCamera = nullptr;
+	FrameBuffer* sceneBuffer = nullptr;
+	GLFWwindow* window = nullptr;
 
 	EditorSettings parameters;
 	Inspector inspector;
@@ -75,13 +79,12 @@ private:
 	float frameCounter = 1.0f;
 	float frameRate = 60.0f;
 
-	// entity
-	Entity* selectedEntity = nullptr;
-
 	// selected gizmo
 	ImGuizmo::OPERATION	gizmoOperation = ImGuizmo::TRANSLATE;
 	const std::vector<const char*> gizmoOperations = { "Translate", "Rotate", "Scale" };
 
-	// camera
-	EditorCamera* editorCamera = nullptr;
+	// mouse and screen settings
+	float lastX = SCR_WIDTH / 2.0f;
+	float lastY = SCR_HEIGHT / 2.0f;
+	bool firstMouse = true;
 };

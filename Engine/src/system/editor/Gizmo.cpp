@@ -1,6 +1,4 @@
 #include "system/editor/Gizmo.h"
-
-#include "system/GlobalSettings.h"
 #include "system/editor/Editor.h"
 
 #include <maths/glm/glm.hpp>
@@ -124,8 +122,10 @@ void Gizmo::bindShader(const Color& color, const Transform& transform)
 {
 	shader->Use();
 
-	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
-	glm::mat4 view = camera.GetViewMatrix();
+	const EditorCamera* camera = Editor::Get()->GetCamera();
+
+	glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+	glm::mat4 view = camera->GetViewMatrix();
 	shader->SetMat4("projection", projection);
 	shader->SetMat4("view", view);
 

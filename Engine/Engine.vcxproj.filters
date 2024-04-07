@@ -1154,9 +1154,6 @@
     <ClInclude Include="include\data\mesh\WireCube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\system\GlobalSettings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\data\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>

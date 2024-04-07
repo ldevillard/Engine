@@ -2,7 +2,10 @@
 
 #pragma region Public Methods
 
-FrameBuffer::FrameBuffer() 
+FrameBuffer::FrameBuffer() :
+	fbo(0),
+	texture(0),
+	rbo(0)
 {
 }
 

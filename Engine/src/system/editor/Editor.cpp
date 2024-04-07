@@ -14,7 +14,9 @@ Editor* Editor::instance = nullptr;
 
 #pragma region Public Methods
 
-Editor::Editor(GLFWwindow* window, EditorSettings params)
+Editor::Editor(GLFWwindow* win, EditorSettings params) :
+	window(win),
+	parameters(params)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -29,7 +31,8 @@ Editor::Editor(GLFWwindow* window, EditorSettings params)
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	// setup
-	parameters = params;
+	editorCamera = new EditorCamera(glm::vec3(0.0f, 5.f, 30.0f));
+	sceneBuffer = new FrameBuffer(SCR_WIDTH, SCR_HEIGHT);
 	inspector = Inspector();
 }
 
@@ -39,6 +42,10 @@ Editor::~Editor()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+
+	// clean
+	delete editorCamera;
+	delete sceneBuffer;
 }
 
 void Editor::CreateInstance(GLFWwindow* window, EditorSettings params)
@@ -68,10 +75,33 @@ const EditorSettings& Editor::GetSettings() const
 	return parameters;
 }
 
-void Editor::Render()
+const EditorCamera* Editor::GetCamera() const
 {
-	float w = static_cast<float>(*parameters.SCR_WIDTH);
-	float h = static_cast<float>(*parameters.SCR_HEIGHT);
+	return editorCamera;
+}
+
+const FrameBuffer* Editor::GetSceneBuffer() const
+{
+	return sceneBuffer;
+}
+
+void Editor::RenderCamera(Shader* shader)
+{
+	shader->Use();
+	shader->SetVec3("viewPos", editorCamera->Position);
+	shader->SetBool("wireframe", *parameters.Wireframe);
+	shader->SetBool("blinn", *parameters.BlinnPhong);
+
+	glm::mat4 projection = editorCamera->GetProjectionMatrix(static_cast<float>(SCR_WIDTH), static_cast<float>(SCR_HEIGHT));
+	glm::mat4 view = editorCamera->GetViewMatrix();
+	shader->SetMat4("projection", projection);
+	shader->SetMat4("view", view);
+}
+
+void Editor::RenderEditor()
+{
+	float w = static_cast<float>(SCR_WIDTH);
+	float h = static_cast<float>(SCR_HEIGHT);
 
 	// Rendering ImGui
 	ImGui_ImplOpenGL3_NewFrame();
@@ -107,14 +137,88 @@ void Editor::Render()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+void Editor::ProcessInputs()
+{
+	// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+	float deltaTime = Time::Get()->DeltaTime;
+
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		editorCamera->ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		editorCamera->ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		editorCamera->ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		editorCamera->ProcessKeyboard(RIGHT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		editorCamera->ProcessKeyboard(DOWN, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		editorCamera->ProcessKeyboard(UP, deltaTime);
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		editorCamera->SetSpeedFactor(2);
+	else
+		editorCamera->SetSpeedFactor(1);
+}
+
+void Editor::MouseCallback(double xposIn, double yposIn)
+{
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_PRESS)
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		firstMouse = true;
+		return;
+	}
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = xpos;
+	lastY = ypos;
+
+	// smooth
+	const float sensitivity = 0.5f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	editorCamera->ProcessMouseMovement(xoffset, yoffset);
+}
+
+// make sure the viewport matches the new window dimensions; note that width and 
+// height will be significantly larger than specified on retina displays.
+void Editor::FramebufferSizeCallback(int width, int height)
+{
+	glViewport(0, 0, width, height);
+
+	SCR_WIDTH = width;
+	SCR_HEIGHT = height;
+
+	sceneBuffer->RescaleFrameBuffer(width, height);
+}
+
+void Editor::ScrollCallback(double xoffset, double yoffset)
+{
+	editorCamera->ProcessMouseScroll(static_cast<float>(yoffset));
+}
+
 void Editor::SelectEntity(Entity* entity)
 {
 	selectedEntity = entity;
-}
-
-void Editor::SetCamera(EditorCamera* camera)
-{
-	editorCamera = camera;
 }
 
 #pragma endregion
@@ -130,10 +234,10 @@ void Editor::renderScene(float width, float height)
 		float width = ImGui::GetContentRegionAvail().x;
 		float height = ImGui::GetContentRegionAvail().y;
 
-		*parameters.SCR_WIDTH = static_cast<unsigned int>(width);
-		*parameters.SCR_HEIGHT = static_cast<unsigned int>(height);;
+		SCR_WIDTH = static_cast<unsigned int>(width);
+		SCR_HEIGHT = static_cast<unsigned int>(height);;
 		ImGui::Image(
-			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(parameters.FrameBuffer->GetFrameTexture())),
+			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(sceneBuffer->GetFrameTexture())),
 			ImGui::GetContentRegionAvail(),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -195,7 +299,7 @@ void Editor::renderSettings()
 	ImGui::Separator();
 	ImGui_Utils::DrawBoolControl("Wireframe", *parameters.Wireframe, 100.f);
 	ImGui_Utils::DrawBoolControl("BlinnPhong", *parameters.BlinnPhong, 100.f);
-	ImGui_Utils::DrawFloatControl("Camera Speed", *parameters.CameraSpeed, 5.f, 100.f);
+	ImGui_Utils::DrawFloatControl("Camera Speed", editorCamera->MovementSpeed, 5.f, 100.f);
 	ImGui::End();
 }
 

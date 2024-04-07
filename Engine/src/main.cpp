@@ -11,9 +11,7 @@
 #include <maths/glm/gtc/matrix_transform.hpp>
 #include <maths/glm/gtc/type_ptr.hpp>
 
-// user define
-#include "system/GlobalSettings.h"
-
+// engine
 #include "render/Shader.h"
 #include "data/Texture.h"
 #include "data/Material.h"
@@ -29,7 +27,6 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow* window);
 
 int main()
 {
@@ -63,9 +60,6 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	Time::CreateInstance();
-
-	FrameBuffer sceneBuffer = FrameBuffer(SCR_WIDTH / 2, SCR_HEIGHT / 2);
-	ptr = &sceneBuffer;
 
 	// build and compile shader programs
 	Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
@@ -124,26 +118,18 @@ int main()
 	//light4.Intensity = 3.5f;
 	//lightEntity4.AddComponent(&light4);
 
-
 	bool wireframeMode = false;
 	bool blinnPhong = true;
 	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();
 
 	// setup editor settings
 	EditorSettings settings;
-	settings.FrameBuffer = &sceneBuffer;
-	settings.SCR_WIDTH = &SCR_WIDTH;
-	settings.SCR_HEIGHT = &SCR_HEIGHT;
 	settings.Wireframe = &wireframeMode;
 	settings.BlinnPhong = &blinnPhong;
-	settings.CameraSpeed = &camera.MovementSpeed;
 	settings.TrianglesNumber = &trianglesNumber;
 
 	Editor::CreateInstance(window, settings);
 	Editor::Get()->SelectEntity(&entity2);
-	Editor::Get()->SetCamera(&camera);
-
-	sceneBuffer.RescaleFrameBuffer(SCR_WIDTH, SCR_HEIGHT);
 
 	// render loop
 	while (!glfwWindowShouldClose(window))
@@ -164,35 +150,20 @@ int main()
 			glPolygonMode(GL_BACK, GL_FILL);
 		}
 
-		// input
-		processInput(window);
-
 		// render
-		sceneBuffer.Bind(); // Lier le framebuffer
+		Editor::Get()->GetSceneBuffer()->Bind(); // bind to framebuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		
-		// Utiliser le shader
-		shader.Use();
-
-		shader.SetVec3("viewPos", camera.Position);
-		shader.SetBool("wireframe", wireframeMode);
-		shader.SetBool("blinn", blinnPhong);
-
-		// view/projection transformations
-		glm::mat4 projection = camera.GetProjectionMatrix(static_cast<float>(SCR_WIDTH), static_cast<float>(SCR_HEIGHT));
-		glm::mat4 view = camera.GetViewMatrix();
-		shader.SetMat4("projection", projection);
-		shader.SetMat4("view", view);
-		
+		Editor::Get()->RenderCamera(&shader);
 		EntityManager::Get()->ComputeEntities();
 
-		// Unbind le framebuffer
-		sceneBuffer.Unbind();
+		// unbind framebuffer
+		Editor::Get()->GetSceneBuffer()->Unbind();
 
-		// render
-		Editor::Get()->Render();
+		// editor
+		Editor::Get()->RenderEditor();
+		Editor::Get()->ProcessInputs();
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(window);
@@ -211,92 +182,34 @@ int main()
 	return 0;
 }
 
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-void processInput(GLFWwindow* window)
-{
-	float deltaTime = Time::Get()->DeltaTime;
-
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		camera.ProcessKeyboard(DOWN, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		camera.ProcessKeyboard(UP, deltaTime);
-
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		camera.SetSpeedFactor(2);
-	else
-		camera.SetSpeedFactor(1);
-}
-
 // glfw: whenever the mouse moves, this callback is called
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_PRESS)
+	Editor* editor = Editor::Get();
+	if (editor)
 	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		firstMouse = true;
-		return;
+		editor->MouseCallback(xposIn, yposIn);
 	}
-
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-	float xpos = static_cast<float>(xposIn);
-	float ypos = static_cast<float>(yposIn);
-
-	if (firstMouse)
-	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
-	}
-
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-	lastX = xpos;
-	lastY = ypos;
-
-	// smooth
-	const float sensitivity = 0.5f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	camera.ProcessMouseScroll(static_cast<float>(yoffset));
+	Editor* editor = Editor::Get();
+	if (editor)
+	{
+		editor->ScrollCallback(xoffset, yoffset);
+	}
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	// make sure the viewport matches the new window dimensions; note that width and 
-	// height will be significantly larger than specified on retina displays.
-	glViewport(0, 0, width, height);
-	SCR_HEIGHT = height;
-	SCR_WIDTH = width;
-
-	if (ptr != nullptr)
+	Editor* editor = Editor::Get();
+	if (editor)
 	{
-		ptr->RescaleFrameBuffer(width, height);
-	}
-
-	if (Editor::Get() != nullptr)
-	{
-		Editor::Get()->Render();
+		editor->FramebufferSizeCallback(width, height);
+		editor->RenderEditor();
 	}
 }
 
