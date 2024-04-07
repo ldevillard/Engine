@@ -3,8 +3,10 @@
 #include <maths/glm/glm.hpp>
 #include "data/OBoundingBox.h"
 #include "system/entity/Entity.h"
+#include "physics/Physics.h"
 
 class Entity;
+class RaycastHit;
 
 class EditorCollider
 {
@@ -16,7 +18,10 @@ public:
 	const OBoundingBox& GetBoundingBox() const;
 	void SetBoundingBox(const OBoundingBox& bb);
 
+	bool IntersectRay(const Ray& ray, RaycastHit& outRaycastHit) const;
+
+	Entity* entity = nullptr;
+
 private:
 	OBoundingBox boundingBox;
-	Entity* entity = nullptr;
 };

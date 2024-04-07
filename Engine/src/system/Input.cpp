@@ -6,6 +6,7 @@ namespace Input
 {
 	static GLFWwindow* window = nullptr;
 	static std::unordered_set<int> pressedKeys = {};
+	static std::unordered_set<int> pressedMouseButtons = {};
 
 	void Initialize(GLFWwindow* _window)
 	{
@@ -38,5 +39,37 @@ namespace Input
 	bool GetKeyUp(int key)
 	{
 		return glfwGetKey(window, key) == GLFW_RELEASE;
+	}
+
+	bool GetMouseButtonDown(int button)
+	{
+		int state = glfwGetMouseButton(window, button);
+		if (state == GLFW_PRESS && pressedMouseButtons.find(button) == pressedMouseButtons.end())
+		{
+			pressedMouseButtons.insert(button);
+			return true;
+		}
+		else if (state == GLFW_RELEASE)
+		{
+			pressedMouseButtons.erase(button);
+		}
+		return false;
+	}
+
+	bool GetMouseButton(int button)
+	{
+		return glfwGetMouseButton(window, button) == GLFW_PRESS;
+	}
+
+	bool GetMouseButtonUp(int button)
+	{
+		return glfwGetMouseButton(window, button) == GLFW_RELEASE;
+	}
+
+	glm::vec2 GetMousePosition()
+	{
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		return glm::vec2(xpos, ypos);
 	}
 }

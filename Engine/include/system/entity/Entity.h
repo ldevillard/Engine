@@ -24,6 +24,7 @@ public:
 
 	void AddComponent(Component* component);
 	const std::vector<Component*>& GetComponents() const;
+	const EditorCollider* GetEditorCollider() const;
 
 	Transform* transform = nullptr;
 

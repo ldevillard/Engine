@@ -49,13 +49,19 @@ const std::vector<Component*>& Entity::GetComponents() const
 	return components;
 }
 
+const EditorCollider* Entity::GetEditorCollider() const
+{
+	return editorCollider;
+}
+
 void Entity::Compute()
 {
     transform->Compute(shader);
-    editorCollider->ApplyTransform(*transform);
-
+    
     for (Component* c : components)
         c->Compute();
+
+    editorCollider->ApplyTransform(*transform);
 }
 
 #pragma endregion

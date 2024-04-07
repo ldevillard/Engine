@@ -33,6 +33,8 @@
     <ClCompile Include="include\maths\glm\detail\glm.cpp" />
     <ClCompile Include="include\maths\glm\glm.cppm" />
     <ClCompile Include="src\component\physics\EditorCollider.cpp" />
+    <ClCompile Include="src\maths\Maths.cpp" />
+    <ClCompile Include="src\physics\Physics.cpp" />
     <ClCompile Include="src\system\editor\EditorCamera.cpp" />
     <ClCompile Include="src\component\Component.cpp" />
     <ClCompile Include="src\component\Light.cpp" />
@@ -75,6 +77,8 @@
     <ClInclude Include="include\component\physics\EditorCollider.h" />
     <ClInclude Include="include\data\physics\Ray.h" />
     <ClInclude Include="include\data\physics\RaycastHit.h" />
+    <ClInclude Include="include\maths\Math.h" />
+    <ClInclude Include="include\physics\Physics.h" />
     <ClInclude Include="include\system\editor\EditorCamera.h" />
     <ClInclude Include="include\component\Component.h" />
     <ClInclude Include="include\component\Light.h" />

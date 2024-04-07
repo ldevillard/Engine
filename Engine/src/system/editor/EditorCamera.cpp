@@ -96,7 +96,7 @@ const glm::mat4 EditorCamera::GetViewMatrix() const
 
 const glm::mat4 EditorCamera::GetProjectionMatrix(float width, float height) const
 {
-   return glm::perspective(glm::radians(Zoom), width / height, 0.1f, 1000.0f);
+   return glm::perspective(glm::radians(Zoom), width / height, Near, Far);
 }
 
 void EditorCamera::SetSpeedFactor(float factor)

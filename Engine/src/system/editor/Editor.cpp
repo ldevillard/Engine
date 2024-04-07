@@ -6,6 +6,8 @@
 #include "system/Input.h"
 #include "system/entity/EntityManager.h"
 #include "utils/ImGui_Utils.h"
+#include "maths/Math.h"
+#include "physics/Physics.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <maths/glm/gtx/matrix_decompose.hpp>
@@ -154,7 +156,7 @@ void Editor::RenderEditor()
 
 void Editor::MouseCallback(double xposIn, double yposIn)
 {
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_PRESS)
+	if (!Input::GetMouseButton(GLFW_MOUSE_BUTTON_RIGHT))
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		firstMouse = true;
@@ -240,6 +242,44 @@ void Editor::ProcessInputs()
 		gizmoOperation = ImGuizmo::OPERATION::ROTATE;
 	if (Input::GetKeyDown(GLFW_KEY_3))
 		gizmoOperation = ImGuizmo::OPERATION::SCALE;
+
+	// mouse picker
+	if (Input::GetMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && !ImGuizmo::IsOver())
+	{
+		// need to check if the mouse is inside the scene window
+		ImVec2 sceneWindowPos = ImGui::GetWindowPos();
+		ImVec2 sceneWindowSize = ImGui::GetWindowSize();
+		ImVec2 sceneWindowMin = ImVec2(sceneWindowPos.x, sceneWindowPos.y);
+		ImVec2 sceneWindowMax = ImVec2(sceneWindowPos.x + sceneWindowSize.x, sceneWindowPos.y + sceneWindowSize.y);
+
+		// compute mouse position relative to the imgui window
+		ImVec2 mPos = ImGui::GetMousePos();
+		ImVec2 mousePosScene = ImVec2(mPos.x - sceneWindowPos.x, mPos.y - sceneWindowPos.y);
+
+		// check if the mouse is inside the scene window
+		if (!(mPos.x >= sceneWindowMin.x && mPos.x <= sceneWindowMax.x &&
+			mPos.y >= sceneWindowMin.y && mPos.y <= sceneWindowMax.y))
+			return;
+
+		glm::vec3 worldPos = Math::ScreenToWorldPoint(glm::vec2(mousePosScene.x, mousePosScene.y)
+				, editorCamera->GetViewMatrix(), editorCamera->GetProjectionMatrix(SCR_WIDTH, SCR_HEIGHT)
+				, glm::vec4(0, 0, SCR_WIDTH, SCR_HEIGHT));
+		
+		// Raycast
+		glm::vec3 direction = glm::normalize(worldPos - editorCamera->Position);
+		Ray ray = Ray(editorCamera->Position, direction);
+		RaycastHit hit;
+		Physics::EditorRaycast(ray, hit);
+	
+		if (hit.editorCollider != nullptr)
+		{
+			SelectEntity(hit.editorCollider->entity);
+		}
+		else
+		{
+			SelectEntity(nullptr);
+		}
+	}
 }
 
 void Editor::SelectEntity(Entity* entity)
@@ -268,8 +308,10 @@ void Editor::renderScene(float width, float height)
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+		ProcessInputs();
 	}
-	transformGizmo(width, height);
+	if (selectedEntity != nullptr)
+		transformGizmo(width, height);
 	ImGui::EndChild();
 	ImGui::End();
 }
