@@ -6,7 +6,7 @@
 #include "physics/Physics.h"
 
 class Entity;
-class RaycastHit;
+struct RaycastHit;
 
 class EditorCollider
 {

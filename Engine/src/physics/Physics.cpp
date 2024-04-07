@@ -14,7 +14,7 @@ namespace Physics
 		{
 			const EditorCollider* collider = e->GetEditorCollider();
 			
-			assert(collider != nullptr, "Entity has no editor collider -> mouse picking purpose");
+			assert(collider != nullptr); // Entity has no editor collider -> mouse picking purpose
 
 			collider->IntersectRay(ray, outRayCastHit);
 		}

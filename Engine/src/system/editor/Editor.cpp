@@ -262,7 +262,8 @@ void Editor::ProcessInputs()
 			return;
 
 		glm::vec3 worldPos = Math::ScreenToWorldPoint(glm::vec2(mousePosScene.x, mousePosScene.y)
-				, editorCamera->GetViewMatrix(), editorCamera->GetProjectionMatrix(SCR_WIDTH, SCR_HEIGHT)
+				, editorCamera->GetViewMatrix()
+				, editorCamera->GetProjectionMatrix(static_cast<float>(SCR_WIDTH), static_cast<float>(SCR_HEIGHT))
 				, glm::vec4(0, 0, SCR_WIDTH, SCR_HEIGHT));
 		
 		// Raycast
