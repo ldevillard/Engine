@@ -3,8 +3,10 @@
 #include <vector>
 #include <string>
 
-#include "data/Transform.h"
 #include "component/Component.h"
+#include "component/Transform.h"
+
+class Component;
 
 class Entity
 {
@@ -28,8 +30,6 @@ public:
 	std::string Name;
 
 private:
-	void BindingTransform() const;
-
 	Shader* shader = nullptr;
 	
 	std::vector<Component*> components = {};

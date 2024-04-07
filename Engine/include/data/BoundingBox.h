@@ -3,7 +3,7 @@
 #include <maths/glm/glm.hpp>
 #include <maths/glm/gtc/matrix_transform.hpp>
 
-#include "data/Transform.h"
+#include "component/Transform.h"
 
 class BoundingBox
 {

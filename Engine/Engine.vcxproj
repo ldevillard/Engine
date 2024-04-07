@@ -40,7 +40,7 @@
     <ClCompile Include="src\data\mesh\WireConeFrustum.cpp" />
     <ClCompile Include="src\data\mesh\WireCube.cpp" />
     <ClCompile Include="src\data\mesh\WireSphere.cpp" />
-    <ClCompile Include="src\data\Transform.cpp" />
+    <ClCompile Include="src\component\Transform.cpp" />
     <ClCompile Include="src\system\entity\Entity.cpp" />
     <ClCompile Include="src\data\Material.cpp" />
     <ClCompile Include="src\data\mesh\Mesh.cpp" />
@@ -82,7 +82,7 @@
     <ClInclude Include="include\system\entity\Entity.h" />
     <ClInclude Include="include\data\Material.h" />
     <ClInclude Include="include\data\mesh\Mesh.h" />
-    <ClInclude Include="include\data\Transform.h" />
+    <ClInclude Include="include\component\Transform.h" />
     <ClInclude Include="include\data\Vertex.h" />
     <ClInclude Include="include\debug\DebugMenu.h" />
     <ClInclude Include="include\utils\glad\glad.h" />

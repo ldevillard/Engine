@@ -1,4 +1,4 @@
-#include "data/Transform.h"
+#include "component/Transform.h"
 #include "system/editor/Gizmo.h"
 
 #pragma region Public Methods
@@ -25,6 +25,26 @@ Transform::Transform(const Transform& other) :
 	Scale(other.Scale)
 {
 
+}
+
+void Transform::Compute(Shader* shader) const
+{
+	shader->Use();
+
+	// binding transform data
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, Position);
+
+	// get the rotation quaternion
+	glm::quat rotationQuaternion = GetRotationQuaternion();
+	// convert the quaternion to a rotation matrix
+	glm::mat4 rotationMatrix = glm::mat4_cast(rotationQuaternion);
+	// apply the rotation matrix to the model matrix
+	model *= rotationMatrix;
+
+	model = glm::scale(model, Scale);
+
+	shader->SetMat4("model", model);
 }
 
 const glm::quat Transform::GetRotationQuaternion() const

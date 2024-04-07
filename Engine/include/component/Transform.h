@@ -2,6 +2,9 @@
 
 #include <maths/glm/glm.hpp>
 #include <maths/glm/gtc/quaternion.hpp>
+#include <maths/glm/gtc/matrix_transform.hpp>
+
+#include "render/Shader.h"
 
 class Transform
 {
@@ -9,6 +12,8 @@ public:
 	Transform();
 	Transform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
 	Transform(const Transform& other);
+
+	void Compute(Shader* shader) const;
 
 	// maybe store these members and return them as references
 	const glm::quat GetRotationQuaternion() const;

@@ -34,6 +34,7 @@ Entity::~Entity()
 void Entity::AddComponent(Component* component)
 {
     component->SetTransform(transform);
+    component->SetEntity(this);
     component->SetShader(shader);
     components.push_back(component);
 
@@ -47,34 +48,9 @@ const std::vector<Component*>& Entity::GetComponents() const
 
 void Entity::Compute()
 {
-    BindingTransform();
-
+    transform->Compute(shader);
     for (Component* c : components)
         c->Compute();
-}
-
-#pragma endregion
-
-#pragma region Private Methods
-
-void Entity::BindingTransform() const
-{
-    shader->Use();
-
-    // binding transform data
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, transform->Position);
-
-    // get the rotation quaternion
-    glm::quat rotationQuaternion = transform->GetRotationQuaternion();
-    // convert the quaternion to a rotation matrix
-    glm::mat4 rotationMatrix = glm::mat4_cast(rotationQuaternion);
-    // apply the rotation matrix to the model matrix
-    model *= rotationMatrix;
-
-    model = glm::scale(model, transform->Scale);
-
-    shader->SetMat4("model", model);
 }
 
 #pragma endregion

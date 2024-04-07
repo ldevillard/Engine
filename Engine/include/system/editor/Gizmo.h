@@ -5,7 +5,7 @@
 #include "data/mesh/WireCube.h"
 #include "data/mesh/WireSphere.h"
 #include "data/mesh/MeshData.h"
-#include "data/Transform.h"
+#include "component/Transform.h"
 #include "data/Color.h"
 
 #include "render/Shader.h"

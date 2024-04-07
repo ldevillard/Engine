@@ -147,7 +147,7 @@
     <ClCompile Include="src\component\Light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\data\Transform.cpp">
+    <ClCompile Include="src\component\Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\data\mesh\WireCone.cpp">
@@ -863,7 +863,7 @@
     <ClInclude Include="include\data\Texture.h">
       <Filter>Header Files\data</Filter>
     </ClInclude>
-    <ClInclude Include="include\data\Transform.h">
+    <ClInclude Include="include\component\Transform.h">
       <Filter>Header Files\data</Filter>
     </ClInclude>
     <ClInclude Include="include\maths\glm\gtx\spline.hpp">
