@@ -94,6 +94,11 @@ const FrameBuffer* Editor::GetSceneBuffer() const
 	return sceneBuffer;
 }
 
+const Entity* Editor::GetSelectedEntity() const
+{
+	return selectedEntity;
+}
+
 #pragma endregion
 
 #pragma region Rendering

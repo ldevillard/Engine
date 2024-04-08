@@ -3,6 +3,7 @@
 #include <maths/glm/glm.hpp>
 #include <maths/glm/gtc/matrix_transform.hpp>
 
+#include "system/editor/Outliner.h"
 #include "system/editor/Gizmo.h"
 
 std::map<PrimitiveType, std::unique_ptr<Model>> Model::PrimitivesModels;
@@ -84,6 +85,14 @@ void Model::Compute()
     shader->SetBool("textured", texturesLoaded.size() > 0);
 
     draw();
+}
+
+void Model::ComputeOutline(Shader* outlineShader)
+{
+	outlineShader->Use();
+    outlineShader->SetFloat("outlining", Outliner::OutlineWidth);
+    outlineShader->SetVec3("color", Outliner::OutlineColor.Value);
+	draw();
 }
 
 void Model::SetMaterialFromName(std::string name)

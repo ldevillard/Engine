@@ -156,9 +156,6 @@
     <ClCompile Include="src\data\mesh\WireConeFrustum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\data\BoundingBox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\ThirdPartyLibs\ImGuizmo\ImCurveEdit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -193,6 +190,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\system\Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\component\physics\EditorCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\maths\Maths.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physics\Physics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data\OBoundingBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\editor\Outliner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1172,10 +1184,28 @@
     <ClInclude Include="include\data\mesh\WireConeFrustum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\data\BoundingBox.h">
+    <ClInclude Include="include\system\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\system\Input.h">
+    <ClInclude Include="include\component\physics\EditorCollider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\physics\Ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\physics\RaycastHit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\maths\Math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\physics\Physics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\OBoundingBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system\editor\Outliner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1602,6 +1632,8 @@
     </None>
     <None Include="shaders\gizmo\GizmoFragmentShader.glsl" />
     <None Include="shaders\gizmo\GizmoVertexShader.glsl" />
+    <None Include="shaders\outline\OutlineVertexShader.glsl" />
+    <None Include="shaders\outline\OutlineFragmentShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\awesomeface.png">

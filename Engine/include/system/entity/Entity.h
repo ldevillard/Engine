@@ -25,10 +25,12 @@ public:
 	void AddComponent(Component* component);
 	const std::vector<Component*>& GetComponents() const;
 	const EditorCollider* GetEditorCollider() const;
+	bool IsSelectedEntity() const;
 
 	Transform* transform = nullptr;
 
 	void Compute();
+	void ComputeOutline() const;
 
 	std::string Name;
 

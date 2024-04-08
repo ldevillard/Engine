@@ -28,7 +28,7 @@ struct EditorSettings
 	int* TrianglesNumber = nullptr;
 	
 	bool Gizmo = true;
-	bool BoundingBoxGizmo = true;
+	bool BoundingBoxGizmo = false;
 };
 
 class Editor
@@ -45,6 +45,7 @@ public:
 	const EditorSettings& GetSettings() const;
 	const EditorCamera* GetCamera() const;
 	const FrameBuffer* GetSceneBuffer() const;
+	const Entity* GetSelectedEntity() const;
 
 	void RenderCamera(Shader* shader);
 	void RenderEditor();

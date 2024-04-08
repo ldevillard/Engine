@@ -2,6 +2,7 @@
 #include <algorithm>
 
 #include "system/entity/EntityManager.h"
+#include "system/editor/Editor.h"
 #include "component/Model.h"
 #include "component/Light.h"
 
@@ -46,7 +47,15 @@ void EntityManager::ComputeEntities() const
 	shader->SetInt("lightsCount", lightsCount);
 
 	for (Entity* e : entities)
+	{
 		e->Compute();
+	}
+
+	const Entity* selectedEntity = Editor::Get()->GetSelectedEntity();
+	if (selectedEntity != nullptr)
+	{
+		selectedEntity->ComputeOutline();
+	}
 }
 
 const unsigned int EntityManager::GetNumberOfTriangles() const

@@ -36,6 +36,9 @@ public:
     void SetMat3(const std::string& name, const glm::mat3& mat) const;
     void SetMat4(const std::string& name, glm::mat4 mat) const;
 
+    std::string FragmentPath = {};
+    std::string VertexPath = {};
+
 private:
 	void checkCompileErrors(unsigned int shader, std::string type);
 };

@@ -26,6 +26,7 @@ public:
     const Material& GetMaterial() const;
 
     void Compute() override;
+    void ComputeOutline(Shader* outlineShader);
 
     void SetMaterialFromName(std::string name);
     void SetEditorCollider(EditorCollider* cl) override;

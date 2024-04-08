@@ -44,6 +44,7 @@
     <ClCompile Include="src\data\mesh\WireCube.cpp" />
     <ClCompile Include="src\data\mesh\WireSphere.cpp" />
     <ClCompile Include="src\component\Transform.cpp" />
+    <ClCompile Include="src\system\editor\Outliner.cpp" />
     <ClCompile Include="src\system\entity\Entity.cpp" />
     <ClCompile Include="src\data\Material.cpp" />
     <ClCompile Include="src\data\mesh\Mesh.cpp" />
@@ -88,6 +89,7 @@
     <ClInclude Include="include\data\mesh\WireConeFrustum.h" />
     <ClInclude Include="include\data\mesh\WireCube.h" />
     <ClInclude Include="include\data\mesh\WireSphere.h" />
+    <ClInclude Include="include\system\editor\Outliner.h" />
     <ClInclude Include="include\system\entity\Entity.h" />
     <ClInclude Include="include\data\Material.h" />
     <ClInclude Include="include\data\mesh\Mesh.h" />
@@ -544,6 +546,8 @@
     <None Include="shaders\light\Color.vs" />
     <None Include="shaders\light\LightCube.fs" />
     <None Include="shaders\light\LightCube.vs" />
+    <None Include="shaders\outline\OutlineFragmentShader.glsl" />
+    <None Include="shaders\outline\OutlineVertexShader.glsl" />
     <None Include="shaders\VertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>

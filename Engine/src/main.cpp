@@ -15,13 +15,14 @@
 #include "system/Input.h"
 #include "system/Time.h"
 #include "system/editor/Gizmo.h"
+#include "system/editor/Outliner.h"
 #include "system/editor/Editor.h"
 #include "system/entity/EntityManager.h"
 #include "data/Texture.h"
 #include "data/Material.h"
 #include "component/Model.h"
-#include "component/Light.h"
 #include "data/Color.h"
+#include "component/Light.h"
 #include "render/Shader.h"
 #include "debug/DebugMenu.h"
 
@@ -59,12 +60,16 @@ int main()
 	}
 
 	// configure global opengl state
-	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST); // enable depth testing
+	glEnable(GL_STENCIL_TEST); // enable stencil testing
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // configure the stencil buffer to replace the value of the stencil buffer if the depth test fails
 
 	// build and compile shader programs
 	Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
 	Shader gizmoShader("shaders/gizmo/GizmoVertexShader.glsl", "shaders/gizmo/GizmoFragmentShader.glsl");
+	Shader outlineShader("shaders/outline/OutlineVertexShader.glsl", "shaders/outline/OutlineFragmentShader.glsl");
 
+	Outliner::Initialize(&outlineShader);
 	Gizmo::InitGizmos(&gizmoShader);
 
 	EntityManager::CreateInstance(&shader);
@@ -82,16 +87,16 @@ int main()
 	entity2.transform->SetRotation({ 0.f, 45.f, 0.f });
 	entity2.AddComponent(&model2);
 
-	/*Entity cubeEntity = Entity("Cube", &shader);
-	Model cubeModel = Model(PrimitiveType::CubePrimitive, Material::Gold);
+	Entity cubeEntity = Entity("Sphere", &shader);
+	Model cubeModel = Model(PrimitiveType::SpherePrimitive, Material::Gold);
 	cubeEntity.AddComponent(&cubeModel);
-	cubeEntity.transform->SetPosition({ 0.f, 4.f, 0.f });*/
+	cubeEntity.transform->SetPosition({ 0.f, 10.f, 0.f });
 
 	Entity lightEntity = Entity("DirectionalLight", &shader);
 	Light light = Light(Light::Directional, Color::Blue);
 	lightEntity.transform->SetPosition({ 0.f, 7.5f, 15.f });
 	lightEntity.transform->SetRotation({ -45.f, 0.f, 0.f });
-	light.Intensity = 0.15f;
+	light.Intensity = .15f;
 	lightEntity.AddComponent(&light);
 
 	Entity lightEntity2 = Entity("PointLight", &shader);
@@ -151,7 +156,7 @@ int main()
 		// render
 		Editor::Get()->GetSceneBuffer()->Bind(); // bind to framebuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		
 		Editor::Get()->RenderCamera(&shader);
 		EntityManager::Get()->ComputeEntities();

@@ -3,6 +3,8 @@
 #pragma region Public Methods
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
+    : FragmentPath(fragmentPath)
+    , VertexPath(vertexPath)
 {
    // 1. retrieve the vertex/fragment source code from filePath
    std::string vertexCode;

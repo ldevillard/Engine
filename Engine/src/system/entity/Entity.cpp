@@ -2,6 +2,8 @@
 #include <iostream>
 #include <maths/glm/gtc/quaternion.hpp>
 
+#include "system/editor/Editor.h"
+#include "system/editor/Outliner.h"
 #include "system/entity/Entity.h"
 #include "system/entity/EntityManager.h"
 
@@ -54,14 +56,51 @@ const EditorCollider* Entity::GetEditorCollider() const
 	return editorCollider;
 }
 
+bool Entity::IsSelectedEntity() const
+{
+	return Editor::Get()->GetSelectedEntity() == this;
+}
+
 void Entity::Compute()
 {
+    if (this == Editor::Get()->GetSelectedEntity()) 
+    {
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilMask(0xFF);
+    }
+    else
+    {
+        glStencilMask(0x00);
+    }
+
     transform->Compute(shader);
     
     for (Component* c : components)
         c->Compute();
-
+    
     editorCollider->ApplyTransform(*transform);
+}
+
+void Entity::ComputeOutline() const
+{
+    Outliner::OutlineShader->Use();
+    // setup stencil buffer for outline
+    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+    glStencilMask(0x00);
+    glDisable(GL_DEPTH_TEST);
+
+    Editor::Get()->RenderCamera(Outliner::OutlineShader);
+    transform->Compute(Outliner::OutlineShader);
+    
+    Model* model = nullptr;
+    if (TryGetComponent<Model>(model))
+    {
+		model->ComputeOutline(Outliner::OutlineShader);
+	}
+
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glStencilMask(0xFF);
+    glEnable(GL_DEPTH_TEST);
 }
 
 #pragma endregion
