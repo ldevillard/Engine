@@ -546,7 +546,10 @@
     <None Include="shaders\light\Color.vs" />
     <None Include="shaders\light\LightCube.fs" />
     <None Include="shaders\light\LightCube.vs" />
+    <None Include="shaders\outline\OutlineBlitFragmentShader.glsl" />
+    <None Include="shaders\outline\OutlineDilatingFragmentShader.glsl" />
     <None Include="shaders\outline\OutlineFragmentShader.glsl" />
+    <None Include="shaders\outline\OutlineQuadVertexShader.glsl" />
     <None Include="shaders\outline\OutlineVertexShader.glsl" />
     <None Include="shaders\VertexShader.glsl" />
   </ItemGroup>

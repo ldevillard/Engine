@@ -64,21 +64,37 @@ int main()
 	glEnable(GL_STENCIL_TEST); // enable stencil testing
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // configure the stencil buffer to replace the value of the stencil buffer if the depth test fails
 
+	// screen quad
+	
+	glGenVertexArrays(1, &screenQuadVAO);
+	glGenBuffers(1, &screenQuadVBO);
+	glBindVertexArray(screenQuadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, screenQuadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cs), &cs, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
+		(void*)(2 * sizeof(float)));
+	glBindVertexArray(0);
+
 	// build and compile shader programs
 	Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
 	Shader gizmoShader("shaders/gizmo/GizmoVertexShader.glsl", "shaders/gizmo/GizmoFragmentShader.glsl");
 	Shader outlineShader("shaders/outline/OutlineVertexShader.glsl", "shaders/outline/OutlineFragmentShader.glsl");
+	Shader outlineDilateShader("shaders/outline/OutlineQuadVertexShader.glsl", "shaders/outline/OutlineDilatingFragmentShader.glsl");
+	Shader outlineBlitShader("shaders/outline/OutlineQuadVertexShader.glsl", "shaders/outline/OutlineBlitFragmentShader.glsl");
 
-	Outliner::Initialize(&outlineShader);
+	Outliner::Initialize(&outlineShader, &outlineDilateShader, &outlineBlitShader);
 	Gizmo::InitGizmos(&gizmoShader);
 
 	EntityManager::CreateInstance(&shader);
 	Model::LoadPrimitives();
 
-	Entity entity1 = Entity("Plane", &shader);
-	Model model1 = Model("resources/models/primitive/plane.obj", Material::Silver);
-	entity1.transform->SetScale({ 30.f, 1.f, 30.f });
-	entity1.AddComponent(&model1);
+	//Entity entity1 = Entity("Plane", &shader);
+	//Model model1 = Model("resources/models/primitive/plane.obj", Material::Silver);
+	//entity1.transform->SetScale({ 30.f, 1.f, 30.f });
+	//entity1.AddComponent(&model1);
 
 	Entity entity2 = Entity("Car", &shader);
 	Model model2 = Model("resources/models/car/car.obj", Material::Turquoise);
@@ -87,8 +103,8 @@ int main()
 	entity2.transform->SetRotation({ 0.f, 45.f, 0.f });
 	entity2.AddComponent(&model2);
 
-	Entity cubeEntity = Entity("Sphere", &shader);
-	Model cubeModel = Model(PrimitiveType::SpherePrimitive, Material::Gold);
+	Entity cubeEntity = Entity("Cube", &shader);
+	Model cubeModel = Model(PrimitiveType::CubePrimitive, Material::Gold);
 	cubeEntity.AddComponent(&cubeModel);
 	cubeEntity.transform->SetPosition({ 0.f, 10.f, 0.f });
 
@@ -124,6 +140,7 @@ int main()
 
 	bool wireframeMode = false;
 	bool blinnPhong = true;
+	bool stencilFrame = false;
 	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();
 
 	// setup editor settings
@@ -131,6 +148,7 @@ int main()
 	settings.Wireframe = &wireframeMode;
 	settings.BlinnPhong = &blinnPhong;
 	settings.TrianglesNumber = &trianglesNumber;
+	settings.StencilFrame = &stencilFrame;
 
 	Editor::CreateInstance(window, settings);
 

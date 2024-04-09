@@ -36,6 +36,8 @@ Editor::Editor(GLFWwindow* win, EditorSettings params) :
 	// setup
 	editorCamera = new EditorCamera(glm::vec3(0.0f, 5.f, 30.0f));
 	sceneBuffer = new FrameBuffer(SCR_WIDTH, SCR_HEIGHT);
+	outlineBuffer[0] = new FrameBuffer(SCR_WIDTH, SCR_HEIGHT);
+	outlineBuffer[1] = new FrameBuffer(SCR_WIDTH, SCR_HEIGHT);
 	inspector = Inspector();
 }
 
@@ -49,6 +51,8 @@ Editor::~Editor()
 	// clean
 	delete editorCamera;
 	delete sceneBuffer;
+	delete outlineBuffer[0];
+	delete outlineBuffer[1];
 }
 
 #pragma region Singleton Methods
@@ -92,6 +96,12 @@ const EditorCamera* Editor::GetCamera() const
 const FrameBuffer* Editor::GetSceneBuffer() const
 {
 	return sceneBuffer;
+}
+
+FrameBuffer* Editor::GetOutlineBuffer(int idx) const
+{
+	// add assert to idx
+	return outlineBuffer[idx];
 }
 
 const Entity* Editor::GetSelectedEntity() const
@@ -204,6 +214,8 @@ void Editor::FramebufferSizeCallback(int width, int height)
 	SCR_HEIGHT = height;
 
 	sceneBuffer->RescaleFrameBuffer(width, height);
+	outlineBuffer[0]->RescaleFrameBuffer(width, height);
+	outlineBuffer[1]->RescaleFrameBuffer(width, height);
 }
 
 void Editor::ScrollCallback(double xoffset, double yoffset)
@@ -306,10 +318,15 @@ void Editor::renderScene(float width, float height)
 		float width = ImGui::GetContentRegionAvail().x;
 		float height = ImGui::GetContentRegionAvail().y;
 
+		imH = height;
+		imW = width;
+
+		FrameBuffer* buffer = *parameters.StencilFrame ? outlineBuffer[1] : sceneBuffer;
+
 		SCR_WIDTH = static_cast<unsigned int>(width);
-		SCR_HEIGHT = static_cast<unsigned int>(height);;
+		SCR_HEIGHT = static_cast<unsigned int>(height);
 		ImGui::Image(
-			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(sceneBuffer->GetFrameTexture())),
+			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(buffer->GetFrameTexture())),
 			ImGui::GetContentRegionAvail(),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -382,6 +399,7 @@ void Editor::renderSettings()
 	ImGui::NewLine();
 	ImGui::Separator();
 	ImGui_Utils::DrawBoolControl("Wireframe", *parameters.Wireframe, 100.f);
+	ImGui_Utils::DrawBoolControl("Stencil", *parameters.StencilFrame, 100.f);
 	ImGui_Utils::DrawBoolControl("BlinnPhong", *parameters.BlinnPhong, 100.f);
 	ImGui_Utils::DrawFloatControl("Camera Speed", editorCamera->MovementSpeed, 5.f, 100.f);
 	ImGui::End();

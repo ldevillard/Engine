@@ -41,7 +41,7 @@ FrameBuffer::~FrameBuffer()
 	glDeleteRenderbuffers(1, &rbo);
 }
 
-unsigned int& FrameBuffer::GetFrameTexture()
+unsigned int FrameBuffer::GetFrameTexture()
 {
 	return texture;
 }

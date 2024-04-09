@@ -20,10 +20,21 @@
 inline unsigned int SCR_WIDTH = 1280;
 inline unsigned int SCR_HEIGHT = 720;
 
+
+inline unsigned int screenQuadVAO;
+inline unsigned int screenQuadVBO;
+inline float cs[] = { -1.0F, 1.0F,  0.0F, 1.0F, -1.0F, -1.0F, 0.0F, 0.0F,
+			  1.0F,  -1.0F, 1.0F, 0.0F, -1.0F, 1.0F,  0.0F, 1.0F,
+			  1.0F,  -1.0F, 1.0F, 0.0F, 1.0F,  1.0F,  1.0F, 1.0F };
+
+inline float imW;
+inline float imH;
+
 struct EditorSettings
 {
 	// scene
 	bool* Wireframe = nullptr;
+	bool* StencilFrame = nullptr;
 	bool* BlinnPhong = nullptr;
 	int* TrianglesNumber = nullptr;
 	
@@ -45,6 +56,7 @@ public:
 	const EditorSettings& GetSettings() const;
 	const EditorCamera* GetCamera() const;
 	const FrameBuffer* GetSceneBuffer() const;
+	FrameBuffer* GetOutlineBuffer(int idx) const;
 	const Entity* GetSelectedEntity() const;
 
 	void RenderCamera(Shader* shader);
@@ -71,6 +83,7 @@ private:
 	Entity* selectedEntity = nullptr;
 	EditorCamera* editorCamera = nullptr;
 	FrameBuffer* sceneBuffer = nullptr;
+	FrameBuffer* outlineBuffer[2] = { nullptr };
 	GLFWwindow* window = nullptr;
 
 	EditorSettings parameters;

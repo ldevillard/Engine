@@ -1634,6 +1634,9 @@
     <None Include="shaders\gizmo\GizmoVertexShader.glsl" />
     <None Include="shaders\outline\OutlineVertexShader.glsl" />
     <None Include="shaders\outline\OutlineFragmentShader.glsl" />
+    <None Include="shaders\outline\OutlineQuadVertexShader.glsl" />
+    <None Include="shaders\outline\OutlineDilatingFragmentShader.glsl" />
+    <None Include="shaders\outline\OutlineBlitFragmentShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\awesomeface.png">

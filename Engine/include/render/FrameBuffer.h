@@ -11,7 +11,7 @@ public:
 	FrameBuffer(GLsizei width, GLsizei height);
 	~FrameBuffer();
 
-	unsigned int& GetFrameTexture();
+	unsigned int GetFrameTexture();
 
 	void RescaleFrameBuffer(unsigned int width, unsigned int height);
 	void Bind() const;
