@@ -93,7 +93,7 @@ const EditorCamera* Editor::GetCamera() const
 	return editorCamera;
 }
 
-const FrameBuffer* Editor::GetSceneBuffer() const
+FrameBuffer* Editor::GetSceneBuffer() const
 {
 	return sceneBuffer;
 }

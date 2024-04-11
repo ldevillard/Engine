@@ -63,14 +63,14 @@ bool Entity::IsSelectedEntity() const
 
 void Entity::Compute()
 {
-   // if (this == Editor::Get()->GetSelectedEntity()) 
+    if (this == Editor::Get()->GetSelectedEntity()) 
     {
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
         glStencilMask(0xFF);
     }
-    //else
+    else
     {
-    //    glStencilMask(0x00);
+        glStencilMask(0x00);
     }
 
     transform->Compute(shader);
@@ -83,16 +83,14 @@ void Entity::Compute()
 
 void Entity::ComputeOutline() const
 {
-    //Editor::Get()->GetOutlineBuffer(1)->Unbind();
-    //Editor::Get()->GetSceneBuffer()->Unbind();
     Editor::Get()->GetOutlineBuffer(0)->Bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     Outliner::OutlineShader->Use();
     // setup stencil buffer for outline
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glStencilMask(0xFF);
-    glEnable(GL_DEPTH_TEST);
+    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+    glStencilMask(0x00);
+    glDisable(GL_DEPTH_TEST);
 
     Editor::Get()->RenderCamera(Outliner::OutlineShader);
     transform->Compute(Outliner::OutlineShader);
@@ -103,18 +101,8 @@ void Entity::ComputeOutline() const
 		model->ComputeOutline(Outliner::OutlineShader);
 	}
 
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glStencilMask(0xFF);
-    glEnable(GL_DEPTH_TEST);
-
-    //Editor::Get()->GetOutlineBuffer(0)->Unbind();
-
+    // dillate outline
     Editor::Get()->GetOutlineBuffer(1)->Bind();
-    //glBindFramebuffer(GL_FRAMEBUFFER, targetB.fbo);
-    //glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    //glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    //glStencilMask(0xFF);
     Outliner::OutlineDilatingShader->Use();
     Outliner::OutlineDilatingShader->SetFloat("radius", 3.f);
     Outliner::OutlineDilatingShader->SetFloat("gridX", 1.F / SCR_WIDTH);
@@ -126,27 +114,23 @@ void Entity::ComputeOutline() const
     glBindVertexArray(screenQuadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    glStencilFunc(GL_ALWAYS, 0, 0xFF);
-
     // bind to main frame buffer
     Editor::Get()->GetSceneBuffer()->Bind();
 
-    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    // blit target B to the default frame buffer
-    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-    glStencilMask(0x00);
-    glDisable(GL_DEPTH_TEST);
-    Outliner::OutlineBlitShader->Use();
-    Outliner::OutlineBlitShader->SetInt("screenTexture", 0);
     glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, Editor::Get()->GetSceneBuffer()->GetFrameTexture());
+    glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, Editor::Get()->GetOutlineBuffer(1)->GetFrameTexture());
+
+    Outliner::OutlineBlitShader->Use();
+    Outliner::OutlineBlitShader->SetInt("sceneTexture", 0);
+    Outliner::OutlineBlitShader->SetInt("outlineTexture", 1);
+
     glBindVertexArray(screenQuadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
-    //Editor::Get()->GetOutlineBuffer(1)->Unbind();
 
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
     glStencilMask(0xFF);
-    glStencilFunc(GL_ALWAYS, 0, 0xFF);
     glEnable(GL_DEPTH_TEST);
 }
 

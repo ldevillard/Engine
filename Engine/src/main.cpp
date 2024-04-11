@@ -91,10 +91,10 @@ int main()
 	EntityManager::CreateInstance(&shader);
 	Model::LoadPrimitives();
 
-	//Entity entity1 = Entity("Plane", &shader);
-	//Model model1 = Model("resources/models/primitive/plane.obj", Material::Silver);
-	//entity1.transform->SetScale({ 30.f, 1.f, 30.f });
-	//entity1.AddComponent(&model1);
+	Entity entity1 = Entity("Plane", &shader);
+	Model model1 = Model("resources/models/primitive/plane.obj", Material::Silver);
+	entity1.transform->SetScale({ 30.f, 1.f, 30.f });
+	entity1.AddComponent(&model1);
 
 	Entity entity2 = Entity("Car", &shader);
 	Model model2 = Model("resources/models/car/car.obj", Material::Turquoise);
@@ -109,34 +109,11 @@ int main()
 	cubeEntity.transform->SetPosition({ 0.f, 10.f, 0.f });
 
 	Entity lightEntity = Entity("DirectionalLight", &shader);
-	Light light = Light(Light::Directional, Color::Blue);
+	Light light = Light(Light::Directional, Color::White);
 	lightEntity.transform->SetPosition({ 0.f, 7.5f, 15.f });
 	lightEntity.transform->SetRotation({ -45.f, 0.f, 0.f });
-	light.Intensity = .15f;
+	light.Intensity = 1.f;
 	lightEntity.AddComponent(&light);
-
-	Entity lightEntity2 = Entity("PointLight", &shader);
-	Light light2 = Light(Light::Point);
-	light2.Intensity = 5.1f;
-	light2.Radius = .3f;
-	lightEntity2.transform->SetPosition({ 4.90f, 2.6f, 9.1f });
-	lightEntity2.AddComponent(&light2);
-
-	Entity lightEntity3 = Entity("PointLight2", &shader);
-	Light light3 = Light(Light::Point);
-	light3.Intensity = 5.1f;
-	light3.Radius = .3f;
-	lightEntity3.transform->SetPosition({ 9.f, 2.6f, 5.f });
-	lightEntity3.AddComponent(&light3);
-
-	Entity lightEntity4 = Entity("SpotLight", &shader);
-	Light light4 = Light(Light::Spot);
-	lightEntity4.transform->SetPosition({ 3.f, 9.8f, 3.f });
-	lightEntity4.transform->SetRotation({ -160.f, 45.f, 0.f });
-	light4.CutOff = 19.f;
-	light4.OutCutOff = 30.f;
-	light4.Intensity = 3.5f;
-	lightEntity4.AddComponent(&light4);
 
 	bool wireframeMode = false;
 	bool blinnPhong = true;

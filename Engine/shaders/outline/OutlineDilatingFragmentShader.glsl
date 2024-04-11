@@ -5,25 +5,23 @@ in vec2 TexCoords;
 
 uniform sampler2D screenTexture;
 uniform float radius;
-uniform float gridX; // 1/screenWidth
-uniform float gridY; // 1/screenHeight
 
-void main() {
+void main()
+{
+    float radius = 3.0; // radius of the dilation
+
     vec3 dilatedColor = vec3(0.0);
+    float stepX = 1.0 / float(textureSize(screenTexture, 0).x); // calculate step size based on texture dimensions
+    float stepY = 1.0 / float(textureSize(screenTexture, 0).y);
 
-    // Sample the texture in a grid around the current pixel
-    float startI = max(-radius, -TexCoords.x / gridX);
-    float endI = min(radius, (1.0 - TexCoords.x) / gridX);
-    float startJ = max(-radius, -TexCoords.y / gridY);
-    float endJ = min(radius, (1.0 - TexCoords.y) / gridY);
-
-    for (float i = startI; i <= endI; ++i) 
+    // Loop through neighbors within the radius
+    for (float i = -radius; i <= radius; i++) 
     {
-        for (float j = startJ; j <= endJ; ++j) 
+        for (float j = -radius; j <= radius; j++) 
         {
-            vec2 uv = TexCoords.st + vec2(i * gridX, j * gridY);
-            vec3 color = texture(screenTexture, uv).rgb;
-            dilatedColor = max(dilatedColor, color); // Dilatation
+            vec2 offset = vec2(i * stepX, j * stepY);
+            vec3 color = texture(screenTexture, TexCoords + offset).rgb;
+            dilatedColor = max(dilatedColor, color);
         }
     }
 

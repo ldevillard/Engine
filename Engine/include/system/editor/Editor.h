@@ -55,7 +55,7 @@ public:
 
 	const EditorSettings& GetSettings() const;
 	const EditorCamera* GetCamera() const;
-	const FrameBuffer* GetSceneBuffer() const;
+	FrameBuffer* GetSceneBuffer() const;
 	FrameBuffer* GetOutlineBuffer(int idx) const;
 	const Entity* GetSelectedEntity() const;
 
