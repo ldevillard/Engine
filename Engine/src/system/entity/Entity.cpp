@@ -83,6 +83,12 @@ void Entity::Compute()
 
 void Entity::ComputeOutline() const
 {
+    Model* model = nullptr;
+    if (!TryGetComponent<Model>(model))
+    {
+        return;
+    }
+
     Editor::Get()->GetOutlineBuffer(0)->Bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -95,18 +101,12 @@ void Entity::ComputeOutline() const
     Editor::Get()->RenderCamera(Outliner::OutlineShader);
     transform->Compute(Outliner::OutlineShader);
     
-    Model* model = nullptr;
-    if (TryGetComponent<Model>(model))
-    {
-		model->ComputeOutline(Outliner::OutlineShader);
-	}
+	model->ComputeOutline(Outliner::OutlineShader);
 
     // dillate outline
     Editor::Get()->GetOutlineBuffer(1)->Bind();
     Outliner::OutlineDilatingShader->Use();
-    Outliner::OutlineDilatingShader->SetFloat("radius", 3.f);
-    Outliner::OutlineDilatingShader->SetFloat("gridX", 1.F / SCR_WIDTH);
-    Outliner::OutlineDilatingShader->SetFloat("gridY", 1.F / SCR_HEIGHT);
+    Outliner::OutlineDilatingShader->SetFloat("radius", 2.5f);
     Outliner::OutlineDilatingShader->SetInt("screenTexture", 0);
     
     glActiveTexture(GL_TEXTURE0);

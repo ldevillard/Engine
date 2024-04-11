@@ -5,7 +5,7 @@
 Shader* Outliner::OutlineShader = nullptr;
 Shader* Outliner::OutlineDilatingShader = nullptr;
 Shader* Outliner::OutlineBlitShader = nullptr;
-Color Outliner::OutlineColor = glm::vec3(1.f, 1.f, 0.4f);
+Color Outliner::OutlineColor = glm::vec3(1.f, 0.565f, 0.161f);
 float Outliner::OutlineWidth = 0.04f;
 
 #pragma region Static Methods
