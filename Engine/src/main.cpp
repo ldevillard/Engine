@@ -59,6 +59,8 @@ int main()
 		return -1;
 	}
 
+	//glfwSwapInterval(1); // enable vsync
+
 	// configure global opengl state
 	glEnable(GL_DEPTH_TEST); // enable depth testing
 	glEnable(GL_STENCIL_TEST); // enable stencil testing
@@ -138,14 +140,12 @@ int main()
 		if (wireframeMode)
 		{
 			glDisable(GL_CULL_FACE);
-			glPolygonMode(GL_BACK, GL_LINE);
-			glPolygonMode(GL_FRONT, GL_LINE);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
 		else
 		{
 			glEnable(GL_CULL_FACE);
-			glPolygonMode(GL_FRONT, GL_FILL);
-			glPolygonMode(GL_BACK, GL_FILL);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
 		// render

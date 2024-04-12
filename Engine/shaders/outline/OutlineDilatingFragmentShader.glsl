@@ -20,7 +20,7 @@ void main()
 
     if (neighbourUp.r < 0.5 || neighbourDown.r < 0.5 || neighbourLeft.r < 0.5 || neighbourRight.r < 0.5)
     {
-        // At least one neighbor is not part of the outline, perform dilation
+        // At least one neighbour is not part of the outline, perform dilation
         for (float i = -radius; i <= radius; i++)
         {
             for (float j = -radius; j <= radius; j++)

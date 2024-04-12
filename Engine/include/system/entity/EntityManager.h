@@ -17,6 +17,7 @@ public:
 	static EntityManager* Get();
 
 	void ComputeEntities() const;
+	void ComputeSelectedEntity() const;
 	const unsigned int GetNumberOfTriangles() const;
 
 	void RegisterEntity(Entity* e);

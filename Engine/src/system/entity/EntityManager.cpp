@@ -51,10 +51,18 @@ void EntityManager::ComputeEntities() const
 		e->Compute();
 	}
 
-	const Entity* selectedEntity = Editor::Get()->GetSelectedEntity();
-	if (selectedEntity != nullptr)
+	ComputeSelectedEntity();
+}
+
+void EntityManager::ComputeSelectedEntity() const
+{
+	if (!*Editor::Get()->GetSettings().Wireframe)
 	{
-		selectedEntity->ComputeOutline();
+		const Entity* selectedEntity = Editor::Get()->GetSelectedEntity();
+		if (selectedEntity != nullptr)
+		{
+			selectedEntity->ComputeOutline();
+		}
 	}
 }
 
@@ -74,7 +82,7 @@ const unsigned int EntityManager::GetNumberOfTriangles() const
 	return sum;
 }
 
-void EntityManager::RegisterEntity(Entity* e) 
+void EntityManager::RegisterEntity(Entity* e)
 {
 	if (e == nullptr)
 	{
@@ -93,7 +101,7 @@ void EntityManager::RegisterEntity(Entity* e)
 	UpdateLightsIndex();
 }
 
-void EntityManager::UnregisterEntity(Entity* e) 
+void EntityManager::UnregisterEntity(Entity* e)
 {
 	if (e == nullptr)
 	{
