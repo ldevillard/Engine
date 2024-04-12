@@ -318,9 +318,6 @@ void Editor::renderScene(float width, float height)
 		float width = ImGui::GetContentRegionAvail().x;
 		float height = ImGui::GetContentRegionAvail().y;
 
-		imH = height;
-		imW = width;
-
 		FrameBuffer* buffer = *parameters.StencilFrame ? outlineBuffer[1] : sceneBuffer;
 
 		SCEEN_WIDTH = static_cast<unsigned int>(width);

@@ -122,7 +122,7 @@ void Entity::ComputeOutline() const
     Outliner::OutlineBlitShader->Use();
     Outliner::OutlineBlitShader->SetTextures(Editor::Get()->GetSceneBuffer()->GetFrameTexture()
                                             , Editor::Get()->GetOutlineBuffer(1)->GetFrameTexture());
-    Outliner::OutlineBlitShader->Dispatch(glm::uvec2(16, 8));
+    Outliner::OutlineBlitShader->Dispatch(glm::uvec2(8, 4));
     Outliner::OutlineBlitShader->Wait();
 
     glStencilFunc(GL_ALWAYS, 1, 0xFF);

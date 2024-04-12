@@ -29,8 +29,6 @@ inline float cs[] = { -1.0F, 1.0F,  0.0F, 1.0F, -1.0F, -1.0F, 0.0F, 0.0F,
 			  1.0F,  -1.0F, 1.0F, 0.0F, -1.0F, 1.0F,  0.0F, 1.0F,
 			  1.0F,  -1.0F, 1.0F, 0.0F, 1.0F,  1.0F,  1.0F, 1.0F };
 
-inline float imW;
-inline float imH;
 
 struct EditorSettings
 {

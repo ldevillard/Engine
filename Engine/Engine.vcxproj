@@ -549,7 +549,6 @@
     <None Include="shaders\light\LightCube.fs" />
     <None Include="shaders\light\LightCube.vs" />
     <None Include="shaders\compute\BlitTexturesComputeShader.glsl" />
-    <None Include="shaders\outline\OutlineBlitFragmentShader.glsl" />
     <None Include="shaders\outline\OutlineDilatingFragmentShader.glsl" />
     <None Include="shaders\outline\OutlineFragmentShader.glsl" />
     <None Include="shaders\outline\OutlineQuadVertexShader.glsl" />

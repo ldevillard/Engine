@@ -60,7 +60,7 @@ int main()
 		return -1;
 	}
 
-	//glfwSwapInterval(1); // enable vsync
+	glfwSwapInterval(1); // enable vsync
 
 	// configure global opengl state
 	glEnable(GL_DEPTH_TEST); // enable depth testing
@@ -86,7 +86,6 @@ int main()
 	Shader gizmoShader("shaders/gizmo/GizmoVertexShader.glsl", "shaders/gizmo/GizmoFragmentShader.glsl");
 	Shader outlineShader("shaders/outline/OutlineVertexShader.glsl", "shaders/outline/OutlineFragmentShader.glsl");
 	Shader outlineDilateShader("shaders/outline/OutlineQuadVertexShader.glsl", "shaders/outline/OutlineDilatingFragmentShader.glsl");
-	//Shader outlineBlitShader("shaders/outline/OutlineQuadVertexShader.glsl", "shaders/outline/OutlineBlitFragmentShader.glsl");
 	ComputeShader outlineBlitShader("shaders/compute/BlitTexturesComputeShader.glsl", glm::uvec2(SCEEN_WIDTH, SCEEN_HEIGHT));
 
 	Outliner::Initialize(&outlineShader, &outlineDilateShader, &outlineBlitShader);
