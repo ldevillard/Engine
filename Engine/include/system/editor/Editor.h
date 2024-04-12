@@ -17,9 +17,11 @@
 #include "system/entity/Entity.h"
 #include "system/editor/EditorCamera.h"
 
-inline unsigned int SCR_WIDTH = 1280;
-inline unsigned int SCR_HEIGHT = 720;
+inline unsigned int SCEEN_WIDTH = 1280;
+inline unsigned int SCEEN_HEIGHT = 720;
 
+inline unsigned int SRC_WIDTH = 1280;
+inline unsigned int SRC_HEIGHT = 720;
 
 inline unsigned int screenQuadVAO;
 inline unsigned int screenQuadVBO;
@@ -100,7 +102,7 @@ private:
 	const std::vector<const char*> gizmoSpaces = { "Local", "World" };
 
 	// mouse and screen settings
-	float lastX = SCR_WIDTH / 2.0f;
-	float lastY = SCR_HEIGHT / 2.0f;
+	float lastX = SCEEN_WIDTH / 2.0f;
+	float lastY = SCEEN_HEIGHT / 2.0f;
 	bool firstMouse = true;
 };

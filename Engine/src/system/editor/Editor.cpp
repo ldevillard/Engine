@@ -35,9 +35,9 @@ Editor::Editor(GLFWwindow* win, EditorSettings params) :
 
 	// setup
 	editorCamera = new EditorCamera(glm::vec3(0.0f, 5.f, 30.0f));
-	sceneBuffer = new FrameBuffer(SCR_WIDTH, SCR_HEIGHT);
-	outlineBuffer[0] = new FrameBuffer(SCR_WIDTH, SCR_HEIGHT);
-	outlineBuffer[1] = new FrameBuffer(SCR_WIDTH, SCR_HEIGHT);
+	sceneBuffer = new FrameBuffer(SCEEN_WIDTH, SCEEN_HEIGHT);
+	outlineBuffer[0] = new FrameBuffer(SCEEN_WIDTH, SCEEN_HEIGHT);
+	outlineBuffer[1] = new FrameBuffer(SCEEN_WIDTH, SCEEN_HEIGHT);
 	inspector = Inspector();
 }
 
@@ -120,7 +120,7 @@ void Editor::RenderCamera(Shader* shader)
 	shader->SetBool("wireframe", *parameters.Wireframe);
 	shader->SetBool("blinn", *parameters.BlinnPhong);
 
-	glm::mat4 projection = editorCamera->GetProjectionMatrix(static_cast<float>(SCR_WIDTH), static_cast<float>(SCR_HEIGHT));
+	glm::mat4 projection = editorCamera->GetProjectionMatrix(static_cast<float>(SCEEN_WIDTH), static_cast<float>(SCEEN_HEIGHT));
 	glm::mat4 view = editorCamera->GetViewMatrix();
 	shader->SetMat4("projection", projection);
 	shader->SetMat4("view", view);
@@ -128,8 +128,8 @@ void Editor::RenderCamera(Shader* shader)
 
 void Editor::RenderEditor()
 {
-	float w = static_cast<float>(SCR_WIDTH);
-	float h = static_cast<float>(SCR_HEIGHT);
+	float w = static_cast<float>(SCEEN_WIDTH);
+	float h = static_cast<float>(SCEEN_HEIGHT);
 
 	// Rendering ImGui
 	ImGui_ImplOpenGL3_NewFrame();
@@ -210,8 +210,8 @@ void Editor::FramebufferSizeCallback(int width, int height)
 {
 	glViewport(0, 0, width, height);
 
-	SCR_WIDTH = width;
-	SCR_HEIGHT = height;
+	SCEEN_WIDTH = width;
+	SCEEN_HEIGHT = height;
 
 	sceneBuffer->RescaleFrameBuffer(width, height);
 	outlineBuffer[0]->RescaleFrameBuffer(width, height);
@@ -280,8 +280,8 @@ void Editor::ProcessInputs()
 
 		glm::vec3 worldPos = Math::ScreenToWorldPoint(glm::vec2(mousePosScene.x, mousePosScene.y)
 				, editorCamera->GetViewMatrix()
-				, editorCamera->GetProjectionMatrix(static_cast<float>(SCR_WIDTH), static_cast<float>(SCR_HEIGHT))
-				, glm::vec4(0, 0, SCR_WIDTH, SCR_HEIGHT));
+				, editorCamera->GetProjectionMatrix(static_cast<float>(SCEEN_WIDTH), static_cast<float>(SCEEN_HEIGHT))
+				, glm::vec4(0, 0, SCEEN_WIDTH, SCEEN_HEIGHT));
 		
 		// Raycast
 		glm::vec3 direction = glm::normalize(worldPos - editorCamera->Position);
@@ -323,8 +323,8 @@ void Editor::renderScene(float width, float height)
 
 		FrameBuffer* buffer = *parameters.StencilFrame ? outlineBuffer[1] : sceneBuffer;
 
-		SCR_WIDTH = static_cast<unsigned int>(width);
-		SCR_HEIGHT = static_cast<unsigned int>(height);
+		SCEEN_WIDTH = static_cast<unsigned int>(width);
+		SCEEN_HEIGHT = static_cast<unsigned int>(height);
 		ImGui::Image(
 			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(buffer->GetFrameTexture())),
 			ImGui::GetContentRegionAvail(),

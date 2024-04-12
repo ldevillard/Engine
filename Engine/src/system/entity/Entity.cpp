@@ -117,17 +117,13 @@ void Entity::ComputeOutline() const
     // bind to main frame buffer
     Editor::Get()->GetSceneBuffer()->Bind();
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, Editor::Get()->GetSceneBuffer()->GetFrameTexture());
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, Editor::Get()->GetOutlineBuffer(1)->GetFrameTexture());
+    Outliner::OutlineBlitShader->SetWorkSize(glm::uvec2(SRC_WIDTH, SRC_HEIGHT));
 
     Outliner::OutlineBlitShader->Use();
-    Outliner::OutlineBlitShader->SetInt("sceneTexture", 0);
-    Outliner::OutlineBlitShader->SetInt("outlineTexture", 1);
-
-    glBindVertexArray(screenQuadVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    Outliner::OutlineBlitShader->SetTextures(Editor::Get()->GetSceneBuffer()->GetFrameTexture()
+                                            , Editor::Get()->GetOutlineBuffer(1)->GetFrameTexture());
+    Outliner::OutlineBlitShader->Dispatch(glm::uvec2(16, 8));
+    Outliner::OutlineBlitShader->Wait();
 
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
     glStencilMask(0xFF);

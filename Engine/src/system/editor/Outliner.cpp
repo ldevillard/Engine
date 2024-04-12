@@ -4,13 +4,13 @@
 // method because Color might not be initialized yet
 Shader* Outliner::OutlineShader = nullptr;
 Shader* Outliner::OutlineDilatingShader = nullptr;
-Shader* Outliner::OutlineBlitShader = nullptr;
+ComputeShader* Outliner::OutlineBlitShader = nullptr;
 Color Outliner::OutlineColor = glm::vec3(1.f, 0.565f, 0.161f);
 float Outliner::OutlineWidth = 0.04f;
 
 #pragma region Static Methods
 
-void Outliner::Initialize(Shader* outlineShader, Shader* outlineDilatingShader, Shader* outlineBlitShader)
+void Outliner::Initialize(Shader* outlineShader, Shader* outlineDilatingShader, ComputeShader* outlineBlitShader)
 {
 	OutlineShader = outlineShader;
 	OutlineDilatingShader = outlineDilatingShader;

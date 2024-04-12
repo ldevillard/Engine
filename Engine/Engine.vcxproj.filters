@@ -207,6 +207,9 @@
     <ClCompile Include="src\system\editor\Outliner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\ComputeShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\imgui\imconfig.h">
@@ -1208,6 +1211,9 @@
     <ClInclude Include="include\system\editor\Outliner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\ComputeShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\VertexShader.glsl" />
@@ -1637,6 +1643,7 @@
     <None Include="shaders\outline\OutlineQuadVertexShader.glsl" />
     <None Include="shaders\outline\OutlineDilatingFragmentShader.glsl" />
     <None Include="shaders\outline\OutlineBlitFragmentShader.glsl" />
+    <None Include="shaders\compute\BlitTexturesComputeShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\awesomeface.png">

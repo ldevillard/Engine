@@ -124,7 +124,7 @@ void Gizmo::bindShader(const Color& color, const Transform& transform)
 
 	const EditorCamera* camera = Editor::Get()->GetCamera();
 
-	glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCEEN_WIDTH / (float)SCEEN_HEIGHT, 0.1f, 1000.0f);
 	glm::mat4 view = camera->GetViewMatrix();
 	shader->SetMat4("projection", projection);
 	shader->SetMat4("view", view);
