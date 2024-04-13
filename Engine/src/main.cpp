@@ -106,10 +106,11 @@ int main()
 	entity2.transform->SetRotation({ 0.f, 45.f, 0.f });
 	entity2.AddComponent(&model2);
 
-	Entity cubeEntity = Entity("Cube", &shader);
-	Model cubeModel = Model(PrimitiveType::CubePrimitive, Material::Gold);
-	cubeEntity.AddComponent(&cubeModel);
-	cubeEntity.transform->SetPosition({ 0.f, 10.f, 0.f });
+	Entity entity3 = Entity("Aircraft", &shader);
+	Model model3 = Model("resources/models/plane/piper_pa18.obj");
+	entity3.transform->SetPosition({ 0.f, 0.f, 0.f });
+	entity3.transform->SetRotation({ 0.f, 45.f, 0.f });
+	entity3.AddComponent(&model3);
 
 	Entity lightEntity = Entity("DirectionalLight", &shader);
 	Light light = Light(Light::Directional, Color::White);
@@ -117,6 +118,14 @@ int main()
 	lightEntity.transform->SetRotation({ -45.f, 0.f, 0.f });
 	light.Intensity = 1.f;
 	lightEntity.AddComponent(&light);
+
+	Entity lightEntity2 = Entity("SpotLight", &shader);
+	Light light2 = Light(Light::Spot, Color::White);
+	lightEntity2.AddComponent(&light2);
+
+	Entity lightEntity3 = Entity("PointLight", &shader);
+	Light light3 = Light(Light::Point, Color::White);
+	lightEntity3.AddComponent(&light3);
 
 	bool wireframeMode = false;
 	bool blinnPhong = true;

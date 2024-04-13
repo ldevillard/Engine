@@ -1642,7 +1642,6 @@
     <None Include="shaders\outline\OutlineFragmentShader.glsl" />
     <None Include="shaders\outline\OutlineQuadVertexShader.glsl" />
     <None Include="shaders\outline\OutlineDilatingFragmentShader.glsl" />
-    <None Include="shaders\outline\OutlineBlitFragmentShader.glsl" />
     <None Include="shaders\compute\BlitTexturesComputeShader.glsl" />
   </ItemGroup>
   <ItemGroup>

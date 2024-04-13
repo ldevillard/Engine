@@ -72,7 +72,7 @@ void ComputeShader::Use()
 void ComputeShader::Dispatch(glm::uvec2 workCount)
 {
     // dispatch the compute shader
-    glDispatchCompute(ceil(workSize.x / workCount.x), ceil(workSize.y / workCount.y), 1);
+    glDispatchCompute((GLuint)ceil(workSize.x / workCount.x), (GLuint)ceil(workSize.y / workCount.y), 1);
 }
 
 void ComputeShader::Wait()

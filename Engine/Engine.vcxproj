@@ -616,8 +616,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGuizmo;C:\Users\ldevillard\Desktop\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Engine\Engine\include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGui;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGuizmo;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGui;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGuizmo;C:\Users\ldevillard\Desktop\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Engine\Engine\include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGui;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGuizmo;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGui;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\Users\ldevillard\Desktop\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
@@ -628,8 +628,8 @@
     <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\ldevillard\Desktop\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <IncludePath>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGuizmo;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGui;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\logan\Desktop\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\imgui;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;C:\Users\ldevillard\Desktop\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\Engine\Engine\include;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGuizmo;C:\Users\logan\Desktop\Engine\ThirdPartyLibs\ImGui;C:\Users\ldevillard\Desktop\Engine\ThirdPartyLibs\Libs;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -674,6 +674,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -685,12 +686,15 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\ldevillard\Desktop\Engine\imgui</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
