@@ -67,20 +67,6 @@ int main()
 	glEnable(GL_STENCIL_TEST); // enable stencil testing
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // configure the stencil buffer to replace the value of the stencil buffer if the depth test fails
 
-	// screen quad
-	
-	glGenVertexArrays(1, &screenQuadVAO);
-	glGenBuffers(1, &screenQuadVBO);
-	glBindVertexArray(screenQuadVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, screenQuadVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cs), &cs, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-		(void*)(2 * sizeof(float)));
-	glBindVertexArray(0);
-
 	// build and compile shader programs
 	Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
 	Shader gizmoShader("shaders/gizmo/GizmoVertexShader.glsl", "shaders/gizmo/GizmoFragmentShader.glsl");
@@ -128,16 +114,12 @@ int main()
 	lightEntity3.AddComponent(&light3);
 
 	bool wireframeMode = false;
-	bool blinnPhong = true;
-	bool stencilFrame = false;
 	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();
 
 	// setup editor settings
 	EditorSettings settings;
 	settings.Wireframe = &wireframeMode;
-	settings.BlinnPhong = &blinnPhong;
 	settings.TrianglesNumber = &trianglesNumber;
-	settings.StencilFrame = &stencilFrame;
 
 	Editor::CreateInstance(window, settings);
 

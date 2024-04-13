@@ -42,19 +42,6 @@ ComputeShader::ComputeShader(const char* path, glm::uvec2 workSize)
     checkCompileErrors(ID, "PROGRAM");
     // delete the shaders as they're linked into our program now and no longer necessary
     glDeleteShader(shader);
-
-    // create input/output textures
-    //glGenTextures(1, &tempTexture);
-    //glActiveTexture(GL_TEXTURE0);
-    //glBindTexture(GL_TEXTURE_2D, tempTexture);
-
-    //// turns out we need this. huh.
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-    //// create empty texture
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, workSize.x, workSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    //glBindImageTexture(0, tempTexture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
 }
 
 ComputeShader::~ComputeShader()

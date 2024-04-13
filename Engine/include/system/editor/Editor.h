@@ -23,19 +23,10 @@ inline unsigned int SCEEN_HEIGHT = 720;
 inline unsigned int SRC_WIDTH = 1280;
 inline unsigned int SRC_HEIGHT = 720;
 
-inline unsigned int screenQuadVAO;
-inline unsigned int screenQuadVBO;
-inline float cs[] = { -1.0F, 1.0F,  0.0F, 1.0F, -1.0F, -1.0F, 0.0F, 0.0F,
-			  1.0F,  -1.0F, 1.0F, 0.0F, -1.0F, 1.0F,  0.0F, 1.0F,
-			  1.0F,  -1.0F, 1.0F, 0.0F, 1.0F,  1.0F,  1.0F, 1.0F };
-
-
 struct EditorSettings
 {
 	// scene
 	bool* Wireframe = nullptr;
-	bool* StencilFrame = nullptr;
-	bool* BlinnPhong = nullptr;
 	int* TrianglesNumber = nullptr;
 	
 	bool Gizmo = true;

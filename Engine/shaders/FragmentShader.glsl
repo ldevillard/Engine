@@ -42,7 +42,6 @@ uniform vec3 viewPos;
 
 uniform bool wireframe;
 uniform bool textured;
-uniform bool blinn;
 
 vec3 ComputeDirectionalLighting(Light light)
 {
@@ -58,16 +57,9 @@ vec3 ComputeDirectionalLighting(Light light)
     // specular lighting
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = 0.0;
-    if (blinn)
-    {
-        vec3 halfwayDir = normalize(lightDir + viewDir);
-        spec = pow(max(dot(halfwayDir, reflectDir), 0.0), material.shininess * 128);
-    }
-    else
-    {
-        spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess * 128);
-    }
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(halfwayDir, reflectDir), 0.0), material.shininess * 128);
+
     vec3 specular = spec * light.color * material.specular;
 
 	return (ambient + diffuse + specular) * light.intensity;
@@ -94,16 +86,9 @@ vec3 ComputePointLighting(Light light)
     // specular lighting
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = 0.0;
-    if (blinn)
-    {
-        vec3 halfwayDir = normalize(lightDir + viewDir);
-        spec = pow(max(dot(halfwayDir, reflectDir), 0.0), material.shininess * 128);
-    }
-    else
-    {
-        spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess * 128);
-    }
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(halfwayDir, reflectDir), 0.0), material.shininess * 128);
+
     vec3 specular = spec * light.color * material.specular * attenuation;
 
     return (ambient + diffuse + specular) * light.intensity;
@@ -137,16 +122,8 @@ vec3 ComputeSpotLighting(Light light)
     // specular lighting
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = 0.0;
-    if (blinn)
-    {
-        vec3 halfwayDir = normalize(lightDir + viewDir);
-        spec = pow(max(dot(halfwayDir, reflectDir), 0.0), material.shininess * 128);
-    }
-    else
-    {
-        spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess * 128);
-    }
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(halfwayDir, reflectDir), 0.0), material.shininess * 128);
     vec3 specular = spec * light.color * material.specular * intensity * attenuation;
 
     return (ambient + diffuse + specular) * light.intensity;

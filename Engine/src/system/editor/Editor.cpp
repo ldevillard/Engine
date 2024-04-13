@@ -118,7 +118,6 @@ void Editor::RenderCamera(Shader* shader)
 	shader->Use();
 	shader->SetVec3("viewPos", editorCamera->Position);
 	shader->SetBool("wireframe", *parameters.Wireframe);
-	shader->SetBool("blinn", *parameters.BlinnPhong);
 
 	glm::mat4 projection = editorCamera->GetProjectionMatrix(static_cast<float>(SCEEN_WIDTH), static_cast<float>(SCEEN_HEIGHT));
 	glm::mat4 view = editorCamera->GetViewMatrix();
@@ -318,12 +317,10 @@ void Editor::renderScene(float width, float height)
 		float width = ImGui::GetContentRegionAvail().x;
 		float height = ImGui::GetContentRegionAvail().y;
 
-		FrameBuffer* buffer = *parameters.StencilFrame ? outlineBuffer[1] : sceneBuffer;
-
 		SCEEN_WIDTH = static_cast<unsigned int>(width);
 		SCEEN_HEIGHT = static_cast<unsigned int>(height);
 		ImGui::Image(
-			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(buffer->GetFrameTexture())),
+			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(sceneBuffer->GetFrameTexture())),
 			ImGui::GetContentRegionAvail(),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -396,8 +393,6 @@ void Editor::renderSettings()
 	ImGui::NewLine();
 	ImGui::Separator();
 	ImGui_Utils::DrawBoolControl("Wireframe", *parameters.Wireframe, 100.f);
-	ImGui_Utils::DrawBoolControl("Stencil", *parameters.StencilFrame, 100.f);
-	ImGui_Utils::DrawBoolControl("BlinnPhong", *parameters.BlinnPhong, 100.f);
 	ImGui_Utils::DrawFloatControl("Camera Speed", editorCamera->MovementSpeed, 5.f, 100.f);
 	ImGui::End();
 }
