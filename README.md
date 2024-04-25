@@ -8,7 +8,7 @@ My 3D Engine working with OpenGL
 - Blinn Phong Lighting with directional, point and spot
 - 3D gizmos to edit transform inside the scene
 - ImGui integration for the interface
-- Raycast mouse picker
+- Raycast mouse picker with outline
 
 ## Next Features
 
