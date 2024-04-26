@@ -26,7 +26,6 @@ void Outliner::Initialize(Shader* outlineShader, Shader* outlineDilatingShader, 
 
 void Outliner::Setup()
 {
-
 	Editor::Get()->GetOutlineBuffer(0)->Bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -62,7 +61,7 @@ void Outliner::Draw()
 	// bind to main frame buffer
 	Editor::Get()->GetSceneBuffer()->Bind();
 
-	OutlineBlitShader->SetWorkSize(glm::uvec2(SRC_WIDTH, SRC_HEIGHT));
+	OutlineBlitShader->SetWorkSize(glm::uvec2(SCR_WIDTH, SCR_HEIGHT));
 
 	OutlineBlitShader->Use();
 	OutlineBlitShader->SetTextures(Editor::Get()->GetSceneBuffer()->GetFrameTexture()

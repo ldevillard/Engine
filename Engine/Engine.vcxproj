@@ -36,6 +36,7 @@
     <ClCompile Include="src\maths\Maths.cpp" />
     <ClCompile Include="src\physics\Physics.cpp" />
     <ClCompile Include="src\render\ComputeShader.cpp" />
+    <ClCompile Include="src\render\RayTracer.cpp" />
     <ClCompile Include="src\system\editor\EditorCamera.cpp" />
     <ClCompile Include="src\component\Component.cpp" />
     <ClCompile Include="src\component\Light.cpp" />
@@ -82,6 +83,7 @@
     <ClInclude Include="include\maths\Math.h" />
     <ClInclude Include="include\physics\Physics.h" />
     <ClInclude Include="include\render\ComputeShader.h" />
+    <ClInclude Include="include\render\RayTracer.h" />
     <ClInclude Include="include\system\editor\EditorCamera.h" />
     <ClInclude Include="include\component\Component.h" />
     <ClInclude Include="include\component\Light.h" />
@@ -553,6 +555,8 @@
     <None Include="shaders\outline\OutlineFragmentShader.glsl" />
     <None Include="shaders\outline\OutlineQuadVertexShader.glsl" />
     <None Include="shaders\outline\OutlineVertexShader.glsl" />
+    <None Include="shaders\raytracing\RayTracerFragmentShader.glsl" />
+    <None Include="shaders\raytracing\RayTracerVertexShader.glsl" />
     <None Include="shaders\VertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>

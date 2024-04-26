@@ -17,11 +17,14 @@
 #include "system/entity/Entity.h"
 #include "system/editor/EditorCamera.h"
 
-inline unsigned int SCEEN_WIDTH = 1280;
-inline unsigned int SCEEN_HEIGHT = 720;
+inline unsigned int SCENE_WIDTH = 1280;
+inline unsigned int SCENE_HEIGHT = 720;
 
-inline unsigned int SRC_WIDTH = 1280;
-inline unsigned int SRC_HEIGHT = 720;
+inline unsigned int RAYTRACED_SCENE_WIDTH = 1280;
+inline unsigned int RAYTRACED_SCENE_HEIGHT = 720;
+
+inline unsigned int SCR_WIDTH = 1280;
+inline unsigned int SCR_HEIGHT = 720;
 
 struct EditorSettings
 {
@@ -47,6 +50,7 @@ public:
 	const EditorSettings& GetSettings() const;
 	const EditorCamera* GetCamera() const;
 	FrameBuffer* GetSceneBuffer() const;
+	FrameBuffer* GetRaytracingBuffer() const;
 	FrameBuffer* GetOutlineBuffer(int idx) const;
 	const Entity* GetSelectedEntity() const;
 
@@ -65,6 +69,7 @@ private:
 
 	// render functions
 	void renderScene(float width, float height);
+	void renderRayTracer();
 	void renderInspector();
 	void renderHierarchy();
 	void renderSettings();
@@ -75,6 +80,7 @@ private:
 	EditorCamera* editorCamera = nullptr;
 	FrameBuffer* sceneBuffer = nullptr;
 	FrameBuffer* outlineBuffer[2] = { nullptr };
+	FrameBuffer* raytracingBuffer = nullptr;
 	GLFWwindow* window = nullptr;
 
 	EditorSettings parameters;
@@ -91,7 +97,7 @@ private:
 	const std::vector<const char*> gizmoSpaces = { "Local", "World" };
 
 	// mouse and screen settings
-	float lastX = SCEEN_WIDTH / 2.0f;
-	float lastY = SCEEN_HEIGHT / 2.0f;
+	float lastX = SCENE_WIDTH / 2.0f;
+	float lastY = SCENE_HEIGHT / 2.0f;
 	bool firstMouse = true;
 };

@@ -25,6 +25,7 @@
 #include "component/Light.h"
 #include "render/Shader.h"
 #include "render/ComputeShader.h"
+#include "render/RayTracer.h"
 #include "debug/DebugMenu.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -40,7 +41,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// glfw window creation
-	GLFWwindow* window = glfwCreateWindow(SCEEN_WIDTH, SCEEN_HEIGHT, "Engine", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCENE_WIDTH, SCENE_HEIGHT, "Engine", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -72,9 +73,11 @@ int main()
 	Shader gizmoShader("shaders/gizmo/GizmoVertexShader.glsl", "shaders/gizmo/GizmoFragmentShader.glsl");
 	Shader outlineShader("shaders/outline/OutlineVertexShader.glsl", "shaders/outline/OutlineFragmentShader.glsl");
 	Shader outlineDilateShader("shaders/outline/OutlineQuadVertexShader.glsl", "shaders/outline/OutlineDilatingFragmentShader.glsl");
-	ComputeShader outlineBlitShader("shaders/compute/BlitTexturesComputeShader.glsl", glm::uvec2(SCEEN_WIDTH, SCEEN_HEIGHT));
+	ComputeShader outlineBlitShader("shaders/compute/BlitTexturesComputeShader.glsl", glm::uvec2(SCENE_WIDTH, SCENE_HEIGHT));
+	Shader raytracingShader("shaders/raytracing/RayTracerVertexShader.glsl", "shaders/raytracing/RayTracerFragmentShader.glsl");
 
 	Outliner::Initialize(&outlineShader, &outlineDilateShader, &outlineBlitShader);
+	RayTracer::Initialize(&raytracingShader);
 	Gizmo::InitGizmos(&gizmoShader);
 
 	EntityManager::CreateInstance(&shader);
@@ -84,19 +87,6 @@ int main()
 	Model model1 = Model("resources/models/primitive/plane.obj", Material::Silver);
 	entity1.transform->SetScale({ 30.f, 1.f, 30.f });
 	entity1.AddComponent(&model1);
-
-	Entity entity2 = Entity("Car", &shader);
-	Model model2 = Model("resources/models/car/car.obj", Material::Turquoise);
-	entity2.transform->SetPosition({ 0.f, 0.f, 0.f });
-	entity2.transform->SetScale({ 0.05f, 0.05f, 0.05f });
-	entity2.transform->SetRotation({ 0.f, 45.f, 0.f });
-	entity2.AddComponent(&model2);
-
-	Entity entity3 = Entity("Aircraft", &shader);
-	Model model3 = Model("resources/models/plane/piper_pa18.obj");
-	entity3.transform->SetPosition({ 0.f, 0.f, 0.f });
-	entity3.transform->SetRotation({ 0.f, 45.f, 0.f });
-	entity3.AddComponent(&model3);
 
 	Entity lightEntity = Entity("DirectionalLight", &shader);
 	Light light = Light(Light::Directional, Color::White);
@@ -151,6 +141,9 @@ int main()
 		// unbind framebuffer
 		Editor::Get()->GetSceneBuffer()->Unbind();
 
+		// raytracing
+		RayTracer::Draw();
+
 		// editor
 		Editor::Get()->RenderEditor();
 
@@ -193,8 +186,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	SRC_WIDTH = width;
-	SRC_HEIGHT = height;
+	SCR_WIDTH = width;
+	SCR_HEIGHT = height;
 
 	Editor* editor = Editor::Get();
 	if (editor)

@@ -4,15 +4,15 @@ enum PrimitiveType
 {
     CubePrimitive,
     SpherePrimitive,
-	PlanePrimitive,
+	 PlanePrimitive,
 };
 
 enum GizmoType
 {
-	WireCubeGizmo,
-	WireSphereGizmo,
-	WireConeGizmo,
-	WireConeFrustumGizmo,
+	 WireCubeGizmo,
+	 WireSphereGizmo,
+	 WireConeGizmo,
+	 WireConeFrustumGizmo,
 };
 
 struct ScreenQuad

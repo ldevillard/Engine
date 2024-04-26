@@ -35,9 +35,10 @@ Editor::Editor(GLFWwindow* win, EditorSettings params) :
 
 	// setup
 	editorCamera = new EditorCamera(glm::vec3(0.0f, 5.f, 30.0f));
-	sceneBuffer = new FrameBuffer(SCEEN_WIDTH, SCEEN_HEIGHT);
-	outlineBuffer[0] = new FrameBuffer(SCEEN_WIDTH, SCEEN_HEIGHT);
-	outlineBuffer[1] = new FrameBuffer(SCEEN_WIDTH, SCEEN_HEIGHT);
+	sceneBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT);
+	raytracingBuffer = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
+	outlineBuffer[0] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
+	outlineBuffer[1] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
 	inspector = Inspector();
 }
 
@@ -51,6 +52,7 @@ Editor::~Editor()
 	// clean
 	delete editorCamera;
 	delete sceneBuffer;
+	delete raytracingBuffer;
 	delete outlineBuffer[0];
 	delete outlineBuffer[1];
 }
@@ -98,6 +100,11 @@ FrameBuffer* Editor::GetSceneBuffer() const
 	return sceneBuffer;
 }
 
+FrameBuffer* Editor::GetRaytracingBuffer() const
+{
+	return raytracingBuffer;
+}
+
 FrameBuffer* Editor::GetOutlineBuffer(int idx) const
 {
 	// add assert to idx
@@ -119,7 +126,7 @@ void Editor::RenderCamera(Shader* shader)
 	shader->SetVec3("viewPos", editorCamera->Position);
 	shader->SetBool("wireframe", *parameters.Wireframe);
 
-	glm::mat4 projection = editorCamera->GetProjectionMatrix(static_cast<float>(SCEEN_WIDTH), static_cast<float>(SCEEN_HEIGHT));
+	glm::mat4 projection = editorCamera->GetProjectionMatrix(static_cast<float>(SCENE_WIDTH), static_cast<float>(SCENE_HEIGHT));
 	glm::mat4 view = editorCamera->GetViewMatrix();
 	shader->SetMat4("projection", projection);
 	shader->SetMat4("view", view);
@@ -127,8 +134,8 @@ void Editor::RenderCamera(Shader* shader)
 
 void Editor::RenderEditor()
 {
-	float w = static_cast<float>(SCEEN_WIDTH);
-	float h = static_cast<float>(SCEEN_HEIGHT);
+	float w = static_cast<float>(SCENE_WIDTH);
+	float h = static_cast<float>(SCENE_HEIGHT);
 
 	// Rendering ImGui
 	ImGui_ImplOpenGL3_NewFrame();
@@ -159,6 +166,7 @@ void Editor::RenderEditor()
 	renderHierarchy();
 	renderInspector();
 	renderScene(w, h);
+	renderRayTracer();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -209,10 +217,14 @@ void Editor::FramebufferSizeCallback(int width, int height)
 {
 	glViewport(0, 0, width, height);
 
-	SCEEN_WIDTH = width;
-	SCEEN_HEIGHT = height;
+	SCENE_WIDTH = width;
+	SCENE_HEIGHT = height;
+
+	RAYTRACED_SCENE_WIDTH = width;
+	RAYTRACED_SCENE_HEIGHT = height;
 
 	sceneBuffer->RescaleFrameBuffer(width, height);
+	raytracingBuffer->RescaleFrameBuffer(width, height);
 	outlineBuffer[0]->RescaleFrameBuffer(width, height);
 	outlineBuffer[1]->RescaleFrameBuffer(width, height);
 }
@@ -279,8 +291,8 @@ void Editor::ProcessInputs()
 
 		glm::vec3 worldPos = Math::ScreenToWorldPoint(glm::vec2(mousePosScene.x, mousePosScene.y)
 				, editorCamera->GetViewMatrix()
-				, editorCamera->GetProjectionMatrix(static_cast<float>(SCEEN_WIDTH), static_cast<float>(SCEEN_HEIGHT))
-				, glm::vec4(0, 0, SCEEN_WIDTH, SCEEN_HEIGHT));
+				, editorCamera->GetProjectionMatrix(static_cast<float>(SCENE_WIDTH), static_cast<float>(SCENE_HEIGHT))
+				, glm::vec4(0, 0, SCENE_WIDTH, SCENE_HEIGHT));
 		
 		// Raycast
 		glm::vec3 direction = glm::normalize(worldPos - editorCamera->Position);
@@ -317,8 +329,8 @@ void Editor::renderScene(float width, float height)
 		float width = ImGui::GetContentRegionAvail().x;
 		float height = ImGui::GetContentRegionAvail().y;
 
-		SCEEN_WIDTH = static_cast<unsigned int>(width);
-		SCEEN_HEIGHT = static_cast<unsigned int>(height);
+		SCENE_WIDTH = static_cast<unsigned int>(width);
+		SCENE_HEIGHT = static_cast<unsigned int>(height);
 		ImGui::Image(
 			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(sceneBuffer->GetFrameTexture())),
 			ImGui::GetContentRegionAvail(),
@@ -329,6 +341,30 @@ void Editor::renderScene(float width, float height)
 	}
 	if (selectedEntity != nullptr)
 		transformGizmo(width, height);
+	ImGui::EndChild();
+	ImGui::End();
+}
+
+void Editor::renderRayTracer()
+{
+	ImGui::Begin("RayTracer", nullptr);
+	{
+		ImGui::BeginChild("Render");
+
+		float width = ImGui::GetContentRegionAvail().x;
+		float height = ImGui::GetContentRegionAvail().y;
+
+		RAYTRACED_SCENE_WIDTH = static_cast<unsigned int>(width);
+		RAYTRACED_SCENE_HEIGHT = static_cast<unsigned int>(height);
+
+		ImGui::Image(
+			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(raytracingBuffer->GetFrameTexture())),
+			ImGui::GetContentRegionAvail(),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+		ProcessInputs();
+	}
 	ImGui::EndChild();
 	ImGui::End();
 }
