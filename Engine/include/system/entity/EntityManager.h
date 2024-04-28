@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Entity.h"
+#include "component/Model.h"
 
 #define MAX_LIGHTS 8
 
@@ -27,6 +28,7 @@ public:
 	void UpdateLightsIndex();
 
 	const std::vector<Entity*>& GetEntities() const;
+	const std::vector<Model*> GetModels() const;
 
 private:
 	// singleton

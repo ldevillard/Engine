@@ -15,6 +15,11 @@ struct Sphere
 	float radius;
 };
 
+layout(std430, binding = 0) buffer data
+{
+	Sphere spheres[];
+};
+
 struct Ray
 {
 	vec3 origin;
@@ -63,22 +68,22 @@ HitInfo RaySphere(Ray ray, vec3 sphereCenter, float sphereRadius)
 void main()
 {
 	Sphere sphere;
-	sphere.radius = 1;
-	sphere.position = vec3(0, 0, 0);
+	sphere.radius = spheres[0].radius;
+	sphere.position = spheres[0].position;
 
 	vec2 fragCoordNorm = (gl_FragCoord.xy / screenSize) * 2.0 - 1.0;
 
-	vec4 clipCoord = vec4(fragCoordNorm, 1.0, 1.0);
+	vec4 clipCoord = vec4(fragCoordNorm, 0.0, 1.0);
 	vec4 viewCoord = invProjection * clipCoord;
 	viewCoord.z = -1.0;
 
 	vec4 worldCoord = invView * viewCoord;
 
-	vec3 worldPosition = worldCoord.xyz;
+	vec3 worldPosition = worldCoord.xyz / worldCoord.w;
 
 	Ray ray;
 	ray.origin = cameraPosition;
-	ray.direction = normalize(worldPosition);
+	ray.direction = normalize(worldPosition - ray.origin);
 
 	HitInfo hitInfo = RaySphere(ray, sphere.position, sphere.radius);
 	if (hitInfo.hit)

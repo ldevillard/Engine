@@ -74,6 +74,16 @@ const glm::mat4 Transform::GetTransformMatrix() const
 	return translationMatrix * rotationMatrix * scaleMatrix;
 }
 
+const float Transform::GetRadius() const
+{
+	return Scale.x * 0.5f;
+}
+
+const Sphere Transform::AsSphere() const
+{
+	return Sphere(Position, GetRadius());
+}
+
 void Transform::SetPosition(const glm::vec3& position)
 {
 	Position = position;

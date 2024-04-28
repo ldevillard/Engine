@@ -17,10 +17,11 @@ public:
 	void SetShader(Shader* sh);
 
 	virtual void Compute() = 0;
+	
+	Transform* transform		   = nullptr;
+	Entity*	entity				   = nullptr;
 
 protected:
 	EditorCollider* editorCollider = nullptr;
-	Transform* transform		   = nullptr;
-	Entity*	entity				   = nullptr;
 	Shader*	shader				   = nullptr;
 };

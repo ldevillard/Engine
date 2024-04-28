@@ -35,6 +35,8 @@ public:
     static void LoadPrimitives();
     static std::map<PrimitiveType, std::unique_ptr<Model>> PrimitivesModels;
 
+    PrimitiveType ModelType = PrimitiveType::None;
+
 private:
     void draw();
 

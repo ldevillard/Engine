@@ -1,18 +1,22 @@
 #pragma once
 
+#include <maths/glm/glm.hpp>
+
 enum PrimitiveType
 {
+    None,
+
     CubePrimitive,
     SpherePrimitive,
-	 PlanePrimitive,
+    PlanePrimitive,
 };
 
 enum GizmoType
 {
-	 WireCubeGizmo,
-	 WireSphereGizmo,
-	 WireConeGizmo,
-	 WireConeFrustumGizmo,
+    WireCubeGizmo,
+    WireSphereGizmo,
+    WireConeGizmo,
+    WireConeFrustumGizmo,
 };
 
 struct ScreenQuad
@@ -30,4 +34,10 @@ struct ScreenQuad
          1.0f, -1.0f,      1.0f, 0.0f, // Bottom-right
          1.0f,  1.0f,      1.0f, 1.0f  // Top-right
     };
+};
+
+struct Sphere
+{
+    glm::vec3 Position;
+    float Radius;
 };

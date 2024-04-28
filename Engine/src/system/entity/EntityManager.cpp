@@ -170,4 +170,20 @@ const std::vector<Entity*>& EntityManager::GetEntities() const
 	return entities;
 }
 
+const std::vector<Model*> EntityManager::GetModels() const
+{
+	std::vector<Model*> models = {};
+
+	for (Entity* e : entities)
+	{
+		Model* model = nullptr;
+		if (e->TryGetComponent<Model>(model))
+		{
+			models.push_back(model);
+		}
+	}
+
+	return models;
+}
+
 #pragma endregion

@@ -28,7 +28,8 @@ Model::Model(std::string path, Material mat) : Component(),
 }
 
 Model::Model(PrimitiveType type, Material mat) : Component(),
-    material(mat)
+    material(mat),
+    ModelType(type)
 {
     switch (type)
     {

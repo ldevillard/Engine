@@ -83,9 +83,8 @@ int main()
 	EntityManager::CreateInstance(&shader);
 	Model::LoadPrimitives();
 
-	Entity entity1 = Entity("Plane", &shader);
-	Model model1 = Model("resources/models/primitive/plane.obj", Material::Silver);
-	entity1.transform->SetScale({ 30.f, 1.f, 30.f });
+	Entity entity1 = Entity("Sphere", &shader);
+	Model model1 = Model(PrimitiveType::SpherePrimitive, Material::Silver);
 	entity1.AddComponent(&model1);
 
 	Entity lightEntity = Entity("DirectionalLight", &shader);
@@ -95,13 +94,13 @@ int main()
 	light.Intensity = 1.f;
 	lightEntity.AddComponent(&light);
 
-	Entity lightEntity2 = Entity("SpotLight", &shader);
-	Light light2 = Light(Light::Spot, Color::White);
-	lightEntity2.AddComponent(&light2);
+	//Entity lightEntity2 = Entity("SpotLight", &shader);
+	//Light light2 = Light(Light::Spot, Color::White);
+	//lightEntity2.AddComponent(&light2);
 
-	Entity lightEntity3 = Entity("PointLight", &shader);
-	Light light3 = Light(Light::Point, Color::White);
-	lightEntity3.AddComponent(&light3);
+	//Entity lightEntity3 = Entity("PointLight", &shader);
+	//Light light3 = Light(Light::Point, Color::White);
+	//lightEntity3.AddComponent(&light3);
 
 	bool wireframeMode = false;
 	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();

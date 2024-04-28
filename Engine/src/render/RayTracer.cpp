@@ -1,14 +1,21 @@
 #include "render/RayTracer.h"
 #include "system/editor/Editor.h"
+#include "system/entity/EntityManager.h"
 
 ScreenQuad RayTracer::screenQuad = {};
 Shader* RayTracer::raytracingShader = nullptr;
+GLuint RayTracer::ssbo = 0;
 
 #pragma region Static Methods
 
 void RayTracer::Initialize(Shader* shader)
 {
 	raytracingShader = shader;
+
+	// initialize ssbo
+	glGenBuffers(1, &ssbo);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
 
 	setupScreenQuad();
 }
@@ -26,6 +33,12 @@ void RayTracer::Draw()
 	raytracingShader->SetMat4("invProjection", glm::inverse(projection));
 	raytracingShader->SetMat4("invView", glm::inverse(view));
 	raytracingShader->SetVec3("cameraPosition", Editor::Get()->GetCamera()->Position);
+
+	// convert scene data to raytracing data (sphere at this moment)
+	const std::vector<Model*> models = EntityManager::Get()->GetModels();
+	std::vector<Sphere> spheres = getSceneSpheres(models);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, spheres.size() * sizeof(Sphere), spheres.data(), GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -53,6 +66,19 @@ void RayTracer::setupScreenQuad()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	glBindVertexArray(0);
+}
+
+std::vector<Sphere> RayTracer::getSceneSpheres(const std::vector<Model*>& models)
+{
+	std::vector<Sphere> spheres = {};
+	for (Model* model : models)
+	{
+		if (model->ModelType == PrimitiveType::SpherePrimitive)
+		{
+			spheres.push_back(model->transform->AsSphere());
+		}
+	}
+	return spheres;
 }
 
 #pragma endregion
