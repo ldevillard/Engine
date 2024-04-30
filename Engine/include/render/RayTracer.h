@@ -6,6 +6,12 @@
 #include "data/mesh/MeshData.h"
 #include "render/Shader.h"
 
+struct alignas(16) RaytracingData
+{
+	Sphere sphere;
+	glm::vec3 color;
+};
+
 class RayTracer
 {
 public:
@@ -14,7 +20,7 @@ public:
 
 private:
 	static void setupScreenQuad();
-	static std::vector<Sphere> getSceneSpheres(const std::vector<Model*>& models);
+	static std::vector<RaytracingData> getSceneData(const std::vector<Model*>& models);
 	
 	static ScreenQuad screenQuad;
 	static Shader* raytracingShader;

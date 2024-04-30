@@ -76,7 +76,10 @@ const glm::mat4 Transform::GetTransformMatrix() const
 
 const float Transform::GetRadius() const
 {
-	return Scale.x * 0.5f;
+	//return Scale.x * 0.5f;
+
+	// This is a hot fix, because the radius of the sphere is equal to the scale of the object (blender sphere)
+	return Scale.x;
 }
 
 const Sphere Transform::AsSphere() const

@@ -36,9 +36,12 @@ void RayTracer::Draw()
 
 	// convert scene data to raytracing data (sphere at this moment)
 	const std::vector<Model*> models = EntityManager::Get()->GetModels();
-	std::vector<Sphere> spheres = getSceneSpheres(models);
+	std::vector<RaytracingData> data = getSceneData(models);
+
+	raytracingShader->SetInt("dataCount", static_cast<int>(data.size()));
+
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, spheres.size() * sizeof(Sphere), spheres.data(), GL_DYNAMIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, data.size() * sizeof(RaytracingData), data.data(), GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -68,17 +71,23 @@ void RayTracer::setupScreenQuad()
 	glBindVertexArray(0);
 }
 
-std::vector<Sphere> RayTracer::getSceneSpheres(const std::vector<Model*>& models)
+std::vector<RaytracingData> RayTracer::getSceneData(const std::vector<Model*>& models)
 {
-	std::vector<Sphere> spheres = {};
+	std::vector<RaytracingData> datas = {};
+
 	for (Model* model : models)
 	{
 		if (model->ModelType == PrimitiveType::SpherePrimitive)
 		{
-			spheres.push_back(model->transform->AsSphere());
+			RaytracingData data = {};
+			data.sphere = model->transform->AsSphere();
+			data.color = model->GetMaterial().Diffuse;
+
+			datas.push_back(data);
 		}
 	}
-	return spheres;
+
+	return datas;
 }
 
 #pragma endregion

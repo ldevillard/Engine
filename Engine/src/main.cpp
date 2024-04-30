@@ -84,8 +84,20 @@ int main()
 	Model::LoadPrimitives();
 
 	Entity entity1 = Entity("Sphere", &shader);
-	Model model1 = Model(PrimitiveType::SpherePrimitive, Material::Silver);
+	Model model1 = Model(PrimitiveType::SpherePrimitive, Material::Sapphire);
 	entity1.AddComponent(&model1);
+
+	Entity entity2 = Entity("Sphere2", &shader);
+	Model model2 = Model(PrimitiveType::SpherePrimitive, Material::Ruby);
+	entity2.transform->SetPosition({ -2.f, 0.f, 0.f });
+	entity2.transform->SetScale({ 0.5f, 0.5f, 0.5f });
+	entity2.AddComponent(&model2);
+
+	Entity entity3 = Entity("Sphere3", &shader);
+	Model model3 = Model(PrimitiveType::SpherePrimitive, Material::Emerald);
+	entity3.transform->SetPosition({ 2.f, 0.f, -10.f });
+	entity3.transform->SetScale({ 2.f, 2.f, 2.f });
+	entity3.AddComponent(&model3);
 
 	Entity lightEntity = Entity("DirectionalLight", &shader);
 	Light light = Light(Light::Directional, Color::White);
