@@ -204,7 +204,7 @@ void Editor::MouseCallback(double xposIn, double yposIn)
 	lastY = ypos;
 
 	// smooth
-	const float sensitivity = 0.5f;
+	const float sensitivity = .1f;
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;
 
