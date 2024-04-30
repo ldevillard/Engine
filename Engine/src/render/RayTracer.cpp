@@ -36,12 +36,14 @@ void RayTracer::Draw()
 
 	// convert scene data to raytracing data (sphere at this moment)
 	const std::vector<Model*> models = EntityManager::Get()->GetModels();
-	std::vector<RaytracingData> data = getSceneData(models);
+	std::vector<RaytracingSphere> spheres = getSceneData(models);
 
-	raytracingShader->SetInt("dataCount", static_cast<int>(data.size()));
+	raytracingShader->SetInt("dataCount", static_cast<int>(spheres.size()));
+	raytracingShader->SetInt("maxBounceCount", Editor::Get()->GetSettings().MaxBounces);
+	raytracingShader->SetInt("numberRaysPerPixel", Editor::Get()->GetSettings().RaysPerPixel);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, data.size() * sizeof(RaytracingData), data.data(), GL_DYNAMIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, spheres.size() * sizeof(RaytracingSphere), spheres.data(), GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -71,23 +73,39 @@ void RayTracer::setupScreenQuad()
 	glBindVertexArray(0);
 }
 
-std::vector<RaytracingData> RayTracer::getSceneData(const std::vector<Model*>& models)
+std::vector<RaytracingSphere> RayTracer::getSceneData(const std::vector<Model*>& models)
 {
-	std::vector<RaytracingData> datas = {};
+	std::vector<RaytracingSphere> spheres = {};
 
 	for (Model* model : models)
 	{
 		if (model->ModelType == PrimitiveType::SpherePrimitive)
 		{
-			RaytracingData data = {};
-			data.sphere = model->transform->AsSphere();
-			data.color = model->GetMaterial().Diffuse;
+			RaytracingSphere raytracingSphere = {};
+			Sphere sphere = model->transform->AsSphere();
+			
+			Material mat = model->GetMaterial();
 
-			datas.push_back(data);
+			raytracingSphere.Position = sphere.Position;
+			raytracingSphere.Radius = sphere.Radius;
+			raytracingSphere.Material.Color = mat.Diffuse;
+
+			if (mat.Emissive)
+			{
+				raytracingSphere.Material.EmissiveColor = mat.Diffuse;
+				raytracingSphere.Material.EmissiveStrength = mat.EmissiveStrength;
+			}
+			else
+			{
+				raytracingSphere.Material.EmissiveColor = glm::vec3(0.0f);
+				raytracingSphere.Material.EmissiveStrength = 0.0f;
+			}
+
+			spheres.push_back(raytracingSphere);
 		}
 	}
 
-	return datas;
+	return spheres;
 }
 
 #pragma endregion

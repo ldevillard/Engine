@@ -28,6 +28,8 @@ public:
 	static const std::vector<const char*> Names;
 	static const Material& GetMaterialFromName(const std::string& name);
 
+	void SetEmissive(bool emissive);
+
 	// These vectors are the colors of the different lights
 	glm::vec3 Ambient;
 	glm::vec3 Diffuse;
@@ -35,6 +37,9 @@ public:
 	
 	// This impact the radius of the specular light
 	float Shininess = 0.6f;
+
+	bool Emissive = false;
+	float EmissiveStrength = 1.0f;
 
 	std::string Name;
 

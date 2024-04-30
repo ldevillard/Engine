@@ -118,6 +118,14 @@ const Material Material::Prune(glm::vec3(0.439216f, 0.172549f, 0.521569f), // Am
 	0.4f, // Shininess
 	"Prune"); // Name
 
+#pragma endregion
+
+#pragma region Public Methods
+
+void Material::SetEmissive(bool emissive)
+{
+	Emissive = emissive;
+}
 
 #pragma endregion
 

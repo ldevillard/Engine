@@ -67,7 +67,7 @@ int Model::GetNumberOfTriangles() const
    return sum;
 }
 
-const Material& Model::GetMaterial() const
+Material& Model::GetMaterial()
 {
 	return material;
 }
@@ -98,7 +98,13 @@ void Model::ComputeOutline(Shader* outlineShader)
 
 void Model::SetMaterialFromName(std::string name)
 {
-	material = Material::GetMaterialFromName(name);
+	const Material& mat = Material::GetMaterialFromName(name);
+
+    material.Ambient = mat.Ambient;
+    material.Diffuse = mat.Diffuse;
+    material.Specular = mat.Specular;
+    material.Shininess = mat.Shininess;
+    material.Name = mat.Name;
 }
 
 void Model::SetEditorCollider(EditorCollider* cl)

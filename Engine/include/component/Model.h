@@ -23,7 +23,7 @@ public:
     Model(const Mesh& mesh, Material mat = Material::Default);
 
     int GetNumberOfTriangles() const;
-    const Material& GetMaterial() const;
+    Material& GetMaterial();
 
     void Compute() override;
     void ComputeOutline(Shader* outlineShader);

@@ -430,6 +430,22 @@ void Editor::renderSettings()
 	ImGui::Separator();
 	ImGui_Utils::DrawBoolControl("Wireframe", *parameters.Wireframe, 100.f);
 	ImGui_Utils::DrawFloatControl("Camera Speed", editorCamera->MovementSpeed, 5.f, 100.f);
+
+	ImGui::Separator();
+	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	if (ImGui::TreeNode("RayTracing"))
+	{
+		ImGui_Utils::DrawBoolControl("Enabled", parameters.RayTracing, 100.f);
+		if (parameters.RayTracing)
+		{
+			ImGui_Utils::DrawIntControl("Max Bounces", parameters.MaxBounces, 1, 100.f);
+			ImGui_Utils::DrawIntControl("Rays Per Pixel", parameters.RaysPerPixel, 1, 100.f);
+		}
+		ImGui::TreePop();
+	}
+	ImGui::NewLine();
+	ImGui::Separator();
+
 	ImGui::End();
 }
 

@@ -34,6 +34,11 @@ struct EditorSettings
 	
 	bool Gizmo = true;
 	bool BoundingBoxGizmo = false;
+
+	// ray tracing
+	bool RayTracing = true;
+	int RaysPerPixel = 1;
+	int MaxBounces = 2;
 };
 
 class Editor

@@ -1,4 +1,5 @@
 #include "system/editor/Inspector.h"
+#include "system/editor/Editor.h"
 
 #include <algorithm>
 
@@ -84,6 +85,13 @@ void Inspector::inspectModel(Model* model) const
 		int currentItem = getMaterialIndex(model->GetMaterial());
 		ImGui_Utils::DrawComboBoxControl("Material", currentItem, Material::Names);
 		model->SetMaterialFromName(Material::Names[currentItem]);
+		
+		// Ray Tracing
+		{
+			ImGui_Utils::DrawBoolControl("Emissive", model->GetMaterial().Emissive);
+			ImGui_Utils::DrawFloatControl("Emissive Strength", model->GetMaterial().EmissiveStrength, 1.f);
+		}
+
 		ImGui::TreePop();
 	}	
 }
