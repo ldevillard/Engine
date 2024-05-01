@@ -89,7 +89,8 @@ void Inspector::inspectModel(Model* model) const
 		// Ray Tracing
 		{
 			ImGui_Utils::DrawBoolControl("Emissive", model->GetMaterial().Emissive);
-			ImGui_Utils::DrawFloatControl("Emissive Strength", model->GetMaterial().EmissiveStrength, 1.f);
+			ImGui_Utils::DrawFloatControl("Emissive Strength", model->GetMaterial().EmissiveStrength, 1.f, 135.f);
+			ImGui_Utils::DrawFloatControl("Smoothness", model->GetMaterial().Smoothness, 0.0f, 135.f);
 		}
 
 		ImGui::TreePop();

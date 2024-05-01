@@ -12,6 +12,7 @@ struct RaytracingMaterial
 	alignas(16) glm::vec3 Color = {};
 	alignas(16) glm::vec3 EmissiveColor = {};
 	float EmissiveStrength = 1;
+	float Smoothness = 0;
 };
 
 struct alignas(16) RaytracingSphere

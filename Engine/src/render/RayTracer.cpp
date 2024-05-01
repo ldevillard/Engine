@@ -130,6 +130,7 @@ std::vector<RaytracingSphere> RayTracer::getSceneData(const std::vector<Model*>&
 			raytracingSphere.Position = sphere.Position;
 			raytracingSphere.Radius = sphere.Radius;
 			raytracingSphere.Material.Color = mat.Diffuse;
+			raytracingSphere.Material.Smoothness = std::clamp(mat.Smoothness, 0.f, 1.f);
 
 			if (mat.Emissive)
 			{

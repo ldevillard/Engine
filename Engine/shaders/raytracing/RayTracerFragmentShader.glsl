@@ -18,6 +18,7 @@ struct Material
 	vec3 color;
 	vec3 emissiveColor;
 	float emissiveStrength;
+	float smoothness;
 };
 
 struct Sphere
@@ -147,7 +148,9 @@ vec3 Trace(Ray ray, inout uint rngState)
 		if (hitInfo.hit)
 		{
 			ray.origin = hitInfo.hitPoint;
-			ray.direction = normalize(hitInfo.normal + RandomDirection(rngState));
+			vec3 diffuseDirection = normalize(hitInfo.normal + RandomDirection(rngState));
+			vec3 specularDirection = reflect(ray.direction, hitInfo.normal);
+			ray.direction = mix(diffuseDirection, specularDirection, hitInfo.material.smoothness);
 
 			vec3 emittedLight = hitInfo.material.emissiveColor * hitInfo.material.emissiveStrength;
 			incomingLight += emittedLight * rayColor;

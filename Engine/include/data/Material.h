@@ -40,6 +40,7 @@ public:
 
 	bool Emissive = false;
 	float EmissiveStrength = 1.0f;
+	float Smoothness = 0.0f;
 
 	std::string Name;
 
