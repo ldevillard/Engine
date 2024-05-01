@@ -93,23 +93,25 @@ int main()
 
 	Entity entity2 = Entity("Sphere Ground", &shader);
 	Model model2 = Model(PrimitiveType::SpherePrimitive, Material::Prune);
-	entity2.transform->SetPosition({ -2.26f, -3.88f, -14.f });
-	entity2.transform->SetScale({ 1.17f, 1.17f, 1.17f });
+	entity2.transform->SetPosition({ 1.05f, -3.88f, -9.44f });
+	entity2.transform->SetScale({ 1.f, 1.f, 1.f });
 	entity2.AddComponent(&model2);
 
 	Entity entity3 = Entity("Sphere1", &shader);
-	Model model3 = Model(PrimitiveType::SpherePrimitive, Material::Emerald);
-	entity3.transform->SetPosition({ 2.f, -18.f, -10.f });
-	entity3.transform->SetScale({ 14.f, 14.f, 14.f });
+	Model model3 = Model(PrimitiveType::SpherePrimitive, Material::Turquoise);
+	entity3.transform->SetPosition({ 0.f, -461.30f, -10.f });
+	entity3.transform->SetScale({ 456.57f, 456.57f, 456.57f });
 	entity3.AddComponent(&model3);
 
 	Entity entity4 = Entity("Sphere2", &shader);
-	Model model4 = Model(PrimitiveType::SpherePrimitive, Material::Sapphire);
+	Model model4 = Model(PrimitiveType::SpherePrimitive, Material::Default);
+	entity4.transform->SetPosition({ 0.94f, -4.31f, -10.79f });
+	entity4.transform->SetScale({ .47f, .47f, .47f });
 	entity4.AddComponent(&model4);
 
 	Entity entity5 = Entity("Sphere3", &shader);
-	Model model5 = Model(PrimitiveType::SpherePrimitive, Material::Ruby);
-	entity5.transform->SetPosition({ 0.f, -3.88f, -14.f });
+	Model model5 = Model(PrimitiveType::SpherePrimitive, Material::Gold);
+	entity5.transform->SetPosition({ 2.24f, -3.88f, -10.98f });
 	entity5.transform->SetScale({ 1.f, 1.f, 1.f });
 	entity5.AddComponent(&model5);
 
