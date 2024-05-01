@@ -3,6 +3,7 @@
 out vec4 FragColor;
 
 uniform vec2 screenSize;
+uniform uint frameCount;
 
 uniform mat4 invView;
 uniform mat4 invProjection;
@@ -146,7 +147,7 @@ vec3 Trace(Ray ray, inout uint rngState)
 		if (hitInfo.hit)
 		{
 			ray.origin = hitInfo.hitPoint;
-			ray.direction = RandomHemisphereDirection(hitInfo.normal, rngState);
+			ray.direction = normalize(hitInfo.normal + RandomDirection(rngState));
 
 			vec3 emittedLight = hitInfo.material.emissiveColor * hitInfo.material.emissiveStrength;
 			incomingLight += emittedLight * rayColor;
@@ -177,7 +178,7 @@ void main()
 	ray.direction = normalize(worldPosition - ray.origin);
 
 	uint pixelIndex = uint(gl_FragCoord.y * screenSize.x + gl_FragCoord.x);
-	uint rngState = pixelIndex;
+	uint rngState = pixelIndex + frameCount * 719393;
 
 	vec3 totalIncomingLight = vec3(0);
 	for (int i = 0; i < numberRaysPerPixel; i++)

@@ -8,6 +8,7 @@
 #include "utils/ImGui_Utils.h"
 #include "maths/Math.h"
 #include "physics/Physics.h"
+#include "render/RayTracer.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <maths/glm/gtx/matrix_decompose.hpp>
@@ -31,12 +32,13 @@ Editor::Editor(GLFWwindow* win, EditorSettings params) :
 	ImGui_Utils::SetPurpleTheme();
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 330");
+	ImGui_ImplOpenGL3_Init("#version 430");
 
 	// setup
 	editorCamera = new EditorCamera(glm::vec3(0.0f, 5.f, 30.0f));
-	sceneBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT);
-	raytracingBuffer = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
+	sceneBuffer = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
+	raytracingBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT);
+	accumulationBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT);
 	outlineBuffer[0] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
 	outlineBuffer[1] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
 	inspector = Inspector();
@@ -53,6 +55,7 @@ Editor::~Editor()
 	delete editorCamera;
 	delete sceneBuffer;
 	delete raytracingBuffer;
+	delete accumulationBuffer;
 	delete outlineBuffer[0];
 	delete outlineBuffer[1];
 }
@@ -103,6 +106,11 @@ FrameBuffer* Editor::GetSceneBuffer() const
 FrameBuffer* Editor::GetRaytracingBuffer() const
 {
 	return raytracingBuffer;
+}
+
+FrameBuffer* Editor::GetAccumulationBuffer() const
+{
+	return accumulationBuffer;
 }
 
 FrameBuffer* Editor::GetOutlineBuffer(int idx) const
@@ -225,6 +233,7 @@ void Editor::FramebufferSizeCallback(int width, int height)
 
 	sceneBuffer->RescaleFrameBuffer(width, height);
 	raytracingBuffer->RescaleFrameBuffer(width, height);
+	accumulationBuffer->RescaleFrameBuffer(width, height);
 	outlineBuffer[0]->RescaleFrameBuffer(width, height);
 	outlineBuffer[1]->RescaleFrameBuffer(width, height);
 }
@@ -357,8 +366,10 @@ void Editor::renderRayTracer()
 		RAYTRACED_SCENE_WIDTH = static_cast<unsigned int>(width);
 		RAYTRACED_SCENE_HEIGHT = static_cast<unsigned int>(height);
 
+		FrameBuffer* buffer = parameters.Accumulate ? accumulationBuffer : raytracingBuffer;
+
 		ImGui::Image(
-			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(raytracingBuffer->GetFrameTexture())),
+			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(buffer->GetFrameTexture())),
 			ImGui::GetContentRegionAvail(),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -438,6 +449,16 @@ void Editor::renderSettings()
 		ImGui_Utils::DrawBoolControl("Enabled", parameters.RayTracing, 100.f);
 		if (parameters.RayTracing)
 		{
+			ImGui_Utils::DrawBoolControl("Accumulate", parameters.Accumulate, 100.f);
+			if (parameters.Accumulate)
+			{
+				// progress bar purpose is to show the velocity of the accumulation (based on 10 frames computations)
+				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.6f, 0.3f, 0.6f, 1.0f));
+				ImGui::ProgressBar(float(RayTracer::GetFrameCount() % 10) / 10.f, ImVec2(-1, 0), "");
+				ImGui::PopStyleColor();
+				ImGui::Text("Samples: %d", RayTracer::GetFrameCount());
+				ImGui::NewLine();
+			}
 			ImGui_Utils::DrawIntControl("Max Bounces", parameters.MaxBounces, 1, 100.f);
 			ImGui_Utils::DrawIntControl("Rays Per Pixel", parameters.RaysPerPixel, 1, 100.f);
 		}

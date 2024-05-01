@@ -543,6 +543,7 @@
     <None Include="include\maths\glm\gtx\vector_angle.inl" />
     <None Include="include\maths\glm\gtx\vector_query.inl" />
     <None Include="include\maths\glm\gtx\wrap.inl" />
+    <None Include="shaders\compute\AccumulateComputeShader.glsl" />
     <None Include="shaders\FragmentShader.glsl" />
     <None Include="shaders\gizmo\GizmoFragmentShader.glsl" />
     <None Include="shaders\gizmo\GizmoVertexShader.glsl" />

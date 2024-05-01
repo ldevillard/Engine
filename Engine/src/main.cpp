@@ -74,10 +74,12 @@ int main()
 	Shader outlineShader("shaders/outline/OutlineVertexShader.glsl", "shaders/outline/OutlineFragmentShader.glsl");
 	Shader outlineDilateShader("shaders/outline/OutlineQuadVertexShader.glsl", "shaders/outline/OutlineDilatingFragmentShader.glsl");
 	ComputeShader outlineBlitShader("shaders/compute/BlitTexturesComputeShader.glsl", glm::uvec2(SCENE_WIDTH, SCENE_HEIGHT));
+	
 	Shader raytracingShader("shaders/raytracing/RayTracerVertexShader.glsl", "shaders/raytracing/RayTracerFragmentShader.glsl");
+	ComputeShader accumulateShader("shaders/compute/AccumulateComputeShader.glsl", glm::uvec2(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT));
 
 	Outliner::Initialize(&outlineShader, &outlineDilateShader, &outlineBlitShader);
-	RayTracer::Initialize(&raytracingShader);
+	RayTracer::Initialize(&raytracingShader, &accumulateShader);
 	Gizmo::InitGizmos(&gizmoShader);
 
 	EntityManager::CreateInstance(&shader);
@@ -85,18 +87,20 @@ int main()
 
 	Entity entity1 = Entity("Sphere Light", &shader);
 	Model model1 = Model(PrimitiveType::SpherePrimitive, Material::Default);
+	entity1.transform->SetPosition({ 0.f, 0.f, -25.f });
+	entity1.transform->SetScale({ 6.5f, 6.5f, 6.5f });
 	entity1.AddComponent(&model1);
 
 	Entity entity2 = Entity("Sphere Ground", &shader);
 	Model model2 = Model(PrimitiveType::SpherePrimitive, Material::Prune);
-	entity2.transform->SetPosition({ -2.f, 0.f, 0.f });
-	entity2.transform->SetScale({ 0.5f, 0.5f, 0.5f });
+	entity2.transform->SetPosition({ -2.26f, -3.88f, -14.f });
+	entity2.transform->SetScale({ 1.17f, 1.17f, 1.17f });
 	entity2.AddComponent(&model2);
 
 	Entity entity3 = Entity("Sphere1", &shader);
 	Model model3 = Model(PrimitiveType::SpherePrimitive, Material::Emerald);
-	entity3.transform->SetPosition({ 2.f, 0.f, -10.f });
-	entity3.transform->SetScale({ 2.f, 2.f, 2.f });
+	entity3.transform->SetPosition({ 2.f, -18.f, -10.f });
+	entity3.transform->SetScale({ 14.f, 14.f, 14.f });
 	entity3.AddComponent(&model3);
 
 	Entity entity4 = Entity("Sphere2", &shader);
@@ -105,6 +109,8 @@ int main()
 
 	Entity entity5 = Entity("Sphere3", &shader);
 	Model model5 = Model(PrimitiveType::SpherePrimitive, Material::Ruby);
+	entity5.transform->SetPosition({ 0.f, -3.88f, -14.f });
+	entity5.transform->SetScale({ 1.f, 1.f, 1.f });
 	entity5.AddComponent(&model5);
 
 	Entity lightEntity = Entity("DirectionalLight", &shader);

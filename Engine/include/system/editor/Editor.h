@@ -39,6 +39,7 @@ struct EditorSettings
 	bool RayTracing = true;
 	int RaysPerPixel = 1;
 	int MaxBounces = 2;
+	bool Accumulate = false;
 };
 
 class Editor
@@ -56,6 +57,7 @@ public:
 	const EditorCamera* GetCamera() const;
 	FrameBuffer* GetSceneBuffer() const;
 	FrameBuffer* GetRaytracingBuffer() const;
+	FrameBuffer* GetAccumulationBuffer() const;
 	FrameBuffer* GetOutlineBuffer(int idx) const;
 	const Entity* GetSelectedEntity() const;
 
@@ -83,10 +85,14 @@ private:
 	// member references
 	Entity* selectedEntity = nullptr;
 	EditorCamera* editorCamera = nullptr;
+	GLFWwindow* window = nullptr;
+
+	// frame buffers
 	FrameBuffer* sceneBuffer = nullptr;
 	FrameBuffer* outlineBuffer[2] = { nullptr };
 	FrameBuffer* raytracingBuffer = nullptr;
-	GLFWwindow* window = nullptr;
+	FrameBuffer* accumulationBuffer = nullptr;
+
 
 	EditorSettings parameters;
 	Inspector inspector;

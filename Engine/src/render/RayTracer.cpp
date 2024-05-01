@@ -4,13 +4,17 @@
 
 ScreenQuad RayTracer::screenQuad = {};
 Shader* RayTracer::raytracingShader = nullptr;
+ComputeShader* RayTracer::accumulateShader = nullptr;
 GLuint RayTracer::ssbo = 0;
+unsigned int RayTracer::frameCount = 0;
+bool RayTracer::accumulate = false;
 
 #pragma region Static Methods
 
-void RayTracer::Initialize(Shader* shader)
+void RayTracer::Initialize(Shader* shader, ComputeShader* accumulate)
 {
 	raytracingShader = shader;
+	accumulateShader = accumulate;
 
 	// initialize ssbo
 	glGenBuffers(1, &ssbo);
@@ -27,6 +31,7 @@ void RayTracer::Draw()
 	raytracingShader->Use();
 
 	raytracingShader->SetVec2("screenSize", glm::vec2(SCR_WIDTH, SCR_HEIGHT));
+	raytracingShader->SetUInt("frameCount", frameCount);
 
 	glm::mat4 projection = Editor::Get()->GetCamera()->GetProjectionMatrix(static_cast<float>(RAYTRACED_SCENE_WIDTH), static_cast<float>(RAYTRACED_SCENE_HEIGHT));
 	glm::mat4 view = Editor::Get()->GetCamera()->GetViewMatrix();
@@ -47,7 +52,43 @@ void RayTracer::Draw()
 
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+
 	Editor::Get()->GetRaytracingBuffer()->Unbind();
+
+	// accumulate rays 
+	if (Editor::Get()->GetSettings().Accumulate)
+	{
+		if (!accumulate)
+		{
+			accumulate = true;
+			ResetFrameCount();
+		}
+
+		accumulateShader->Use();
+		accumulateShader->SetWorkSize(glm::uvec2(SCR_WIDTH, SCR_HEIGHT));
+		accumulateShader->SetUInt("frameCount", frameCount);
+		accumulateShader->SetTextures(Editor::Get()->GetAccumulationBuffer()->GetFrameTexture()
+			, Editor::Get()->GetRaytracingBuffer()->GetFrameTexture());
+
+		accumulateShader->Dispatch(glm::uvec2(8, 4));
+		accumulateShader->Wait();
+	}
+	else
+	{
+		accumulate = false;
+	}
+
+	frameCount++;
+}
+
+void RayTracer::ResetFrameCount()
+{
+	frameCount = 0;
+}
+
+unsigned int RayTracer::GetFrameCount()
+{
+	return frameCount;
 }
 
 #pragma endregion

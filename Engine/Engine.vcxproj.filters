@@ -1651,6 +1651,7 @@
     <None Include="shaders\compute\BlitTexturesComputeShader.glsl" />
     <None Include="shaders\raytracing\RayTracerVertexShader.glsl" />
     <None Include="shaders\raytracing\RayTracerFragmentShader.glsl" />
+    <None Include="shaders\compute\AccumulateComputeShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\awesomeface.png">

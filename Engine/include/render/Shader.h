@@ -24,6 +24,7 @@ public:
     // utility uniform functions
     void SetBool(const std::string& name, bool value) const;
     void SetInt(const std::string& name, int value) const;
+    void SetUInt(const std::string& name, unsigned int value) const;
     void SetFloat(const std::string& name, float value) const;
     void SetFloat4(const std::string& name, float v1, float v2, float v3, float v4) const;
     void SetVec2(const std::string& name, const glm::vec2& value) const;
