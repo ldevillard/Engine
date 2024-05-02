@@ -413,6 +413,7 @@ void Editor::renderSettings()
 {
 	ImGui::Begin("Editor");
 	ImGui::Text("FPS: %.1f", Time::FrameRate());
+	ImGui::Text("Frame time : %.1f ms", Time::DeltaTime * 1000);
 	ImGui::Text("Triangles: %d", *parameters.TrianglesNumber);
 	ImGui::Separator();
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);

@@ -85,22 +85,19 @@ HitInfo RaySphere(Ray ray, vec3 sphereCenter, float sphereRadius)
 	HitInfo hitInfo;
 	hitInfo.hit = false;
 
-	vec3 offsetRayOrigin = ray.origin - sphereCenter;
+	// related to https://iquilezles.org/articles/intersectors/
 	
-	// origin centered sphere equation x2 + y2 + z2 = r2
-	// see https://raytracing.github.io/books/RayTracingInOneWeekend.html
-	float a = dot(ray.direction, ray.direction);
-	float b = 2.0 * dot(offsetRayOrigin, ray.direction);
+	vec3 offsetRayOrigin = ray.origin - sphereCenter;
+
+	float b = dot(offsetRayOrigin, ray.direction);
 	float c = dot(offsetRayOrigin, offsetRayOrigin) - sphereRadius * sphereRadius;
+	float h = b * b - c;
 
-	float discriminant = b * b - 4 * a * c;
-
-	// >= 0 mean intersection
-	if (discriminant >= 0)
+	if (h >= 0)
 	{
-		float dst = (-b - sqrt(discriminant)) / (2 * a);
+		h = sqrt(h);
+		float dst = -b - h;
 
-		// ignore intersections that occur behind the ray
 		if (dst >= 0)
 		{
 			hitInfo.hit = true;
