@@ -28,12 +28,26 @@ struct Sphere
 	Material material;
 };
 
-uniform int dataCount;
+struct Cube
+{
+	vec3 min;
+	vec3 max;
+	mat4 transform;
+	Material material;
+};
 
-layout(std430, binding = 0) buffer data
+uniform int sphereCount;
+layout(std430, binding = 0) buffer sphereData
 {
 	Sphere spheres[];
 };
+
+uniform int cubeCount;
+layout(std430, binding = 1) buffer cubeData
+{
+	Cube cubes[];
+};
+
 
 struct Ray
 {
@@ -110,6 +124,56 @@ HitInfo RaySphere(Ray ray, vec3 sphereCenter, float sphereRadius)
 	return hitInfo;
 }
 
+HitInfo RayCube(Ray ray, Cube cube) // box in case
+{
+	HitInfo hitInfo;
+	hitInfo.hit = false;
+
+	// related to EditorCollider.cpp IntersectRay() method
+	// transform the ray to the local space of the box
+	vec4 ro1 = inverse(cube.transform) * vec4(ray.origin, 1.0);
+	vec4 rd1 = inverse(cube.transform) * vec4(ray.direction, 0.0);
+
+	vec3 ro = ro1.xyz;
+	vec3 rd = rd1.xyz;
+
+	vec3 tMin = (cube.min - ro) / rd;
+	vec3 tMax = (cube.max - ro) / rd;
+
+	vec3 tNear = min(tMin, tMax);
+	vec3 tFar = max(tMin, tMax);
+
+	float tNearMax = max(max(tNear.x, tNear.y), tNear.z);
+	float tFarMin = min(min(tFar.x, tFar.y), tFar.z);
+
+	// intersection
+	if (tNearMax <= tFarMin)
+	{
+		hitInfo.hit = true;
+		hitInfo.distance = tNearMax;
+		hitInfo.hitPoint = ro + rd * tNearMax;
+
+		vec3 normal;
+
+		if (tNear.x > tNear.y && tNear.x > tNear.z)
+			normal = vec3(-1.0, 0.0, 0.0); // Left face
+		else if (tNear.y > tNear.x && tNear.y > tNear.z)
+			normal = vec3(0.0, -1.0, 0.0); // Bottom face
+		else if (tNear.z > tNear.x && tNear.z > tNear.y)
+			normal = vec3(0.0, 0.0, -1.0); // Back face
+		else if (tNear.x < tNear.y && tNear.x < tNear.z)
+			normal = vec3(1.0, 0.0, 0.0); // Right face
+		else if (tNear.y < tNear.x && tNear.y < tNear.z)
+			normal = vec3(0.0, 1.0, 0.0); // Top face
+		else if (tNear.z < tNear.x && tNear.z < tNear.y)
+			normal = vec3(0.0, 0.0, 1.0); // Front face
+
+		hitInfo.normal = normal;
+	}
+
+	return hitInfo;
+}
+
 HitInfo CalculateRayCollision(Ray ray)
 {
 	HitInfo hitInfo;
@@ -117,7 +181,7 @@ HitInfo CalculateRayCollision(Ray ray)
 	hitInfo.distance = 1.0 / 0.0; // infinity
 	hitInfo.material.color = vec3(0.1, 0.1, 0.1);
 
-	for (int i = 0; i < dataCount; i++)
+	for (int i = 0; i < sphereCount; i++)
 	{
 		Sphere sphere = spheres[i];
 
@@ -127,6 +191,19 @@ HitInfo CalculateRayCollision(Ray ray)
 		{
 			hitInfo = hit;
 			hitInfo.material = sphere.material;
+		}
+	}
+
+	for (int i = 0; i < cubeCount; i++)
+	{
+		Cube cube = cubes[i];
+
+		HitInfo hit = RayCube(ray, cube);
+
+		if (hit.hit && hit.distance < hitInfo.distance)
+		{
+			hitInfo = hit;
+			hitInfo.material = cube.material;
 		}
 	}
 

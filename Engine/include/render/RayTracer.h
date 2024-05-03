@@ -15,10 +15,20 @@ struct RaytracingMaterial
 	float Smoothness = 0;
 };
 
-struct alignas(16) RaytracingSphere
+struct RaytracingSphere
 {
 	alignas(16) glm::vec3 Position = {};
 	float Radius = 1;
+
+	RaytracingMaterial Material = {};
+};
+
+struct RaytracingCube
+{
+	alignas(16) glm::vec3 Min = {};
+	alignas(16) glm::vec3 Max = {};
+	alignas(16) glm::mat4 TransformMatrix = {};
+
 	RaytracingMaterial Material = {};
 };
 
@@ -33,7 +43,7 @@ public:
 
 private:
 	static void setupScreenQuad();
-	static std::vector<RaytracingSphere> getSceneData(const std::vector<Model*>& models);
+	static void getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes);
 	
 	static unsigned int frameCount;
 	static bool accumulate;
@@ -41,5 +51,6 @@ private:
 	static ScreenQuad screenQuad;
 	static Shader* raytracingShader;
 	static ComputeShader* accumulateShader;
-	static GLuint ssbo;
+	static GLuint sphereSSBO;
+	static GLuint cubeSSBO;
 };

@@ -5,7 +5,8 @@
 ScreenQuad RayTracer::screenQuad = {};
 Shader* RayTracer::raytracingShader = nullptr;
 ComputeShader* RayTracer::accumulateShader = nullptr;
-GLuint RayTracer::ssbo = 0;
+GLuint RayTracer::sphereSSBO = 0;
+GLuint RayTracer::cubeSSBO = 0;
 unsigned int RayTracer::frameCount = 0;
 bool RayTracer::accumulate = false;
 
@@ -17,9 +18,13 @@ void RayTracer::Initialize(Shader* shader, ComputeShader* accumulate)
 	accumulateShader = accumulate;
 
 	// initialize ssbo
-	glGenBuffers(1, &ssbo);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+	glGenBuffers(1, &sphereSSBO);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, sphereSSBO);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, sphereSSBO);
+
+	glGenBuffers(1, &cubeSSBO);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, cubeSSBO);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, cubeSSBO);
 
 	setupScreenQuad();
 }
@@ -41,14 +46,20 @@ void RayTracer::Draw()
 
 	// convert scene data to raytracing data (sphere at this moment)
 	const std::vector<Model*> models = EntityManager::Get()->GetModels();
-	std::vector<RaytracingSphere> spheres = getSceneData(models);
+	std::vector<RaytracingSphere> spheres = {};
+	std::vector<RaytracingCube> cubes = {};
+	getSceneData(models, spheres, cubes);
 
-	raytracingShader->SetInt("dataCount", static_cast<int>(spheres.size()));
+	raytracingShader->SetInt("sphereCount", static_cast<int>(spheres.size()));
+	raytracingShader->SetInt("cubeCount", static_cast<int>(cubes.size()));
 	raytracingShader->SetInt("maxBounceCount", Editor::Get()->GetSettings().MaxBounces);
 	raytracingShader->SetInt("numberRaysPerPixel", Editor::Get()->GetSettings().RaysPerPixel);
 
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, sphereSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, spheres.size() * sizeof(RaytracingSphere), spheres.data(), GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, cubeSSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, cubes.size() * sizeof(RaytracingCube), cubes.data(), GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -114,40 +125,42 @@ void RayTracer::setupScreenQuad()
 	glBindVertexArray(0);
 }
 
-std::vector<RaytracingSphere> RayTracer::getSceneData(const std::vector<Model*>& models)
+void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes)
 {
-	std::vector<RaytracingSphere> spheres = {};
-
 	for (Model* model : models)
 	{
+		// material setup
+		Material mat = model->GetMaterial();
+		RaytracingMaterial material = {};
+		material.Color = mat.Diffuse;
+		material.Smoothness = mat.Smoothness;
+		material.EmissiveColor = mat.Emissive ? mat.Diffuse : glm::vec3(0.0f);
+		material.EmissiveStrength = mat.Emissive ? mat.EmissiveStrength : 0.0f;
+
 		if (model->ModelType == PrimitiveType::SpherePrimitive)
 		{
 			RaytracingSphere raytracingSphere = {};
 			Sphere sphere = model->transform->AsSphere();
-			
-			Material mat = model->GetMaterial();
 
 			raytracingSphere.Position = sphere.Position;
 			raytracingSphere.Radius = sphere.Radius;
-			raytracingSphere.Material.Color = mat.Diffuse;
-			raytracingSphere.Material.Smoothness = std::clamp(mat.Smoothness, 0.f, 1.f);
+			raytracingSphere.Material = material;
 
-			if (mat.Emissive)
-			{
-				raytracingSphere.Material.EmissiveColor = mat.Diffuse;
-				raytracingSphere.Material.EmissiveStrength = mat.EmissiveStrength;
-			}
-			else
-			{
-				raytracingSphere.Material.EmissiveColor = glm::vec3(0.0f);
-				raytracingSphere.Material.EmissiveStrength = 0.0f;
-			}
+			inout_spheres.push_back(raytracingSphere);
+		}
+		else if (model->ModelType == PrimitiveType::CubePrimitive)
+		{
+			RaytracingCube raytracingCube = {};
+			const OBoundingBox& obb = model->GetBoundingBox();
 
-			spheres.push_back(raytracingSphere);
+			raytracingCube.Min = obb.Min;
+			raytracingCube.Max = obb.Max;
+			raytracingCube.TransformMatrix = model->transform->GetTransformMatrix();
+			raytracingCube.Material = material;
+
+			inout_cubes.push_back(raytracingCube);
 		}
 	}
-
-	return spheres;
 }
 
 #pragma endregion

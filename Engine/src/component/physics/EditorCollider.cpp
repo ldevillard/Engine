@@ -30,7 +30,7 @@ bool EditorCollider::IntersectRay(const Ray& ray, RaycastHit& outRaycastHit) con
 
 	Ray localRay(origin, direction);
 
-	// check if the ray intersects the bounding box
+	 // check if the ray intersects the bounding box
     // calculate the intersections of the ray with each axis-aligned plane of the bounding box
     glm::vec3 tMin = (boundingBox.Min - localRay.origin) / localRay.direction;
     glm::vec3 tMax = (boundingBox.Max - localRay.origin) / localRay.direction;

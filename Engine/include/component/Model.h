@@ -24,6 +24,7 @@ public:
 
     int GetNumberOfTriangles() const;
     Material& GetMaterial();
+    const OBoundingBox& GetBoundingBox() const;
 
     void Compute() override;
     void ComputeOutline(Shader* outlineShader);

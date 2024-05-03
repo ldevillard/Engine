@@ -72,6 +72,11 @@ Material& Model::GetMaterial()
 	return material;
 }
 
+const OBoundingBox& Model::GetBoundingBox() const
+{
+   return editorCollider->GetBoundingBox();
+}
+
 void Model::Compute()
 {
     shader->Use();

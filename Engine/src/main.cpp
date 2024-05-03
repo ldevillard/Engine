@@ -115,6 +115,10 @@ int main()
 	entity5.transform->SetScale({ 1.f, 1.f, 1.f });
 	entity5.AddComponent(&model5);
 
+	Entity entity6 = Entity("Cube", &shader);
+	Model model6 = Model(PrimitiveType::CubePrimitive);
+	entity6.AddComponent(&model6);
+
 	Entity lightEntity = Entity("DirectionalLight", &shader);
 	Light light = Light(Light::Directional, Color::White);
 	lightEntity.transform->SetPosition({ 0.f, 7.5f, 15.f });
