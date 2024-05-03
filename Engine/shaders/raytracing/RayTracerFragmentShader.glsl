@@ -129,13 +129,12 @@ HitInfo RayCube(Ray ray, Cube cube) // box in case
 	HitInfo hitInfo;
 	hitInfo.hit = false;
 
+	mat4 txi = inverse(cube.transform);
+
 	// related to EditorCollider.cpp IntersectRay() method
 	// transform the ray to the local space of the box
-	vec4 ro1 = inverse(cube.transform) * vec4(ray.origin, 1.0);
-	vec4 rd1 = inverse(cube.transform) * vec4(ray.direction, 0.0);
-
-	vec3 ro = ro1.xyz;
-	vec3 rd = rd1.xyz;
+	vec3 ro = vec3((txi * vec4(ray.origin, 1.0)).xyz);
+	vec3 rd = vec3((txi * vec4(ray.direction, 0.0)).xyz);
 
 	vec3 tMin = (cube.min - ro) / rd;
 	vec3 tMax = (cube.max - ro) / rd;
@@ -153,22 +152,21 @@ HitInfo RayCube(Ray ray, Cube cube) // box in case
 		hitInfo.distance = tNearMax;
 		hitInfo.hitPoint = ro + rd * tNearMax;
 
-		vec3 normal;
+		vec3 s = vec3((rd.x < 0.0) ? 1.0 : -1.0,
+			(rd.y < 0.0) ? 1.0 : -1.0,
+			(rd.z < 0.0) ? 1.0 : -1.0);
 
+		// Calculate normals in world space
+		vec3 localNormal;
 		if (tNear.x > tNear.y && tNear.x > tNear.z)
-			normal = vec3(-1.0, 0.0, 0.0); // Left face
+			localNormal = vec3(s.x, 0.0, 0.0);
 		else if (tNear.y > tNear.x && tNear.y > tNear.z)
-			normal = vec3(0.0, -1.0, 0.0); // Bottom face
-		else if (tNear.z > tNear.x && tNear.z > tNear.y)
-			normal = vec3(0.0, 0.0, -1.0); // Back face
-		else if (tNear.x < tNear.y && tNear.x < tNear.z)
-			normal = vec3(1.0, 0.0, 0.0); // Right face
-		else if (tNear.y < tNear.x && tNear.y < tNear.z)
-			normal = vec3(0.0, 1.0, 0.0); // Top face
-		else if (tNear.z < tNear.x && tNear.z < tNear.y)
-			normal = vec3(0.0, 0.0, 1.0); // Front face
+			localNormal = vec3(0.0, s.y, 0.0);
+		else
+			localNormal = vec3(0.0, 0.0, s.z);
 
-		hitInfo.normal = normal;
+		// Transform normals to world space
+		hitInfo.normal = normalize(vec3((txi * vec4(localNormal, 0.0)).xyz));
 	}
 
 	return hitInfo;
