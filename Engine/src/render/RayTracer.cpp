@@ -43,6 +43,8 @@ void RayTracer::Draw()
 	raytracingShader->SetMat4("invProjection", glm::inverse(projection));
 	raytracingShader->SetMat4("invView", glm::inverse(view));
 	raytracingShader->SetVec3("cameraPosition", Editor::Get()->GetCamera()->Position);
+	raytracingShader->SetVec3("cameraRight", Editor::Get()->GetCamera()->Right);
+	raytracingShader->SetVec3("cameraUp", Editor::Get()->GetCamera()->Up);
 
 	// convert scene data to raytracing data (sphere at this moment)
 	const std::vector<Model*> models = EntityManager::Get()->GetModels();

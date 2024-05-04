@@ -90,7 +90,7 @@ void Inspector::inspectModel(Model* model) const
 		{
 			ImGui_Utils::DrawBoolControl("Emissive", model->GetMaterial().Emissive);
 			ImGui_Utils::DrawFloatControl("Emissive Strength", model->GetMaterial().EmissiveStrength, 1.f, 135.f);
-			ImGui_Utils::DrawFloatControl("Smoothness", model->GetMaterial().Smoothness, 0.0f, 135.f);
+			ImGui_Utils::SliderFloat("Smoothness", model->GetMaterial().Smoothness, 0.0f, 1.0f, "%.2f", 135.f);
 		}
 
 		ImGui::TreePop();

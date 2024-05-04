@@ -9,6 +9,8 @@ uniform mat4 invView;
 uniform mat4 invProjection;
 
 uniform vec3 cameraPosition;
+uniform vec3 cameraRight;
+uniform vec3 cameraUp;
 
 uniform int maxBounceCount;
 uniform int numberRaysPerPixel;
@@ -95,6 +97,14 @@ vec3 RandomHemisphereDirection(vec3 normal, inout uint rngState)
 	return dot(randomDirection, normal) > 0.0 ? randomDirection : -randomDirection;
 }
 
+vec2 RandomPointInCircle(uint rngState)
+{
+	float angle = RandomValue(rngState) * 2.0 * 3.1415926;
+	float radius = sqrt(RandomValue(rngState));
+	return vec2(cos(angle) * radius, sin(angle) * radius);
+
+}
+
 HitInfo RaySphere(Ray ray, vec3 sphereCenter, float sphereRadius)
 {
 	HitInfo hitInfo;
@@ -125,7 +135,7 @@ HitInfo RaySphere(Ray ray, vec3 sphereCenter, float sphereRadius)
 	return hitInfo;
 }
 
-vec3 cubeNml(vec3 i, vec3 bmin, vec3 bmax)
+vec3 ComputeCubeNormal(vec3 i, vec3 bmin, vec3 bmax)
 {
     float epsilon = 0.001;
 
@@ -184,7 +194,7 @@ HitInfo RayCube(Ray ray, Cube cube) // box in case
 		vec3 hitPointWorld = ray.origin + ray.direction * tNearMax;
 		hitInfo.hitPoint = hitPointWorld;
 		vec3 hitPointLocal = vec3((txi * vec4(hitPointWorld, 1.0)).xyz);
-		vec3 normal = cubeNml(hitPointLocal, bmin, bmax);
+		vec3 normal = ComputeCubeNormal(hitPointLocal, bmin, bmax);
 		hitInfo.normal = normalize(vec3((cube.transform * vec4(normal, 0.0)).xyz));
 	}
 
@@ -267,16 +277,19 @@ void main()
 
 	vec3 worldPosition = worldCoord.xyz / worldCoord.w;
 
-	Ray ray;
-	ray.origin = cameraPosition;
-	ray.direction = normalize(worldPosition - ray.origin);
-
 	uint pixelIndex = uint(gl_FragCoord.y * screenSize.x + gl_FragCoord.x);
 	uint rngState = pixelIndex + frameCount * 719393;
 
 	vec3 totalIncomingLight = vec3(0);
 	for (int i = 0; i < numberRaysPerPixel; i++)
 	{
+		Ray ray;
+		ray.origin = cameraPosition;
+		vec2 randomPoint = RandomPointInCircle(rngState) * (0.5 / screenSize.x);
+		vec3 randomPos = worldPosition + cameraRight * randomPoint.x + cameraUp * randomPoint.y;
+
+		ray.direction = normalize(randomPos - ray.origin);
+
 		totalIncomingLight += Trace(ray, rngState);
 	}
 
