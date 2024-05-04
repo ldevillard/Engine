@@ -11,6 +11,7 @@ struct RaytracingMaterial
 {
 	alignas(16) glm::vec3 Color = {};
 	alignas(16) glm::vec3 EmissiveColor = {};
+	int HideEmissive = 0;
 	float EmissiveStrength = 1;
 	float Smoothness = 0;
 };

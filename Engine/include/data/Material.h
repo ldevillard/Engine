@@ -39,6 +39,7 @@ public:
 	float Shininess = 0.6f;
 
 	bool Emissive = false;
+	bool HideEmissive = false;
 	float EmissiveStrength = 1.0f;
 	float Smoothness = 0.0f;
 

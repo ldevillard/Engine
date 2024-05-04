@@ -19,6 +19,7 @@ struct Material
 {
 	vec3 color;
 	vec3 emissiveColor;
+	int hideEmissive;
 	float emissiveStrength;
 	float smoothness;
 };
@@ -248,6 +249,13 @@ vec3 Trace(Ray ray, inout uint rngState)
 
 		if (hitInfo.hit)
 		{
+			Material material = hitInfo.material;
+			if (material.hideEmissive == 1 && i == 0)
+			{
+				ray.origin = hitInfo.hitPoint + ray.direction * 0.001;
+				continue;
+			}
+
 			ray.origin = hitInfo.hitPoint;
 			vec3 diffuseDirection = normalize(hitInfo.normal + RandomDirection(rngState));
 			vec3 specularDirection = reflect(ray.direction, hitInfo.normal);
