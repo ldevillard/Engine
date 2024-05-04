@@ -33,6 +33,7 @@ struct Cube
 	vec3 min;
 	vec3 max;
 	mat4 transform;
+	mat4 inverseTransform;
 	Material material;
 };
 
@@ -124,49 +125,67 @@ HitInfo RaySphere(Ray ray, vec3 sphereCenter, float sphereRadius)
 	return hitInfo;
 }
 
+vec3 cubeNml(vec3 i, vec3 bmin, vec3 bmax)
+{
+    float epsilon = 0.001;
+
+    float cx = abs(i.x - bmin.x);
+    float fx = abs(i.x - bmax.x);
+    float cy = abs(i.y - bmin.y);
+    float fy = abs(i.y - bmax.y);
+    float cz = abs(i.z - bmin.z);
+    float fz = abs(i.z - bmax.z);
+
+    if(cx < epsilon)
+        return vec3(-1.0, 0.0, 0.0);
+    else if (fx < epsilon)
+        return vec3(1.0, 0.0, 0.0);
+    else if (cy < epsilon)
+        return vec3(0.0, -1.0, 0.0);
+    else if (fy < epsilon)
+        return vec3(0.0, 1.0, 0.0);
+    else if (cz < epsilon)
+        return vec3(0.0, 0.0, -1.0);
+    else if (fz < epsilon)
+        return vec3(0.0, 0.0, 1.0);
+    
+    return vec3(0.0, 0.0, 0.0);
+}
+
+
 HitInfo RayCube(Ray ray, Cube cube) // box in case
 {
 	HitInfo hitInfo;
 	hitInfo.hit = false;
 
-	mat4 txi = inverse(cube.transform);
+	mat4 txi = cube.inverseTransform;
 
-	// related to EditorCollider.cpp IntersectRay() method
-	// transform the ray to the local space of the box
+	vec3 bmin = cube.min;
+	vec3 bmax = cube.max;
+
 	vec3 ro = vec3((txi * vec4(ray.origin, 1.0)).xyz);
 	vec3 rd = vec3((txi * vec4(ray.direction, 0.0)).xyz);
 
-	vec3 tMin = (cube.min - ro) / rd;
-	vec3 tMax = (cube.max - ro) / rd;
+	vec3 invRd = 1.0 / rd;
 
-	vec3 tNear = min(tMin, tMax);
-	vec3 tFar = max(tMin, tMax);
+	vec3 t1 = (bmin - ro) * (1.0 / rd);
+	vec3 t2 = (bmax - ro) * (1.0 / rd);
+
+	vec3 tNear = min(t1, t2);
+	vec3 tFar = max(t1, t2);
 
 	float tNearMax = max(max(tNear.x, tNear.y), tNear.z);
 	float tFarMin = min(min(tFar.x, tFar.y), tFar.z);
 
-	// intersection
-	if (tNearMax <= tFarMin)
+	if (tNearMax <= tFarMin && tNearMax > 0)
 	{
 		hitInfo.hit = true;
 		hitInfo.distance = tNearMax;
-		hitInfo.hitPoint = ro + rd * tNearMax;
-
-		vec3 s = vec3((rd.x < 0.0) ? 1.0 : -1.0,
-			(rd.y < 0.0) ? 1.0 : -1.0,
-			(rd.z < 0.0) ? 1.0 : -1.0);
-
-		// Calculate normals in world space
-		vec3 localNormal;
-		if (tNear.x > tNear.y && tNear.x > tNear.z)
-			localNormal = vec3(s.x, 0.0, 0.0);
-		else if (tNear.y > tNear.x && tNear.y > tNear.z)
-			localNormal = vec3(0.0, s.y, 0.0);
-		else
-			localNormal = vec3(0.0, 0.0, s.z);
-
-		// Transform normals to world space
-		hitInfo.normal = normalize(vec3((txi * vec4(localNormal, 0.0)).xyz));
+		vec3 hitPointWorld = ray.origin + ray.direction * tNearMax;
+		hitInfo.hitPoint = hitPointWorld;
+		vec3 hitPointLocal = vec3((txi * vec4(hitPointWorld, 1.0)).xyz);
+		vec3 normal = cubeNml(hitPointLocal, bmin, bmax);
+		hitInfo.normal = normalize(vec3((cube.transform * vec4(normal, 0.0)).xyz));
 	}
 
 	return hitInfo;

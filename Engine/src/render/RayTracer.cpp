@@ -156,6 +156,7 @@ void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 			raytracingCube.Min = obb.Min;
 			raytracingCube.Max = obb.Max;
 			raytracingCube.TransformMatrix = model->transform->GetTransformMatrix();
+			raytracingCube.InverseTransformMatrix = glm::inverse(model->transform->GetTransformMatrix());
 			raytracingCube.Material = material;
 
 			inout_cubes.push_back(raytracingCube);

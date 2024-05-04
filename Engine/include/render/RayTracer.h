@@ -28,6 +28,7 @@ struct RaytracingCube
 	alignas(16) glm::vec3 Min = {};
 	alignas(16) glm::vec3 Max = {};
 	alignas(16) glm::mat4 TransformMatrix = {};
+	alignas(16) glm::mat4 InverseTransformMatrix = {};
 
 	RaytracingMaterial Material = {};
 };

@@ -109,15 +109,15 @@ int main()
 	entity4.transform->SetScale({ .47f, .47f, .47f });
 	entity4.AddComponent(&model4);
 
-	Entity entity5 = Entity("Sphere3", &shader);
-	Model model5 = Model(PrimitiveType::SpherePrimitive, Material::Gold);
+	Entity entity5 = Entity("Cube", &shader);
+	Model model5 = Model(PrimitiveType::CubePrimitive);
 	entity5.transform->SetPosition({ 2.24f, -3.88f, -10.98f });
 	entity5.transform->SetScale({ 1.f, 1.f, 1.f });
 	entity5.AddComponent(&model5);
 
-	Entity entity6 = Entity("Cube", &shader);
+	/*Entity entity6 = Entity("Cube", &shader);
 	Model model6 = Model(PrimitiveType::CubePrimitive);
-	entity6.AddComponent(&model6);
+	entity6.AddComponent(&model6);*/
 
 	Entity lightEntity = Entity("DirectionalLight", &shader);
 	Light light = Light(Light::Directional, Color::White);
