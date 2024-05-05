@@ -86,53 +86,35 @@ int main()
 	Model::LoadPrimitives();
 
 	Entity* entity1 = EntityManager::Get()->CreateEntity("Sphere Light");
-	Model model1 = Model(PrimitiveType::SpherePrimitive, Material::Default);
+	Model* model1 = entity1->AddComponent<Model>(PrimitiveType::SpherePrimitive, Material::Default);
 	entity1->transform->SetPosition({ 0.f, 0.f, -25.f });
 	entity1->transform->SetScale({ 6.5f, 6.5f, 6.5f });
-	entity1->AddComponent(&model1);
 
 	Entity* entity2 = EntityManager::Get()->CreateEntity("Sphere Ground");
-	Model model2 = Model(PrimitiveType::SpherePrimitive, Material::Prune);
+	Model* model2 = entity2->AddComponent<Model>(PrimitiveType::SpherePrimitive, Material::Prune);
 	entity2->transform->SetPosition({ 1.05f, -3.88f, -9.44f });
 	entity2->transform->SetScale({ 1.f, 1.f, 1.f });
-	entity2->AddComponent(&model2);
 
 	Entity* entity3 = EntityManager::Get()->CreateEntity("Sphere1");
-	Model model3 = Model(PrimitiveType::SpherePrimitive, Material::Turquoise);
+	Model* model3 = entity3->AddComponent<Model>(PrimitiveType::SpherePrimitive, Material::Turquoise);
 	entity3->transform->SetPosition({ 0.f, -461.30f, -10.f });
 	entity3->transform->SetScale({ 456.57f, 456.57f, 456.57f });
-	entity3->AddComponent(&model3);
 
 	Entity* entity4 = EntityManager::Get()->CreateEntity("Sphere2");
-	Model model4 = Model(PrimitiveType::SpherePrimitive, Material::Default);
+	Model* model4 = entity4->AddComponent<Model>(PrimitiveType::SpherePrimitive);
 	entity4->transform->SetPosition({ 0.94f, -4.31f, -10.79f });
 	entity4->transform->SetScale({ .47f, .47f, .47f });
-	entity4->AddComponent(&model4);
 
 	Entity* entity5 = EntityManager::Get()->CreateEntity("Cube");
-	Model model5 = Model(PrimitiveType::CubePrimitive);
+	Model* model5 = entity5->AddComponent<Model>(PrimitiveType::CubePrimitive);
 	entity5->transform->SetPosition({ 2.24f, -3.88f, -10.98f });
 	entity5->transform->SetScale({ 1.f, 1.f, 1.f });
-	entity5->AddComponent(&model5);
-
-	/*Entity entity6 = Entity("Cube", &shader);
-	Model model6 = Model(PrimitiveType::CubePrimitive);
-	entity6.AddComponent(&model6);*/
 
 	Entity* lightEntity = EntityManager::Get()->CreateEntity("DirectionalLight");
-	Light light = Light(Light::Directional, Color::White);
-	light.Intensity = 1.f;
+	Light* light = lightEntity->AddComponent<Light>(Light::Directional, Color::White);
+	light->Intensity = 1.f;
 	lightEntity->transform->SetPosition({ 0.f, 7.5f, 15.f });
 	lightEntity->transform->SetRotation({ -45.f, 0.f, 0.f });
-	lightEntity->AddComponent(&light);
-
-	//Entity lightEntity2 = Entity("SpotLight", &shader);
-	//Light light2 = Light(Light::Spot, Color::White);
-	//lightEntity2.AddComponent(&light2);
-
-	//Entity lightEntity3 = Entity("PointLight", &shader);
-	//Light light3 = Light(Light::Point, Color::White);
-	//lightEntity3.AddComponent(&light3);
 
 	bool wireframeMode = false;
 	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();

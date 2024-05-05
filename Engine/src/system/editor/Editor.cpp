@@ -531,7 +531,9 @@ void Editor::showHierarchyContextMenu()
 			{
 				if (ImGui::MenuItem("Sphere"))
 				{
-					EntityManager::Get()->CreateEntity("Sphere");
+					// add method to find the name of the new entity
+					Entity* entity = EntityManager::Get()->CreateEntity("Sphere");
+					entity->AddComponent<Model>(SpherePrimitive);
 				}
 				if (ImGui::MenuItem("Cube"))
 				{

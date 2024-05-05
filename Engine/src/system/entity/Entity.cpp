@@ -23,17 +23,6 @@ Entity::~Entity()
     delete editorCollider;
 }
 
-void Entity::AddComponent(Component* component)
-{
-    component->SetEditorCollider(editorCollider);
-    component->SetTransform(transform);
-    component->SetEntity(this);
-    component->SetShader(shader);
-    components.push_back(component);
-
-    EntityManager::Get()->UpdateLightsIndex();
-}
-
 const std::vector<Component*>& Entity::GetComponents() const
 {
 	return components;
@@ -93,3 +82,16 @@ void Entity::ComputeOutline() const
 }
 
 #pragma endregion
+
+#pragma region Private Methods
+
+void Entity::setupComponent(Component* component)
+{
+    component->SetEditorCollider(editorCollider);
+    component->SetTransform(transform);
+    component->SetEntity(this);
+    component->SetShader(shader);
+    components.push_back(component);
+
+    EntityManager::Get()->UpdateLightsIndex();
+}

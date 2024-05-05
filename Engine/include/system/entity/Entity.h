@@ -22,7 +22,9 @@ public:
 	template<typename T>
 	bool TryGetComponent(T*& outComponent) const;
 
-	void AddComponent(Component* component);
+	template<typename T, typename... Args>
+	T* AddComponent(Args&&... args);
+
 	const std::vector<Component*>& GetComponents() const;
 	const EditorCollider* GetEditorCollider() const;
 	bool IsSelectedEntity() const;
@@ -35,6 +37,8 @@ public:
 	std::string Name;
 
 private:
+	void setupComponent(Component* component);
+
 	EditorCollider* editorCollider = nullptr;
 	Shader* shader = nullptr;
 	
@@ -67,4 +71,19 @@ bool Entity::TryGetComponent(T*& outComponent) const
 		}
 	}
 	return false;
+}
+
+template<typename T, typename... Args>
+T* Entity::AddComponent(Args&&... args)
+{
+	T* newComponent = new T(std::forward<Args>(args)...);
+	Component* component = dynamic_cast<Component*>(newComponent);
+	if (component == nullptr)
+	{
+		// handle error
+		delete newComponent;
+		return nullptr;
+	}
+	setupComponent(component);
+	return newComponent;
 }
