@@ -405,6 +405,9 @@ void Editor::renderHierarchy()
 				}
 			}
 		}
+
+		// handle right click menu
+		showHierarchyContextMenu();
 	}
 	ImGui::End();
 }
@@ -514,6 +517,32 @@ void Editor::transformGizmo(float width, float height)
 			selectedEntity->transform->Position = translation;
 			selectedEntity->transform->Rotation += glm::degrees(deltaRotation);
 			selectedEntity->transform->Scale = scale;
+		}
+	}
+}
+
+void Editor::showHierarchyContextMenu() 
+{
+	if (!ImGui::IsAnyItemHovered() || ImGui::IsPopupOpen("HierarchyContextMenu"))
+	{
+		if (ImGui::BeginPopupContextWindow("HierarchyContextMenu"))
+		{
+			if (ImGui::BeginMenu("Create"))
+			{
+				if (ImGui::MenuItem("Sphere"))
+				{
+					//std::unique_ptr<Entity> entity = std::make_unique<Entity>("Sphere");
+					////Model model = Model(PrimitiveType::SpherePrimitive);
+					////entity->AddComponent(&model);
+					//entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 4.0f);
+				}
+				if (ImGui::MenuItem("Cube"))
+				{
+					// Action 2
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndPopup();
 		}
 	}
 }

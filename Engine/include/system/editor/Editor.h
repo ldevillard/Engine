@@ -82,6 +82,9 @@ private:
 	void renderSettings();
 	void transformGizmo(float width, float height);
 
+	// context menu
+	void showHierarchyContextMenu();
+
 	// member references
 	Entity* selectedEntity = nullptr;
 	EditorCamera* editorCamera = nullptr;
