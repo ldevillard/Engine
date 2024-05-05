@@ -531,10 +531,7 @@ void Editor::showHierarchyContextMenu()
 			{
 				if (ImGui::MenuItem("Sphere"))
 				{
-					//std::unique_ptr<Entity> entity = std::make_unique<Entity>("Sphere");
-					////Model model = Model(PrimitiveType::SpherePrimitive);
-					////entity->AddComponent(&model);
-					//entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 4.0f);
+					EntityManager::Get()->CreateEntity("Sphere");
 				}
 				if (ImGui::MenuItem("Cube"))
 				{

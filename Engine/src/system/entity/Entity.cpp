@@ -15,22 +15,10 @@ Entity::Entity(const std::string &name, Shader* sh) :
 {
 	transform = new Transform();
     editorCollider = new EditorCollider(this);
-
-    EntityManager* manager = EntityManager::Get();
-    if (manager == nullptr)
-    {
-        throw std::runtime_error("FATAL: try to create entity before the manager is initialized!");
-    }
-
-    manager->RegisterEntity(this);
 }
 
 Entity::~Entity()
 {
-    if (EntityManager::Get())
-    {
-        EntityManager::Get()->UnregisterEntity(this);
-    }
 	delete transform;
     delete editorCollider;
 }

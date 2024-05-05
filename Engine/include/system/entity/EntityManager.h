@@ -17,6 +17,8 @@ public:
 	static void DestroyInstance();
 	static EntityManager* Get();
 
+	Entity* CreateEntity(const std::string& name);
+
 	void ComputeEntities() const;
 	void ComputeSelectedEntity() const;
 	const unsigned int GetNumberOfTriangles() const;

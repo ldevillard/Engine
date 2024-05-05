@@ -41,6 +41,13 @@ EntityManager* EntityManager::Get()
 	return instance;
 }
 
+Entity* EntityManager::CreateEntity(const std::string& name)
+{
+	Entity* entity = new Entity(name, shader);
+	RegisterEntity(entity);
+	return entity;
+}
+
 void EntityManager::ComputeEntities() const
 {
 	shader->Use();
@@ -112,7 +119,9 @@ void EntityManager::UnregisterEntity(Entity* e)
 	auto it = std::find(entities.begin(), entities.end(), e);
 
 	if (it != entities.end())
-		entities.erase(it);
+	{
+		delete *it;
+	}
 	else
 		std::cerr << "Couldn't not find Entity to unregister! Maybe Entity has already been unregistered!" << std::endl;
 
