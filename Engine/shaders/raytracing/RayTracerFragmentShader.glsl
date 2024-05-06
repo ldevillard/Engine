@@ -293,7 +293,7 @@ void main()
 	{
 		Ray ray;
 		ray.origin = cameraPosition;
-		vec2 randomPoint = RandomPointInCircle(rngState) * (0.5 / screenSize.x);
+		vec2 randomPoint = RandomPointInCircle(rngState) * (0.25 / screenSize.x);
 		vec3 randomPos = worldPosition + cameraRight * randomPoint.x + cameraUp * randomPoint.y;
 
 		ray.direction = normalize(randomPos - ray.origin);
