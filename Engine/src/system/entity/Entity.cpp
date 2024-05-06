@@ -19,6 +19,10 @@ Entity::Entity(const std::string &name, Shader* sh) :
 
 Entity::~Entity()
 {
+    std::for_each(components.begin(), components.end(),
+        [this](Component* c) { delete c; });
+    components.clear();
+
 	delete transform;
     delete editorCollider;
 }

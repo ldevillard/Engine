@@ -535,12 +535,14 @@ void Editor::showHierarchyContextMenu()
 				{
 					const std::string name = EntityManager::Get()->GenerateNewEntityName("Sphere");
 					Entity* entity = EntityManager::Get()->CreateEntity(name);
+					entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 15.0f);
 					entity->AddComponent<Model>(SpherePrimitive);
 				}
 				if (ImGui::MenuItem("Cube"))
 				{
 					const std::string name = EntityManager::Get()->GenerateNewEntityName("Cube");
 					Entity* entity = EntityManager::Get()->CreateEntity(name);
+					entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 15.0f);
 					entity->AddComponent<Model>(CubePrimitive);
 				}
 				ImGui::EndMenu();
