@@ -80,7 +80,7 @@ T* Entity::AddComponent(Args&&... args)
 	Component* component = dynamic_cast<Component*>(newComponent);
 	if (component == nullptr)
 	{
-		// handle error
+		assert(false && "Can't adding a non component object");
 		delete newComponent;
 		return nullptr;
 	}

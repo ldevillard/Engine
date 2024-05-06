@@ -87,27 +87,27 @@ int main()
 
 	Entity* entity1 = EntityManager::Get()->CreateEntity("Sphere Light");
 	Model* model1 = entity1->AddComponent<Model>(PrimitiveType::SpherePrimitive, Material::Default);
-	entity1->transform->SetPosition({ 0.f, 0.f, -25.f });
+	entity1->transform->SetPosition({ 0.f, 5.5f, -25.f });
 	entity1->transform->SetScale({ 6.5f, 6.5f, 6.5f });
 
-	Entity* entity2 = EntityManager::Get()->CreateEntity("Sphere Ground");
+	Entity* entity2 = EntityManager::Get()->CreateEntity("Sphere1");
 	Model* model2 = entity2->AddComponent<Model>(PrimitiveType::SpherePrimitive, Material::Prune);
-	entity2->transform->SetPosition({ 1.05f, -3.88f, -9.44f });
+	entity2->transform->SetPosition({ 1.05f, 0.f, -9.44f });
 	entity2->transform->SetScale({ 1.f, 1.f, 1.f });
 
-	Entity* entity3 = EntityManager::Get()->CreateEntity("Sphere1");
-	Model* model3 = entity3->AddComponent<Model>(PrimitiveType::SpherePrimitive, Material::Turquoise);
-	entity3->transform->SetPosition({ 0.f, -461.30f, -10.f });
-	entity3->transform->SetScale({ 456.57f, 456.57f, 456.57f });
+	Entity* entity3 = EntityManager::Get()->CreateEntity("Ground");
+	Model* model3 = entity3->AddComponent<Model>(PrimitiveType::CubePrimitive, Material::Turquoise);
+	entity3->transform->SetPosition({ 0.f, -2.f, 0.f });
+	entity3->transform->SetScale({ 50.f, 1.f, 50.f });
 
 	Entity* entity4 = EntityManager::Get()->CreateEntity("Sphere2");
 	Model* model4 = entity4->AddComponent<Model>(PrimitiveType::SpherePrimitive);
-	entity4->transform->SetPosition({ 0.94f, -4.31f, -10.79f });
-	entity4->transform->SetScale({ .47f, .47f, .47f });
+	entity4->transform->SetPosition({ 0.94f, -0.5f, -10.79f });
+	entity4->transform->SetScale({ .5f, .5f, .5f });
 
-	Entity* entity5 = EntityManager::Get()->CreateEntity("Cube");
+	Entity* entity5 = EntityManager::Get()->CreateEntity("Cube1");
 	Model* model5 = entity5->AddComponent<Model>(PrimitiveType::CubePrimitive);
-	entity5->transform->SetPosition({ 2.24f, -3.88f, -10.98f });
+	entity5->transform->SetPosition({ 2.24f, 0.f, -10.98f });
 	entity5->transform->SetScale({ 1.f, 1.f, 1.f });
 
 	Entity* lightEntity = EntityManager::Get()->CreateEntity("DirectionalLight");

@@ -31,6 +31,7 @@ public:
 
 	const std::vector<Entity*>& GetEntities() const;
 	const std::vector<Model*> GetModels() const;
+	const std::string GenerateNewEntityName(const std::string& prefix) const;
 
 private:
 	// singleton

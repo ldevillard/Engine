@@ -521,6 +521,8 @@ void Editor::transformGizmo(float width, float height)
 	}
 }
 
+/* Show context menu when right click on the hierarchy                            
+/* For the entity creation we generate a name to avoid duplicate name in the scene */
 void Editor::showHierarchyContextMenu() 
 {
 	if (!ImGui::IsAnyItemHovered() || ImGui::IsPopupOpen("HierarchyContextMenu"))
@@ -531,13 +533,15 @@ void Editor::showHierarchyContextMenu()
 			{
 				if (ImGui::MenuItem("Sphere"))
 				{
-					// add method to find the name of the new entity
-					Entity* entity = EntityManager::Get()->CreateEntity("Sphere");
+					const std::string name = EntityManager::Get()->GenerateNewEntityName("Sphere");
+					Entity* entity = EntityManager::Get()->CreateEntity(name);
 					entity->AddComponent<Model>(SpherePrimitive);
 				}
 				if (ImGui::MenuItem("Cube"))
 				{
-					// Action 2
+					const std::string name = EntityManager::Get()->GenerateNewEntityName("Cube");
+					Entity* entity = EntityManager::Get()->CreateEntity(name);
+					entity->AddComponent<Model>(CubePrimitive);
 				}
 				ImGui::EndMenu();
 			}

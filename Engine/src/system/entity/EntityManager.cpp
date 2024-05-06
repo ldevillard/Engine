@@ -120,7 +120,7 @@ void EntityManager::UnregisterEntity(Entity* e)
 
 	if (it != entities.end())
 	{
-		delete *it;
+		delete* it;
 	}
 	else
 		std::cerr << "Couldn't not find Entity to unregister! Maybe Entity has already been unregistered!" << std::endl;
@@ -193,6 +193,19 @@ const std::vector<Model*> EntityManager::GetModels() const
 	}
 
 	return models;
+}
+
+const std::string EntityManager::GenerateNewEntityName(const std::string& prefix) const
+{
+	std::string name(prefix);
+
+	int count = 0;
+	for (Entity* e : entities)
+	{
+		if (e->Name == name)
+			name = prefix + "(" + std::to_string(++count) + ")";
+	}
+	return name;
 }
 
 #pragma endregion
