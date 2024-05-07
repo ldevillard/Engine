@@ -14,7 +14,7 @@ EntityManager* EntityManager::instance = nullptr;
 EntityManager::~EntityManager()
 {
 	std::for_each(entities.begin(), entities.end(),
-		[this](Entity* e) { UnregisterEntity(e); });
+		[this](Entity* e) { unregisterEntity(e); });
 	entities.clear();
 }
 
@@ -44,8 +44,18 @@ EntityManager* EntityManager::Get()
 Entity* EntityManager::CreateEntity(const std::string& name)
 {
 	Entity* entity = new Entity(name, shader);
-	RegisterEntity(entity);
+	registerEntity(entity);
 	return entity;
+}
+
+void EntityManager::DestroyEntity(Entity* entity)
+{
+	auto it = unregisterEntity(entity);
+	if (it != entities.end())
+		entities.erase(it);
+
+	// refresh lights index for shader binding
+	UpdateLightsIndex();
 }
 
 void EntityManager::ComputeEntities() const
@@ -87,46 +97,6 @@ const unsigned int EntityManager::GetNumberOfTriangles() const
 	}
 
 	return sum;
-}
-
-void EntityManager::RegisterEntity(Entity* e)
-{
-	if (e == nullptr)
-	{
-		std::cerr << "Try to register a null Entity" << std::endl;
-		return;
-	}
-
-	auto it = std::find(entities.begin(), entities.end(), e);
-
-	if (it == entities.end())
-		entities.push_back(e);
-	else
-		std::cerr << "Entity is already registered!" << std::endl;
-
-	// refresh lights index for shader binding
-	UpdateLightsIndex();
-}
-
-void EntityManager::UnregisterEntity(Entity* e)
-{
-	if (e == nullptr)
-	{
-		std::cerr << "Try to unregister a null Entity" << std::endl;
-		return;
-	}
-
-	auto it = std::find(entities.begin(), entities.end(), e);
-
-	if (it != entities.end())
-	{
-		delete* it;
-	}
-	else
-		std::cerr << "Couldn't not find Entity to unregister! Maybe Entity has already been unregistered!" << std::endl;
-
-	// refresh lights index for shader binding
-	UpdateLightsIndex();
 }
 
 unsigned int EntityManager::GetLightIndex(Transform* transform) const
@@ -206,6 +176,46 @@ const std::string EntityManager::GenerateNewEntityName(const std::string& prefix
 			name = prefix + "(" + std::to_string(++count) + ")";
 	}
 	return name;
+}
+
+#pragma endregion
+
+#pragma region Private Methods
+
+void EntityManager::registerEntity(Entity* e)
+{
+	if (e == nullptr)
+	{
+		std::cerr << "Try to register a null Entity" << std::endl;
+		return;
+	}
+
+	auto it = std::find(entities.begin(), entities.end(), e);
+
+	if (it == entities.end())
+		entities.push_back(e);
+	else
+		std::cerr << "Entity is already registered!" << std::endl;
+
+	// refresh lights index for shader binding
+	UpdateLightsIndex();
+}
+
+std::vector<Entity*>::iterator EntityManager::unregisterEntity(Entity* e)
+{
+	assert(e != nullptr && "Try to unregister a null Entity");
+
+	auto it = std::find(entities.begin(), entities.end(), e);
+
+	if (it != entities.end())
+	{
+		delete* it;
+	}
+	else
+	{
+		assert(false && "Couldn't not find Entity to unregister!");
+	}
+	return it;
 }
 
 #pragma endregion

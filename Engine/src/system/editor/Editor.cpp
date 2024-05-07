@@ -403,11 +403,16 @@ void Editor::renderHierarchy()
 				{
 					SelectEntity(entity);
 				}
+				if (ImGui::GetID(entity->Name.c_str()) == ImGui::GetHoveredID())
+				{
+					hoveredEntity = entity;
+				}
 			}
-		}
 
-		// handle right click menu
-		showHierarchyContextMenu();
+			// handle right click menu
+			showHierarchyContextMenu();
+			showEntityContextMenu();
+		}
 	}
 	ImGui::End();
 }
@@ -523,7 +528,7 @@ void Editor::transformGizmo(float width, float height)
 
 /* Show context menu when right click on the hierarchy                            
 /* For the entity creation we generate a name to avoid duplicate name in the scene */
-void Editor::showHierarchyContextMenu() 
+void Editor::showHierarchyContextMenu() const
 {
 	if (!ImGui::IsAnyItemHovered() || ImGui::IsPopupOpen("HierarchyContextMenu"))
 	{
@@ -549,6 +554,32 @@ void Editor::showHierarchyContextMenu()
 			}
 			ImGui::EndPopup();
 		}
+	}
+}
+
+/* Show context menu when right click on an entity
+/* We want to have the ability to delete the entity */
+void Editor::showEntityContextMenu()
+{
+	if (hoveredEntity == nullptr)
+		return;
+
+	if (!ImGui::IsAnyItemHovered() && !ImGui::IsPopupOpen("HierarchyContextEntity"))
+	{
+		hoveredEntity = nullptr;
+		return;
+	}
+		
+	if (ImGui::BeginPopupContextWindow("HierarchyContextEntity"))
+	{
+		if (ImGui::Selectable("Delete"))
+		{
+			Entity* entity = hoveredEntity;
+			hoveredEntity = nullptr;
+			selectedEntity = nullptr;
+			EntityManager::Get()->DestroyEntity(entity);
+		}
+		ImGui::EndPopup();
 	}
 }
 

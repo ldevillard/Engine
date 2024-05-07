@@ -83,10 +83,12 @@ private:
 	void transformGizmo(float width, float height);
 
 	// context menu
-	void showHierarchyContextMenu();
+	void showHierarchyContextMenu() const;
+	void showEntityContextMenu();
 
 	// member references
 	Entity* selectedEntity = nullptr;
+	Entity* hoveredEntity = nullptr; // register UI hovered entity
 	EditorCamera* editorCamera = nullptr;
 	GLFWwindow* window = nullptr;
 

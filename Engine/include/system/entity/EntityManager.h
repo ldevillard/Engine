@@ -18,13 +18,11 @@ public:
 	static EntityManager* Get();
 
 	Entity* CreateEntity(const std::string& name);
+	void DestroyEntity(Entity* entity);
 
 	void ComputeEntities() const;
 	void ComputeSelectedEntity() const;
 	const unsigned int GetNumberOfTriangles() const;
-
-	void RegisterEntity(Entity* e);
-	void UnregisterEntity(Entity* e);
 
 	unsigned int GetLightIndex(Transform* transform) const;
 	void UpdateLightsIndex();
@@ -36,6 +34,9 @@ public:
 private:
 	// singleton
 	static EntityManager* instance;
+
+	void registerEntity(Entity* e);
+	std::vector<Entity*>::iterator unregisterEntity(Entity* e);
 
 	Shader* shader = nullptr;
 
