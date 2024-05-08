@@ -26,9 +26,11 @@ public:
 	const static Material Prune;
 
 	static const std::vector<const char*> Names;
+	static const std::vector<const char*> Flags;
 	static const Material& GetMaterialFromName(const std::string& name);
 
 	void SetEmissive(bool emissive);
+	void SetFlag(int flag);
 
 	// These vectors are the colors of the different lights
 	glm::vec3 Ambient;
@@ -39,7 +41,7 @@ public:
 	float Shininess = 0.6f;
 
 	bool Emissive = false;
-	bool HideEmissive = false;
+	int Flag = 0;
 	float EmissiveStrength = 1.0f;
 	float Smoothness = 0.0f;
 

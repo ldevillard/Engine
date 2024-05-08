@@ -72,16 +72,16 @@ void ComputeShader::SetTexture(unsigned int id)
 {
     tempTexture = id;
     glActiveTexture(GL_TEXTURE0);
-    glBindImageTexture(0, id, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+    glBindImageTexture(0, id, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA16);
 }
 
 void ComputeShader::SetTextures(unsigned int id1, unsigned int id2)
 {
     glActiveTexture(GL_TEXTURE0);
-    glBindImageTexture(0, id1, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+    glBindImageTexture(0, id1, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA16);
 
     glActiveTexture(GL_TEXTURE1);
-    glBindImageTexture(1, id2, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
+    glBindImageTexture(1, id2, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA16);
 }
 
 

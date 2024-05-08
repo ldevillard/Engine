@@ -85,13 +85,13 @@ void RayTracer::Draw()
 
 		accumulateShader->Dispatch(glm::uvec2(8, 4));
 		accumulateShader->Wait();
+		frameCount++;
 	}
 	else
 	{
 		accumulate = false;
 	}
 
-	frameCount++;
 }
 
 void RayTracer::ResetFrameCount()
@@ -135,7 +135,7 @@ void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 		Material mat = model->GetMaterial();
 		RaytracingMaterial material = {};
 		material.Color = mat.Diffuse;
-		material.HideEmissive = static_cast<int>(mat.HideEmissive);
+		material.Flag = mat.Flag;
 		material.Smoothness = std::clamp(mat.Smoothness, 0.f, 1.f);
 		material.EmissiveColor = mat.Emissive ? mat.Diffuse : glm::vec3(0.0f);
 		material.EmissiveStrength = mat.Emissive ? mat.EmissiveStrength : 0.0f;

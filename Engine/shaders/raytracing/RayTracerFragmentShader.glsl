@@ -15,11 +15,14 @@ uniform vec3 cameraUp;
 uniform int maxBounceCount;
 uniform int numberRaysPerPixel;
 
+const int checkerPattern = 1;
+const int hideEmissive = 2;
+
 struct Material
 {
 	vec3 color;
 	vec3 emissiveColor;
-	int hideEmissive;
+	int flag;
 	float emissiveStrength;
 	float smoothness;
 };
@@ -68,10 +71,17 @@ struct HitInfo
 	Material material;
 };
 
+uint NextRandom(inout uint state)
+{
+	state = state * 747796405 + 2891336453;
+	uint result = ((state >> ((state >> 28) + 4)) ^ state) * 277803737;
+	result = (result >> 22) ^ result;
+	return result;
+}
+
 float RandomValue(inout uint state)
 {
-	state *= (state + 195439) * (state + 124395) * (state + 845921);
-	return state / 4294967295.0;
+	return NextRandom(state) / 4294967295.0; // 2^32 - 1
 }
 
 float RandomValueNormalDistribution(inout uint state)
@@ -240,17 +250,23 @@ HitInfo CalculateRayCollision(Ray ray)
 
 vec3 Trace(Ray ray, inout uint rngState)
 {
-	vec3 incomingLight = vec3(0.1);
+	vec3 incomingLight = vec3(0);
 	vec3 rayColor = vec3(1);
 
-	for (int i = 0; i < maxBounceCount; i++)
+	for (int i = 0; i <= maxBounceCount; i++)
 	{
 		HitInfo hitInfo = CalculateRayCollision(ray);
 
 		if (hitInfo.hit)
 		{
 			Material material = hitInfo.material;
-			if (material.hideEmissive == 1 && i == 0)
+
+			if (material.flag == checkerPattern)
+			{
+				vec2 c = mod(floor(hitInfo.hitPoint.xz), vec2(2.0));
+				material.color = c.x == c.y ? material.color : material.emissiveColor;
+			}
+			else if (material.flag == hideEmissive && i == 0)
 			{
 				ray.origin = hitInfo.hitPoint + ray.direction * 0.001;
 				continue;
@@ -259,14 +275,15 @@ vec3 Trace(Ray ray, inout uint rngState)
 			ray.origin = hitInfo.hitPoint;
 			vec3 diffuseDirection = normalize(hitInfo.normal + RandomDirection(rngState));
 			vec3 specularDirection = reflect(ray.direction, hitInfo.normal);
-			ray.direction = mix(diffuseDirection, specularDirection, hitInfo.material.smoothness);
+			ray.direction = normalize(mix(diffuseDirection, specularDirection, material.smoothness));
 
-			vec3 emittedLight = hitInfo.material.emissiveColor * hitInfo.material.emissiveStrength;
+			vec3 emittedLight = material.emissiveColor * material.emissiveStrength;
 			incomingLight += emittedLight * rayColor;
-			rayColor *= hitInfo.material.color;
+			rayColor *= material.color;
 		}
 		else
 		{
+			incomingLight += vec3(0.1) * rayColor;
 			break ;
 		}
 	}

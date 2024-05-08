@@ -20,6 +20,13 @@ const std::vector<const char*> Material::Names =
 	"Prune",
 };
 
+const std::vector<const char*> Material::Flags =
+{
+	"None",
+	"CheckerPattern",
+	"HideEmissive"
+};
+
 const Material& Material::GetMaterialFromName(const std::string& name)
 {
 	static const std::unordered_map<std::string, const Material*> materialMap = {
@@ -125,6 +132,11 @@ const Material Material::Prune(glm::vec3(0.439216f, 0.172549f, 0.521569f), // Am
 void Material::SetEmissive(bool emissive)
 {
 	Emissive = emissive;
+}
+
+void Material::SetFlag(int flag)
+{
+	Flag = flag;
 }
 
 #pragma endregion

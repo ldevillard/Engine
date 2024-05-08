@@ -38,7 +38,7 @@ struct EditorSettings
 	// ray tracing
 	bool RayTracing = true;
 	int RaysPerPixel = 1;
-	int MaxBounces = 2;
+	int MaxBounces = 1;
 	bool Accumulate = false;
 };
 
