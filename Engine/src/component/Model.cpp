@@ -93,6 +93,23 @@ void Model::Compute()
     draw();
 }
 
+Component* Model::Clone()
+{
+	Model* model = new Model();
+
+    for (Mesh mesh : meshes)
+		model->meshes.push_back(Mesh(mesh));
+
+    for (Texture texture : texturesLoaded)
+        model->texturesLoaded.push_back(Texture(texture));
+
+    model->material = material;
+    model->directory = directory;
+    model->ModelType = ModelType;
+
+	return model;
+}
+
 void Model::ComputeOutline(Shader* outlineShader)
 {
 	outlineShader->Use();

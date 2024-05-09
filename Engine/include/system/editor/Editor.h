@@ -83,7 +83,7 @@ private:
 	void transformGizmo(float width, float height);
 
 	// context menu
-	void showHierarchyContextMenu() const;
+	void showHierarchyContextMenu();
 	void showEntityContextMenu();
 
 	// member references

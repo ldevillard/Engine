@@ -17,6 +17,7 @@ public:
 	void SetShader(Shader* sh);
 
 	virtual void Compute() = 0;
+	virtual Component* Clone() = 0;
 	
 	Transform* transform		   = nullptr;
 	Entity*	entity				   = nullptr;

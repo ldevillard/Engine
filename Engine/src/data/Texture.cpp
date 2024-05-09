@@ -41,4 +41,8 @@ Texture::Texture(const char* texturePath, std::string name, TextureParam params)
    }
 }
 
+Texture::Texture(const Texture& other) : Name(other.Name), ID(other.ID), Path(other.Path)
+{
+}
+
 #pragma endregion

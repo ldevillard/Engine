@@ -14,6 +14,7 @@ class Entity
 {
 public:
 	Entity(const std::string &name, Shader* sh);
+	Entity(const Entity& other);
 	~Entity();
 
 	template<typename T>

@@ -19,6 +19,7 @@ public:
 
 	Entity* CreateEntity(const std::string& name);
 	void DestroyEntity(Entity* entity);
+	Entity* DuplicateEntity(Entity* entity);
 
 	void ComputeEntities() const;
 	void ComputeSelectedEntity() const;

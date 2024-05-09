@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <regex>
 
 #include "system/entity/EntityManager.h"
 #include "system/editor/Editor.h"
@@ -56,6 +57,14 @@ void EntityManager::DestroyEntity(Entity* entity)
 
 	// refresh lights index for shader binding
 	UpdateLightsIndex();
+}
+
+Entity* EntityManager::DuplicateEntity(Entity* entity)
+{
+	Entity* newEntity = new Entity(*entity);
+	newEntity->Name = GenerateNewEntityName(newEntity->Name);
+	registerEntity(newEntity);
+	return newEntity;
 }
 
 void EntityManager::ComputeEntities() const
@@ -170,11 +179,30 @@ const std::string EntityManager::GenerateNewEntityName(const std::string& prefix
 	std::string name(prefix);
 
 	int count = 0;
+
+	// regex pattern to match "(number)" at the end of the string
+	std::regex pattern("\\(\\d+\\)$");
+
 	for (Entity* e : entities)
 	{
 		if (e->Name == name)
-			name = prefix + "(" + std::to_string(++count) + ")";
+		{
+			// check if the name ends with a number in parentheses
+			if (std::regex_search(name, pattern))
+			{
+				// if it does, extract the number and increment it
+				std::smatch match;
+				std::regex_search(name, match, pattern);
+				count = std::stoi(match[0].str().substr(1, match[0].str().size() - 2));
+				// remove the existing number
+				name = std::regex_replace(name, pattern, "");
+			}
+
+			// increment the count and append it to the name
+			name += "(" + std::to_string(++count) + ")";
+		}
 	}
+
 	return name;
 }
 

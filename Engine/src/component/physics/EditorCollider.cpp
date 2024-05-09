@@ -6,6 +6,10 @@ EditorCollider::EditorCollider(Entity* e) : boundingBox(), entity(e)
 {
 }
 
+EditorCollider::EditorCollider(const EditorCollider& other) : boundingBox(other.boundingBox), entity(other.entity)
+{
+}
+
 void EditorCollider::ApplyTransform(const Transform& transform)
 {
 	boundingBox.ApplyTransform(transform);

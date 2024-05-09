@@ -18,6 +18,7 @@ public:
 	Light(const LightType& type = Directional, const Color& color = Color::White);
 
 	void Compute() override;
+	Component* Clone() override;
 
 	void SetLightTypeFromString(const std::string& type);
 	static const std::vector<const char*> Names; // = { "Directional", "Point", "Spot" };

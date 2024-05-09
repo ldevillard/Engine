@@ -27,4 +27,5 @@ public:
 	std::string Path;
 
 	Texture(const char* texturePath, std::string name, TextureParam params = TextureParam());
+	Texture(const Texture& other);
 };

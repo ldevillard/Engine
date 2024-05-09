@@ -528,7 +528,7 @@ void Editor::transformGizmo(float width, float height)
 
 /* Show context menu when right click on the hierarchy                            
 /* For the entity creation we generate a name to avoid duplicate name in the scene */
-void Editor::showHierarchyContextMenu() const
+void Editor::showHierarchyContextMenu()
 {
 	if (!ImGui::IsAnyItemHovered() || ImGui::IsPopupOpen("HierarchyContextMenu"))
 	{
@@ -542,6 +542,7 @@ void Editor::showHierarchyContextMenu() const
 					Entity* entity = EntityManager::Get()->CreateEntity(name);
 					entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 15.0f);
 					entity->AddComponent<Model>(SpherePrimitive);
+					SelectEntity(entity);
 				}
 				if (ImGui::MenuItem("Cube"))
 				{
@@ -549,6 +550,7 @@ void Editor::showHierarchyContextMenu() const
 					Entity* entity = EntityManager::Get()->CreateEntity(name);
 					entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 15.0f);
 					entity->AddComponent<Model>(CubePrimitive);
+					SelectEntity(entity);
 				}
 				ImGui::EndMenu();
 			}
@@ -558,7 +560,7 @@ void Editor::showHierarchyContextMenu() const
 }
 
 /* Show context menu when right click on an entity
-/* We want to have the ability to delete the entity */
+/* We want to have the ability to delete/duplicate the entity */
 void Editor::showEntityContextMenu()
 {
 	if (hoveredEntity == nullptr)
@@ -578,6 +580,14 @@ void Editor::showEntityContextMenu()
 			hoveredEntity = nullptr;
 			selectedEntity = nullptr;
 			EntityManager::Get()->DestroyEntity(entity);
+		}
+		if (ImGui::Selectable("Duplicate"))
+		{
+			Entity* entity = hoveredEntity;
+			hoveredEntity = nullptr;
+			selectedEntity = nullptr;
+			Entity* duplicatedEntity = EntityManager::Get()->DuplicateEntity(entity);
+			SelectEntity(duplicatedEntity);
 		}
 		ImGui::EndPopup();
 	}

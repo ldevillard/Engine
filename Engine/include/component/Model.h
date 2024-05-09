@@ -27,6 +27,7 @@ public:
     const OBoundingBox& GetBoundingBox() const;
 
     void Compute() override;
+    Component* Clone() override;
     void ComputeOutline(Shader* outlineShader);
 
     void SetMaterialFromName(std::string name);
@@ -39,6 +40,7 @@ public:
     PrimitiveType ModelType = PrimitiveType::None;
 
 private:
+    Model() = default;
     void draw();
 
     // model data

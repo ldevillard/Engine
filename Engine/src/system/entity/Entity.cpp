@@ -17,6 +17,21 @@ Entity::Entity(const std::string &name, Shader* sh) :
     editorCollider = new EditorCollider(this);
 }
 
+Entity::Entity(const Entity& other) :
+    shader(other.shader),
+    Name(other.Name)
+{
+	transform = new Transform(*other.transform);
+	editorCollider = new EditorCollider(*other.editorCollider);
+    editorCollider->entity = this;
+
+    for (Component* c : other.components)
+    {
+		Component* newComponent = c->Clone();
+		setupComponent(newComponent);
+	}
+}
+
 Entity::~Entity()
 {
     std::for_each(components.begin(), components.end(),

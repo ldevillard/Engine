@@ -12,6 +12,7 @@ class EditorCollider
 {
 public:
 	EditorCollider(Entity* e);
+	EditorCollider(const EditorCollider& other);
 
 	void ApplyTransform(const Transform& transform);
 	

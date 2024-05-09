@@ -33,6 +33,16 @@ void Light::Compute()
 	}
 }
 
+Component* Light::Clone()
+{
+	Light* newLight = new Light(lightType, color);
+	newLight->Intensity = Intensity;
+	newLight->Radius = Radius;
+	newLight->CutOff = CutOff;
+	newLight->OutCutOff = OutCutOff;
+	return newLight;
+}
+
 void Light::SetLightTypeFromString(const std::string& type)
 {
 	if (type == "Directional")
