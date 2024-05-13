@@ -80,6 +80,7 @@
     <ClInclude Include="include\component\physics\EditorCollider.h" />
     <ClInclude Include="include\data\physics\Ray.h" />
     <ClInclude Include="include\data\physics\RaycastHit.h" />
+    <ClInclude Include="include\data\template\Singleton.h" />
     <ClInclude Include="include\maths\Math.h" />
     <ClInclude Include="include\physics\Physics.h" />
     <ClInclude Include="include\render\ComputeShader.h" />

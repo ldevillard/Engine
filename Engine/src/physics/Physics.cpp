@@ -8,7 +8,7 @@ namespace Physics
 {
 	bool EditorRaycast(const Ray& ray, RaycastHit& outRayCastHit)
 	{
-		std::vector<Entity*> entities = EntityManager::Get()->GetEntities();
+		std::vector<Entity*> entities = EntityManager::Get().GetEntities();
 
 		for (Entity* e : entities)
 		{

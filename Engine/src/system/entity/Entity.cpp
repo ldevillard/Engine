@@ -54,12 +54,12 @@ const EditorCollider* Entity::GetEditorCollider() const
 
 bool Entity::IsSelectedEntity() const
 {
-	return Editor::Get()->GetSelectedEntity() == this;
+	return Editor::Get().GetSelectedEntity() == this;
 }
 
 void Entity::Compute()
 {
-    if (this == Editor::Get()->GetSelectedEntity()) 
+    if (this == Editor::Get().GetSelectedEntity()) 
     {
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
         glStencilMask(0xFF);
@@ -89,7 +89,7 @@ void Entity::ComputeOutline() const
     Outliner::Setup();
 
     // render model
-    Editor::Get()->RenderCamera(Outliner::OutlineShader);
+    Editor::Get().RenderCamera(Outliner::OutlineShader);
     transform->Compute(Outliner::OutlineShader);
     
 	 model->ComputeOutline(Outliner::OutlineShader);
@@ -112,5 +112,5 @@ void Entity::setupComponent(Component* component)
     component->SetShader(shader);
     components.push_back(component);
 
-    EntityManager::Get()->UpdateLightsIndex();
+    EntityManager::Get().UpdateLightsIndex();
 }

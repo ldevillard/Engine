@@ -34,7 +34,7 @@ void Gizmo::DrawWireCube(const Color& color, const Transform& transform)
 		return;
 	}
 
-	if (!Editor::Get()->GetSettings().Gizmo)
+	if (!Editor::Get().GetSettings().Gizmo)
 		return;
 
 	bindShader(color, transform);
@@ -50,7 +50,7 @@ void Gizmo::DrawWireSphere(const Color& color, const Transform& transform)
 		return;
 	}
 
-	if (!Editor::Get()->GetSettings().Gizmo)
+	if (!Editor::Get().GetSettings().Gizmo)
 		return;
 
 	bindShader(color, transform);
@@ -66,7 +66,7 @@ void Gizmo::DrawWireCone(const Color& color, const Transform& transform)
 		return;
 	}
 
-	if (!Editor::Get()->GetSettings().Gizmo)
+	if (!Editor::Get().GetSettings().Gizmo)
 		return;
 
 	bindShader(color, transform);
@@ -82,7 +82,7 @@ void Gizmo::DrawArrow(const Color& color, Transform transform)
 		return;
 	}
 
-	if (!Editor::Get()->GetSettings().Gizmo)
+	if (!Editor::Get().GetSettings().Gizmo)
 		return;
 
 	Transform tr(transform.Position, transform.Rotation, glm::vec3(0.001f, 0.001f, .5f));
@@ -102,7 +102,7 @@ void Gizmo::DrawWireConeFrustum(const Color& color, const Transform& transform)
 		return;
 	}
 
-	if (!Editor::Get()->GetSettings().Gizmo)
+	if (!Editor::Get().GetSettings().Gizmo)
 		return;
 
 	Transform tr(transform);
@@ -122,7 +122,7 @@ void Gizmo::bindShader(const Color& color, const Transform& transform)
 {
 	shader->Use();
 
-	const EditorCamera* camera = Editor::Get()->GetCamera();
+	const EditorCamera* camera = Editor::Get().GetCamera();
 
 	glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCENE_WIDTH / (float)SCENE_HEIGHT, 0.1f, 1000.0f);
 	glm::mat4 view = camera->GetViewMatrix();

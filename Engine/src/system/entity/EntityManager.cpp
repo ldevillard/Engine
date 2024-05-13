@@ -7,8 +7,15 @@
 #include "component/Model.h"
 #include "component/Light.h"
 
-// singleton instance
-EntityManager* EntityManager::instance = nullptr;
+#pragma region Singleton Methods
+
+// singleton override
+void EntityManager::initialize()
+{
+	Singleton<EntityManager>::initialize();
+}
+
+#pragma endregion
 
 #pragma region Public Methods
 
@@ -19,27 +26,11 @@ EntityManager::~EntityManager()
 	entities.clear();
 }
 
-void EntityManager::CreateInstance(Shader* shader)
+void EntityManager::Initialize(Shader* shader)
 {
-	if (instance == nullptr)
-	{
-		instance = new EntityManager;
-		instance->shader = shader;
-	}
-}
-
-void EntityManager::DestroyInstance()
-{
-	if (instance != nullptr)
-	{
-		delete instance;
-		instance = nullptr;
-	}
-}
-
-EntityManager* EntityManager::Get()
-{
-	return instance;
+	Get();
+	instance->shader = shader;
+	instance->initialize();
 }
 
 Entity* EntityManager::CreateEntity(const std::string& name)
@@ -82,9 +73,9 @@ void EntityManager::ComputeEntities() const
 
 void EntityManager::ComputeSelectedEntity() const
 {
-	if (!*Editor::Get()->GetSettings().Wireframe)
+	if (!Editor::Get().GetSettings().Wireframe)
 	{
-		const Entity* selectedEntity = Editor::Get()->GetSelectedEntity();
+		const Entity* selectedEntity = Editor::Get().GetSelectedEntity();
 		if (selectedEntity != nullptr)
 		{
 			selectedEntity->ComputeOutline();

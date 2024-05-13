@@ -38,7 +38,7 @@ void OBoundingBox::ApplyTransform(const Transform& transform)
 
     tr.Position = obbCenter;
 
-   if (Editor::Get()->GetSettings().BoundingBoxGizmo)
+   if (Editor::Get().GetSettings().BoundingBoxGizmo)
         Gizmo::DrawWireCube(Color::Green, tr);
 }
 

@@ -31,31 +31,31 @@ void RayTracer::Initialize(Shader* shader, ComputeShader* accumulate)
 
 void RayTracer::Draw()
 {
-	Editor::Get()->GetRaytracingBuffer()->Bind();
+	Editor::Get().GetRaytracingBuffer()->Bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	raytracingShader->Use();
 
 	raytracingShader->SetVec2("screenSize", glm::vec2(SCR_WIDTH, SCR_HEIGHT));
 	raytracingShader->SetUInt("frameCount", frameCount);
 
-	glm::mat4 projection = Editor::Get()->GetCamera()->GetProjectionMatrix(static_cast<float>(RAYTRACED_SCENE_WIDTH), static_cast<float>(RAYTRACED_SCENE_HEIGHT));
-	glm::mat4 view = Editor::Get()->GetCamera()->GetViewMatrix();
+	glm::mat4 projection = Editor::Get().GetCamera()->GetProjectionMatrix(static_cast<float>(RAYTRACED_SCENE_WIDTH), static_cast<float>(RAYTRACED_SCENE_HEIGHT));
+	glm::mat4 view = Editor::Get().GetCamera()->GetViewMatrix();
 	raytracingShader->SetMat4("invProjection", glm::inverse(projection));
 	raytracingShader->SetMat4("invView", glm::inverse(view));
-	raytracingShader->SetVec3("cameraPosition", Editor::Get()->GetCamera()->Position);
-	raytracingShader->SetVec3("cameraRight", Editor::Get()->GetCamera()->Right);
-	raytracingShader->SetVec3("cameraUp", Editor::Get()->GetCamera()->Up);
+	raytracingShader->SetVec3("cameraPosition", Editor::Get().GetCamera()->Position);
+	raytracingShader->SetVec3("cameraRight", Editor::Get().GetCamera()->Right);
+	raytracingShader->SetVec3("cameraUp", Editor::Get().GetCamera()->Up);
 
 	// convert scene data to raytracing data (sphere at this moment)
-	const std::vector<Model*> models = EntityManager::Get()->GetModels();
+	const std::vector<Model*> models = EntityManager::Get().GetModels();
 	std::vector<RaytracingSphere> spheres = {};
 	std::vector<RaytracingCube> cubes = {};
 	getSceneData(models, spheres, cubes);
 
 	raytracingShader->SetInt("sphereCount", static_cast<int>(spheres.size()));
 	raytracingShader->SetInt("cubeCount", static_cast<int>(cubes.size()));
-	raytracingShader->SetInt("maxBounceCount", Editor::Get()->GetSettings().MaxBounces);
-	raytracingShader->SetInt("numberRaysPerPixel", Editor::Get()->GetSettings().RaysPerPixel);
+	raytracingShader->SetInt("maxBounceCount", Editor::Get().GetSettings().MaxBounces);
+	raytracingShader->SetInt("numberRaysPerPixel", Editor::Get().GetSettings().RaysPerPixel);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, sphereSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, spheres.size() * sizeof(RaytracingSphere), spheres.data(), GL_DYNAMIC_DRAW);
@@ -66,10 +66,10 @@ void RayTracer::Draw()
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	Editor::Get()->GetRaytracingBuffer()->Unbind();
+	Editor::Get().GetRaytracingBuffer()->Unbind();
 
 	// accumulate rays 
-	if (Editor::Get()->GetSettings().Accumulate)
+	if (Editor::Get().GetSettings().Accumulate)
 	{
 		if (!accumulate)
 		{
@@ -80,8 +80,8 @@ void RayTracer::Draw()
 		accumulateShader->Use();
 		accumulateShader->SetWorkSize(glm::uvec2(SCR_WIDTH, SCR_HEIGHT));
 		accumulateShader->SetUInt("frameCount", frameCount);
-		accumulateShader->SetTextures(Editor::Get()->GetAccumulationBuffer()->GetFrameTexture()
-			, Editor::Get()->GetRaytracingBuffer()->GetFrameTexture());
+		accumulateShader->SetTextures(Editor::Get().GetAccumulationBuffer()->GetFrameTexture()
+			, Editor::Get().GetRaytracingBuffer()->GetFrameTexture());
 
 		accumulateShader->Dispatch(glm::uvec2(8, 4));
 		accumulateShader->Wait();

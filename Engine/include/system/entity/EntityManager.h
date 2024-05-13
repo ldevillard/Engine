@@ -4,19 +4,18 @@
 
 #include "Entity.h"
 #include "component/Model.h"
+#include "data/template/Singleton.h"
 
 #define MAX_LIGHTS 8
 
-class EntityManager
+class EntityManager : public Singleton<EntityManager>
 {
 public:	
-	~EntityManager();
-
 	// singleton
-	static void CreateInstance(Shader* shader);
-	static void DestroyInstance();
-	static EntityManager* Get();
+	static void Initialize(Shader* shader);
 
+	~EntityManager();
+	
 	Entity* CreateEntity(const std::string& name);
 	void DestroyEntity(Entity* entity);
 	Entity* DuplicateEntity(Entity* entity);
@@ -32,10 +31,10 @@ public:
 	const std::vector<Model*> GetModels() const;
 	const std::string GenerateNewEntityName(const std::string& prefix) const;
 
-private:
-	// singleton
-	static EntityManager* instance;
+protected:
+	void initialize() override;
 
+private:
 	void registerEntity(Entity* e);
 	std::vector<Entity*>::iterator unregisterEntity(Entity* e);
 

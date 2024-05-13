@@ -13,15 +13,13 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <maths/glm/gtx/matrix_decompose.hpp>
 
-// singleton instance
-Editor* Editor::instance = nullptr;
+#pragma region Singleton Methods
 
-#pragma region Public Methods
-
-Editor::Editor(GLFWwindow* win, EditorSettings params) :
-	window(win),
-	parameters(params)
+// singleton override
+void Editor::initialize()
 {
+	Singleton<Editor>::initialize();
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -31,17 +29,29 @@ Editor::Editor(GLFWwindow* win, EditorSettings params) :
 
 	ImGui_Utils::SetPurpleTheme();
 
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplGlfw_InitForOpenGL(instance->window, true);
 	ImGui_ImplOpenGL3_Init("#version 430");
+}
+
+#pragma endregion
+
+#pragma region Public Methods
+
+void Editor::Initialize(GLFWwindow* win)
+{
+	Get();
+	instance->window = win;
 
 	// setup
-	editorCamera = new EditorCamera(glm::vec3(0.0f, 5.f, 30.0f));
-	sceneBuffer = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
-	raytracingBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT);
-	accumulationBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT);
-	outlineBuffer[0] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
-	outlineBuffer[1] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
-	inspector = Inspector();
+	instance->editorCamera = new EditorCamera(glm::vec3(0.0f, 5.f, 30.0f));
+	instance->sceneBuffer = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
+	instance->raytracingBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT);
+	instance->accumulationBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT);
+	instance->outlineBuffer[0] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
+	instance->outlineBuffer[1] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
+	instance->inspector = Inspector();
+
+	instance->initialize();
 }
 
 Editor::~Editor()
@@ -59,32 +69,6 @@ Editor::~Editor()
 	delete outlineBuffer[0];
 	delete outlineBuffer[1];
 }
-
-#pragma region Singleton Methods
-
-void Editor::CreateInstance(GLFWwindow* window, EditorSettings params)
-{
-	if (instance == nullptr)
-	{
-		instance = new Editor(window, params);
-	}
-}
-
-void Editor::DestroyInstance()
-{
-	if (instance != nullptr)
-	{
-		delete instance;
-		instance = nullptr;
-	}
-}
-
-Editor* Editor::Get()
-{
-	return instance;
-}
-
-#pragma endregion
 
 #pragma region Getters
 
@@ -132,7 +116,7 @@ void Editor::RenderCamera(Shader* shader)
 {
 	shader->Use();
 	shader->SetVec3("viewPos", editorCamera->Position);
-	shader->SetBool("wireframe", *parameters.Wireframe);
+	shader->SetBool("wireframe", parameters.Wireframe);
 
 	glm::mat4 projection = editorCamera->GetProjectionMatrix(static_cast<float>(SCENE_WIDTH), static_cast<float>(SCENE_HEIGHT));
 	glm::mat4 view = editorCamera->GetViewMatrix();
@@ -394,35 +378,35 @@ void Editor::renderHierarchy()
 {
 	ImGui::Begin("Hierarchy");
 	{
-		EntityManager* manager = EntityManager::Get();
-		if (manager != nullptr)
+		EntityManager& manager = EntityManager::Get();
+		for (Entity* entity : manager.GetEntities())
 		{
-			for (Entity* entity : manager->GetEntities())
+			if (ImGui::Selectable(entity->Name.c_str(), selectedEntity == entity))
 			{
-				if (ImGui::Selectable(entity->Name.c_str(), selectedEntity == entity))
-				{
-					SelectEntity(entity);
-				}
-				if (ImGui::GetID(entity->Name.c_str()) == ImGui::GetHoveredID())
-				{
-					hoveredEntity = entity;
-				}
+				SelectEntity(entity);
 			}
-
-			// handle right click menu
-			showHierarchyContextMenu();
-			showEntityContextMenu();
+			if (ImGui::GetID(entity->Name.c_str()) == ImGui::GetHoveredID())
+			{
+				hoveredEntity = entity;
+			}
 		}
+
+		// handle right click menu
+		showHierarchyContextMenu();
+		showEntityContextMenu();
 	}
 	ImGui::End();
 }
 
 void Editor::renderSettings()
 {
+	// update triangle count
+	parameters.TrianglesNumber = EntityManager::Get().GetNumberOfTriangles();
+
 	ImGui::Begin("Editor");
 	ImGui::Text("FPS: %.1f", Time::FrameRate());
 	ImGui::Text("Frame time : %.1f ms", Time::DeltaTime * 1000);
-	ImGui::Text("Triangles: %d", *parameters.TrianglesNumber);
+	ImGui::Text("Triangles: %d", parameters.TrianglesNumber);
 	ImGui::Separator();
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::TreeNode("Gizmos"))
@@ -448,7 +432,7 @@ void Editor::renderSettings()
 	}
 	ImGui::NewLine();
 	ImGui::Separator();
-	ImGui_Utils::DrawBoolControl("Wireframe", *parameters.Wireframe, 100.f);
+	ImGui_Utils::DrawBoolControl("Wireframe", parameters.Wireframe, 100.f);
 	ImGui_Utils::DrawFloatControl("Camera Speed", editorCamera->MovementSpeed, 5.f, 100.f);
 
 	ImGui::Separator();
@@ -538,16 +522,16 @@ void Editor::showHierarchyContextMenu()
 			{
 				if (ImGui::MenuItem("Sphere"))
 				{
-					const std::string name = EntityManager::Get()->GenerateNewEntityName("Sphere");
-					Entity* entity = EntityManager::Get()->CreateEntity(name);
+					const std::string name = EntityManager::Get().GenerateNewEntityName("Sphere");
+					Entity* entity = EntityManager::Get().CreateEntity(name);
 					entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 15.0f);
 					entity->AddComponent<Model>(SpherePrimitive);
 					SelectEntity(entity);
 				}
 				if (ImGui::MenuItem("Cube"))
 				{
-					const std::string name = EntityManager::Get()->GenerateNewEntityName("Cube");
-					Entity* entity = EntityManager::Get()->CreateEntity(name);
+					const std::string name = EntityManager::Get().GenerateNewEntityName("Cube");
+					Entity* entity = EntityManager::Get().CreateEntity(name);
 					entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 15.0f);
 					entity->AddComponent<Model>(CubePrimitive);
 					SelectEntity(entity);
@@ -579,14 +563,14 @@ void Editor::showEntityContextMenu()
 			Entity* entity = hoveredEntity;
 			hoveredEntity = nullptr;
 			selectedEntity = nullptr;
-			EntityManager::Get()->DestroyEntity(entity);
+			EntityManager::Get().DestroyEntity(entity);
 		}
 		if (ImGui::Selectable("Duplicate"))
 		{
 			Entity* entity = hoveredEntity;
 			hoveredEntity = nullptr;
 			selectedEntity = nullptr;
-			Entity* duplicatedEntity = EntityManager::Get()->DuplicateEntity(entity);
+			Entity* duplicatedEntity = EntityManager::Get().DuplicateEntity(entity);
 			SelectEntity(duplicatedEntity);
 		}
 		ImGui::EndPopup();

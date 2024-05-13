@@ -82,49 +82,41 @@ int main()
 	RayTracer::Initialize(&raytracingShader, &accumulateShader);
 	Gizmo::InitGizmos(&gizmoShader);
 
-	EntityManager::CreateInstance(&shader);
+	EntityManager::Initialize(&shader);
 	Model::LoadPrimitives();
 
-	Entity* entity1 = EntityManager::Get()->CreateEntity("Sphere Light");
-	Model* model1 = entity1->AddComponent<Model>(PrimitiveType::SpherePrimitive, Material::Default);
+	Entity* entity1 = EntityManager::Get().CreateEntity("Sphere Light");
+	Model* model1 = entity1->AddComponent<Model>(SpherePrimitive, Material::Default);
 	entity1->transform->SetPosition({ 0.f, 5.5f, -25.f });
 	entity1->transform->SetScale({ 6.5f, 6.5f, 6.5f });
 
-	Entity* entity2 = EntityManager::Get()->CreateEntity("Sphere1");
+	Entity* entity2 = EntityManager::Get().CreateEntity("Sphere1");
 	Model* model2 = entity2->AddComponent<Model>(PrimitiveType::SpherePrimitive, Material::Prune);
 	entity2->transform->SetPosition({ 1.05f, 0.f, -9.44f });
 	entity2->transform->SetScale({ 1.f, 1.f, 1.f });
 
-	Entity* entity3 = EntityManager::Get()->CreateEntity("Ground");
+	Entity* entity3 = EntityManager::Get().CreateEntity("Ground");
 	Model* model3 = entity3->AddComponent<Model>(PrimitiveType::CubePrimitive, Material::Turquoise);
 	entity3->transform->SetPosition({ 0.f, -2.f, 0.f });
 	entity3->transform->SetScale({ 50.f, 1.f, 50.f });
 
-	Entity* entity4 = EntityManager::Get()->CreateEntity("Sphere2");
+	Entity* entity4 = EntityManager::Get().CreateEntity("Sphere2");
 	Model* model4 = entity4->AddComponent<Model>(PrimitiveType::SpherePrimitive);
 	entity4->transform->SetPosition({ 0.94f, -0.5f, -10.79f });
 	entity4->transform->SetScale({ .5f, .5f, .5f });
 
-	Entity* entity5 = EntityManager::Get()->CreateEntity("Cube1");
+	Entity* entity5 = EntityManager::Get().CreateEntity("Cube1");
 	Model* model5 = entity5->AddComponent<Model>(PrimitiveType::CubePrimitive);
 	entity5->transform->SetPosition({ 2.24f, 0.f, -10.98f });
 	entity5->transform->SetScale({ 1.f, 1.f, 1.f });
 
-	Entity* lightEntity = EntityManager::Get()->CreateEntity("DirectionalLight");
+	Entity* lightEntity = EntityManager::Get().CreateEntity("DirectionalLight");
 	Light* light = lightEntity->AddComponent<Light>(Light::Directional, Color::White);
 	light->Intensity = 1.f;
 	lightEntity->transform->SetPosition({ 0.f, 7.5f, 15.f });
 	lightEntity->transform->SetRotation({ -45.f, 0.f, 0.f });
 
-	bool wireframeMode = false;
-	int trianglesNumber = EntityManager::Get()->GetNumberOfTriangles();
-
-	// setup editor settings
-	EditorSettings settings;
-	settings.Wireframe = &wireframeMode;
-	settings.TrianglesNumber = &trianglesNumber;
-
-	Editor::CreateInstance(window, settings);
+	Editor::Initialize(window);
 
 	// render loop
 	while (!glfwWindowShouldClose(window))
@@ -132,7 +124,7 @@ int main()
 		// per-frame time logic
 		Time::Update();
 
-		if (wireframeMode)
+		if (Editor::Get().GetSettings().Wireframe)
 		{
 			glDisable(GL_CULL_FACE);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -144,33 +136,29 @@ int main()
 		}
 
 		// render
-		Editor::Get()->GetSceneBuffer()->Bind(); // bind to framebuffer
+		Editor::Get().GetSceneBuffer()->Bind(); // bind to framebuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		
-		Editor::Get()->RenderCamera(&shader);
-		EntityManager::Get()->ComputeEntities();
+		Editor::Get().RenderCamera(&shader);
+		EntityManager::Get().ComputeEntities();
 
 		// unbind framebuffer
-		Editor::Get()->GetSceneBuffer()->Unbind();
+		Editor::Get().GetSceneBuffer()->Unbind();
 
 		// raytracing
-		if (Editor::Get()->GetSettings().RayTracing)
+		if (Editor::Get().GetSettings().RayTracing)
 		{
 			RayTracer::Draw();
 		}
 
 		// editor
-		Editor::Get()->RenderEditor();
+		Editor::Get().RenderEditor();
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-	// cleanup
-	Editor::DestroyInstance();
-	EntityManager::DestroyInstance();
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	glfwDestroyWindow(window);
@@ -182,21 +170,13 @@ int main()
 // glfw: whenever the mouse moves, this callback is called
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-	Editor* editor = Editor::Get();
-	if (editor)
-	{
-		editor->MouseCallback(xposIn, yposIn);
-	}
+	Editor::Get().MouseCallback(xposIn, yposIn);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	Editor* editor = Editor::Get();
-	if (editor)
-	{
-		editor->ScrollCallback(xoffset, yoffset);
-	}
+	Editor::Get().ScrollCallback(xoffset, yoffset);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -205,11 +185,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	SCR_WIDTH = width;
 	SCR_HEIGHT = height;
 
-	Editor* editor = Editor::Get();
-	if (editor)
-	{
-		editor->FramebufferSizeCallback(width, height);
-		editor->RenderEditor();
-	}
+	Editor& editor = Editor::Get();
+	editor.FramebufferSizeCallback(width, height);
+	editor.RenderEditor();
 }
 

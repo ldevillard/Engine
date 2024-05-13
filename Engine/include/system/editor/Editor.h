@@ -13,9 +13,10 @@
 #include <maths/glm/glm.hpp>
 
 #include "system/editor/Inspector.h"
-#include "render/FrameBuffer.h"
 #include "system/entity/Entity.h"
 #include "system/editor/EditorCamera.h"
+#include "render/FrameBuffer.h"
+#include "data/template/Singleton.h"
 
 inline unsigned int SCENE_WIDTH = 1280;
 inline unsigned int SCENE_HEIGHT = 720;
@@ -29,8 +30,8 @@ inline unsigned int SCR_HEIGHT = 720;
 struct EditorSettings
 {
 	// scene
-	bool* Wireframe = nullptr;
-	int* TrianglesNumber = nullptr;
+	bool Wireframe = false;
+	int TrianglesNumber = 0;
 	
 	bool Gizmo = true;
 	bool BoundingBoxGizmo = false;
@@ -42,16 +43,13 @@ struct EditorSettings
 	bool Accumulate = false;
 };
 
-class Editor
+class Editor : public Singleton<Editor>
 {
 public:
-	Editor(GLFWwindow* window, EditorSettings params);
-	~Editor();
-
 	// singleton
-	static void CreateInstance(GLFWwindow* win, EditorSettings params);
-	static void DestroyInstance();
-	static Editor* Get();
+	static void Initialize(GLFWwindow* win);
+
+	~Editor();
 
 	const EditorSettings& GetSettings() const;
 	const EditorCamera* GetCamera() const;
@@ -70,10 +68,10 @@ public:
 
 	void SelectEntity(Entity* entity);
 
-private:
-	// singleton
-	static Editor* instance;
+protected:
+	void initialize() override;
 
+private:
 	// render functions
 	void renderScene(float width, float height);
 	void renderRayTracer();
@@ -97,7 +95,6 @@ private:
 	FrameBuffer* outlineBuffer[2] = { nullptr };
 	FrameBuffer* raytracingBuffer = nullptr;
 	FrameBuffer* accumulationBuffer = nullptr;
-
 
 	EditorSettings parameters;
 	Inspector inspector;

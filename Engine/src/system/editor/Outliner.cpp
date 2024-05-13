@@ -26,7 +26,7 @@ void Outliner::Initialize(Shader* outlineShader, Shader* outlineDilatingShader, 
 
 void Outliner::Setup()
 {
-	Editor::Get()->GetOutlineBuffer(0)->Bind();
+	Editor::Get().GetOutlineBuffer(0)->Bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	Outliner::OutlineShader->Use();
@@ -48,24 +48,24 @@ void Outliner::Reset()
 void Outliner::Draw()
 {
 	// dillate outline
-	Editor::Get()->GetOutlineBuffer(1)->Bind();
+	Editor::Get().GetOutlineBuffer(1)->Bind();
 	OutlineDilatingShader->Use();
 	OutlineDilatingShader->SetFloat("radius", radius);
 	OutlineDilatingShader->SetInt("screenTexture", 0);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Editor::Get()->GetOutlineBuffer(0)->GetFrameTexture());
+	glBindTexture(GL_TEXTURE_2D, Editor::Get().GetOutlineBuffer(0)->GetFrameTexture());
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	// bind to main frame buffer
-	Editor::Get()->GetSceneBuffer()->Bind();
+	Editor::Get().GetSceneBuffer()->Bind();
 
 	OutlineBlitShader->SetWorkSize(glm::uvec2(SCR_WIDTH, SCR_HEIGHT));
 
 	OutlineBlitShader->Use();
-	OutlineBlitShader->SetTextures(Editor::Get()->GetSceneBuffer()->GetFrameTexture()
-		, Editor::Get()->GetOutlineBuffer(1)->GetFrameTexture());
+	OutlineBlitShader->SetTextures(Editor::Get().GetSceneBuffer()->GetFrameTexture()
+		, Editor::Get().GetOutlineBuffer(1)->GetFrameTexture());
 
 	OutlineBlitShader->Dispatch(glm::uvec2(8, 4));
 	OutlineBlitShader->Wait();
