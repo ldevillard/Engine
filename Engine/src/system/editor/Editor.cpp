@@ -137,23 +137,24 @@ void Editor::RenderEditor()
 
 	// Setup docking space
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(viewport->Pos);
-	ImGui::SetNextWindowSize(viewport->Size);
+	ImVec2 pos(viewport->Pos.x, viewport->Pos.y + TOP_BAR_HEIGHT);
+	ImVec2 size(viewport->Size.x, viewport->Size.y - TOP_BAR_HEIGHT);
+	ImGui::SetNextWindowPos(pos);
+	ImGui::SetNextWindowSize(size);
 	ImGui::Begin("DockSpace", nullptr,
 		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
 		ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus |
 		ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDocking);
 	ImGuiID dockspace_id = ImGui::GetID("DockSpace");
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+	ImGui::DockSpace(dockspace_id);
 	ImGui::End();
-
-	ImGui::SetNextWindowSizeConstraints(ImVec2(300, -1), ImVec2(600, -1));
 
 	// Clean the screen
 	glClear(GL_COLOR_BUFFER_BIT);
 	
 	// Render the scene and the UI
+	renderTopBar();
 	renderSettings();
 	renderHierarchy();
 	renderInspector();
@@ -312,6 +313,26 @@ void Editor::SelectEntity(Entity* entity)
 #pragma endregion
 
 #pragma region Private Methods
+
+void Editor::renderTopBar()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Save Scene"))
+			{
+				// logic
+			}
+			if (ImGui::MenuItem("Load Scene"))
+			{
+				// logic
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+}
 
 void Editor::renderScene(float width, float height)
 {

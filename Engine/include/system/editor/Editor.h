@@ -73,6 +73,7 @@ protected:
 
 private:
 	// render functions
+	void renderTopBar();
 	void renderScene(float width, float height);
 	void renderRayTracer();
 	void renderInspector();
@@ -83,6 +84,8 @@ private:
 	// context menu
 	void showHierarchyContextMenu();
 	void showEntityContextMenu();
+
+	static constexpr float TOP_BAR_HEIGHT = 12.0f;
 
 	// member references
 	Entity* selectedEntity = nullptr;
