@@ -1,6 +1,7 @@
 #include "system/editor/Editor.h"
 
 #include <glfw3.h>
+#include <utils/ImFileDialog.h>
 
 #include "system/Time.h"
 #include "system/Input.h"
@@ -31,6 +32,9 @@ void Editor::initialize()
 
 	ImGui_ImplGlfw_InitForOpenGL(instance->window, true);
 	ImGui_ImplOpenGL3_Init("#version 430");
+
+	// init file browser
+	ifd::FileDialog::Instance().Initialize();
 }
 
 #pragma endregion
@@ -236,8 +240,9 @@ void Editor::ProcessInputs()
 	// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 	float deltaTime = Time::DeltaTime;
 
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
+	// close the editor by press the escape key
+	/*if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);*/
 
 	if (Input::GetKey(GLFW_KEY_W))
 		editorCamera->ProcessKeyboard(FORWARD, deltaTime);
@@ -316,13 +321,14 @@ void Editor::SelectEntity(Entity* entity)
 
 void Editor::renderTopBar()
 {
+	// TO DO correct format for the save and load filedialog
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("Save Scene"))
 			{
-				// logic
+				ifd::FileDialog::Instance().Open("TextureOpenDialog", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga){.png,.jpg,.jpeg,.bmp,.tga},.*");
 			}
 			if (ImGui::MenuItem("Load Scene"))
 			{
@@ -331,6 +337,16 @@ void Editor::renderTopBar()
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
+	}
+
+	if (ifd::FileDialog::Instance().IsDone("TextureOpenDialog")) 
+	{
+		if (ifd::FileDialog::Instance().HasResult()) 
+		{
+			std::string res = ifd::FileDialog::Instance().GetResult().string();
+			printf("OPEN[%s]\n", res.c_str());
+		}
+		ifd::FileDialog::Instance().Close();
 	}
 }
 

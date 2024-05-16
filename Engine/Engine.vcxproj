@@ -65,6 +65,7 @@
     <ClCompile Include="src\system\Time.cpp" />
     <ClCompile Include="src\data\Color.cpp" />
     <ClCompile Include="src\system\editor\Gizmo.cpp" />
+    <ClCompile Include="src\utils\ImFileDialog.cpp" />
     <ClCompile Include="src\utils\ImGui_Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +392,7 @@
     <ClInclude Include="include\maths\glm\vec3.hpp" />
     <ClInclude Include="include\maths\glm\vec4.hpp" />
     <ClInclude Include="include\maths\glm\vector_relational.hpp" />
+    <ClInclude Include="include\utils\ImFileDialog.h" />
     <ClInclude Include="include\utils\KHR\khrplatform.h" />
     <ClInclude Include="include\component\Model.h" />
     <ClInclude Include="include\render\FrameBuffer.h" />
