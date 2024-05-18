@@ -198,14 +198,16 @@ const std::string EntityManager::GenerateNewEntityName(const std::string& prefix
 	return name;
 }
 
-nlohmann::json EntityManager::Serialize() const
+nlohmann::ordered_json EntityManager::Serialize() const
 {
-	nlohmann::json json;
+	nlohmann::ordered_json json;
 
-	for (Entity* e : entities)
+	nlohmann::ordered_json entitiesJson = nlohmann::ordered_json::array();
+	for (const Entity* e : entities) 
 	{
-	//	json["Entities"].push_back(e->Serialize());
+		entitiesJson.push_back(e->Serialize());
 	}
+	json["Entities"] = entitiesJson;
 
 	return json;
 }

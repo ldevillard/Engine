@@ -33,7 +33,7 @@ public:
 	const std::string GenerateNewEntityName(const std::string& prefix) const;
 
 	// serialization
-	nlohmann::json Serialize() const;
+	nlohmann::ordered_json Serialize() const;
 
 protected:
 	void initialize() override;

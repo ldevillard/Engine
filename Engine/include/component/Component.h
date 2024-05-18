@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utils/serializer/json/json.hpp"
+
 class Entity;
 class EditorCollider;
 class Shader;
@@ -15,6 +17,9 @@ public:
 
 	virtual void Compute() = 0;
 	virtual Component* Clone() = 0;
+
+	// serialization
+	virtual nlohmann::ordered_json Serialize() const = 0;
 	
 	Transform* transform		   = nullptr;
 	Entity*	entity				   = nullptr;

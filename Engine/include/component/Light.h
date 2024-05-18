@@ -26,6 +26,9 @@ public:
 
 	void SetIndex(unsigned int i);
 
+	// serialization
+	nlohmann::ordered_json Serialize() const override;
+
 	LightType lightType;
 	Color	  color;
 	float	  Intensity = 1.0f;

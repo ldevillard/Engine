@@ -4,9 +4,9 @@
 #include <maths/glm/gtc/quaternion.hpp>
 #include <maths/glm/gtc/matrix_transform.hpp>
 
-#include "render/Shader.h"
-
 #include "data/mesh/MeshData.h"
+#include "render/Shader.h"
+#include "utils/serializer/json/json.hpp"
 
 class Transform
 {
@@ -29,6 +29,9 @@ public:
 	void SetPosition(const glm::vec3& position);
 	void SetRotation(const glm::vec3& rotation);
 	void SetScale(const glm::vec3& scale);
+
+	// serialization
+	nlohmann::ordered_json Serialize() const;
 
 	glm::vec3 Position;
 	glm::vec3 Rotation;

@@ -2,6 +2,8 @@
 
 #include <maths/glm/glm.hpp>
 
+#include "utils/serializer/json/json.hpp"
+
 class Color
 {
 public:
@@ -27,6 +29,9 @@ public:
 	static Color Cyan;
 	static Color Magenta;
 	static Color Orange;
+
+	// serialization
+	nlohmann::ordered_json Serialize() const;
 
 	glm::vec3 Value;
 };

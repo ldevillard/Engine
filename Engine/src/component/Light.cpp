@@ -58,6 +58,21 @@ void Light::SetIndex(unsigned int i)
 	index = i;
 }
 
+nlohmann::ordered_json Light::Serialize() const
+{
+	nlohmann::ordered_json json;
+
+	json["type"] = "Light";
+	json["lightType"] = lightType;
+	json["color"] = color.Serialize();
+	json["intensity"] = Intensity;
+	json["radius"] = Radius;
+	json["cutOff"] = CutOff;
+	json["outCutOff"] = OutCutOff;
+
+	return json;
+}
+
 #pragma endregion
 
 #pragma region Private Methods

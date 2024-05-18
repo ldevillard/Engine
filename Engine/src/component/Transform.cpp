@@ -102,4 +102,32 @@ void Transform::SetScale(const glm::vec3& scale)
 	Scale = scale;
 }
 
+nlohmann::ordered_json Transform::Serialize() const
+{
+	nlohmann::ordered_json json;
+
+	json["Position"] = 
+	{
+		{"x", Position.x},
+		{"y", Position.y},
+		{"z", Position.z}
+	};
+
+	json["Rotation"] = 
+	{
+		{"x", Rotation.x},
+		{"y", Rotation.y},
+		{"z", Rotation.z}
+	};
+
+	json["Scale"] = 
+	{
+		{"x", Scale.x},
+		{"y", Scale.y},
+		{"z", Scale.z}
+	};
+
+	return json;
+}
+
 #pragma endregion

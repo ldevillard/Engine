@@ -36,7 +36,7 @@ public:
 	void ComputeOutline() const;
 
 	//serialization
-	//nlohmann::json Serialize() const;
+	nlohmann::ordered_json Serialize() const;
 
 	std::string Name;
 

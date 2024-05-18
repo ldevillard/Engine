@@ -23,7 +23,7 @@ void Model::LoadPrimitives()
 #pragma region Public Methods
 
 Model::Model(std::string path, Material mat) : Component(),
-    material(mat)
+    material(mat), modelPath(path)
 {
 	loadModel(path);
 }
@@ -134,6 +134,19 @@ void Model::SetEditorCollider(EditorCollider* cl)
 {
     Component::SetEditorCollider(cl);
 	processOBB();
+}
+
+nlohmann::ordered_json Model::Serialize() const
+{
+    nlohmann::ordered_json json;
+
+	json["type"] = "Model";
+	//json["material"] = material.Serialize();
+	json["directory"] = directory;
+	json["modelType"] = ModelType;
+	json["model"] = modelPath;
+
+	return json;
 }
 
 #pragma endregion

@@ -39,6 +39,9 @@ public:
     static void LoadPrimitives();
     static std::map<PrimitiveType, std::unique_ptr<Model>> PrimitivesModels;
 
+    // serialization
+    nlohmann::ordered_json Serialize() const override;
+
     PrimitiveType ModelType = PrimitiveType::None;
 
 private:
@@ -46,6 +49,7 @@ private:
     void draw();
 
     // model data
+    std::string modelPath = "";
     std::vector<Mesh> meshes;
     std::vector<Texture> texturesLoaded;
     std::string directory;

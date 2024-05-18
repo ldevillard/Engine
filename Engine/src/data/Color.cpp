@@ -71,3 +71,18 @@ Color Color::operator/(float scalar) const
 }
 
 #pragma endregion
+
+#pragma region Public Methods
+
+nlohmann::ordered_json Color::Serialize() const
+{
+	nlohmann::ordered_json json;
+
+	json["r"] = Value.r;
+	json["g"] = Value.g;
+	json["b"] = Value.b;
+	
+	return json;
+}
+
+#pragma endregion

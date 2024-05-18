@@ -12,7 +12,7 @@ void Serializer::SaveSceneToFile(const std::string& path, const std::string& fil
 {
 	path;
 
-	nlohmann::json json;
+	nlohmann::ordered_json json;
 	
 	json[filename]["Scene"] = EntityManager::Get().Serialize();
 

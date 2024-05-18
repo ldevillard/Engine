@@ -103,6 +103,23 @@ void Entity::ComputeOutline() const
     Outliner::Reset();
 }
 
+nlohmann::ordered_json Entity::Serialize() const
+{
+    nlohmann::ordered_json json;
+
+    json["Name"] = Name;
+    json["Transform"] = transform->Serialize();
+
+    nlohmann::ordered_json componentsJson = nlohmann::ordered_json::array();
+    for (const Component* component : components) 
+    {
+        componentsJson.push_back(component->Serialize());
+    }
+    json["Components"] = componentsJson;
+
+    return json;
+}
+
 #pragma endregion
 
 #pragma region Private Methods
