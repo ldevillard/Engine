@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "component/Model.h"
 #include "data/template/Singleton.h"
+#include "utils/serializer/json/json.hpp"
 
 #define MAX_LIGHTS 8
 
@@ -30,6 +31,9 @@ public:
 	const std::vector<Entity*>& GetEntities() const;
 	const std::vector<Model*> GetModels() const;
 	const std::string GenerateNewEntityName(const std::string& prefix) const;
+
+	// serialization
+	nlohmann::json Serialize() const;
 
 protected:
 	void initialize() override;

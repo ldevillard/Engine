@@ -1,12 +1,9 @@
 #pragma once
 
-#include "component/Transform.h"
-#include "component/physics/EditorCollider.h"
-#include "render/Shader.h"
-#include "system/entity/Entity.h"
-
 class Entity;
 class EditorCollider;
+class Shader;
+class Transform;
 
 class Component
 {

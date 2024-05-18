@@ -3,12 +3,12 @@
 #include <vector>
 #include <string>
 
-#include "component/Component.h"
-#include "component/Transform.h"
-#include "component/physics/EditorCollider.h"
+#include "utils/serializer/json/json.hpp"
 
 class Component;
 class EditorCollider;
+class Shader;
+class Transform;
 
 class Entity
 {
@@ -34,6 +34,9 @@ public:
 
 	void Compute();
 	void ComputeOutline() const;
+
+	//serialization
+	//nlohmann::json Serialize() const;
 
 	std::string Name;
 

@@ -3,6 +3,7 @@
 #include <maths/glm/glm.hpp>
 #include <maths/glm/gtc/matrix_transform.hpp>
 
+#include "component/physics/EditorCollider.h"
 #include "system/editor/Outliner.h"
 #include "system/editor/Gizmo.h"
 

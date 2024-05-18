@@ -1,5 +1,8 @@
 #include "component/physics/EditorCollider.h"
 
+#include "system/entity/Entity.h"
+#include "physics/Physics.h"
+
 #pragma region Public Methods
 
 EditorCollider::EditorCollider(Entity* e) : boundingBox(), entity(e)

@@ -1,15 +1,16 @@
 #include "system/editor/Editor.h"
 
 #include <glfw3.h>
-#include <utils/ImFileDialog.h>
 
-#include "system/Time.h"
-#include "system/Input.h"
-#include "system/entity/EntityManager.h"
-#include "utils/ImGui_Utils.h"
 #include "maths/Math.h"
 #include "physics/Physics.h"
 #include "render/RayTracer.h"
+#include "system/Time.h"
+#include "system/Input.h"
+#include "system/entity/EntityManager.h"
+#include "utils/ImFileDialog.h"
+#include "utils/ImGui_Utils.h"
+#include "utils/serializer/Serializer.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <maths/glm/gtx/matrix_decompose.hpp>
@@ -328,23 +329,34 @@ void Editor::renderTopBar()
 		{
 			if (ImGui::MenuItem("Save Scene"))
 			{
-				ifd::FileDialog::Instance().Open("TextureOpenDialog", "Open a texture", "Image file (*.png;*.jpg;*.jpeg;*.bmp;*.tga){.png,.jpg,.jpeg,.bmp,.tga},.*");
+				ifd::FileDialog::Instance().Save("SaveSceneDialog", "Save Scene", "Scene file (*.devil){}");
 			}
 			if (ImGui::MenuItem("Load Scene"))
 			{
-				// logic
+				ifd::FileDialog::Instance().Open("LoadSceneDialog", "Load Scene", "Scene file (*.devil){}");
 			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
 	}
 
-	if (ifd::FileDialog::Instance().IsDone("TextureOpenDialog")) 
+	if (ifd::FileDialog::Instance().IsDone("SaveSceneDialog")) 
 	{
 		if (ifd::FileDialog::Instance().HasResult()) 
 		{
 			std::string res = ifd::FileDialog::Instance().GetResult().string();
-			printf("OPEN[%s]\n", res.c_str());
+			//printf("OPEN[%s]\n", res.c_str());
+			Serializer::SaveSceneToFile(res, "Filename");
+		}
+		ifd::FileDialog::Instance().Close();
+	}
+
+	if (ifd::FileDialog::Instance().IsDone("LoadSceneDialog"))
+	{
+		if (ifd::FileDialog::Instance().HasResult())
+		{
+			std::string res = ifd::FileDialog::Instance().GetResult().string();
+			//printf("OPEN[%s]\n", res.c_str());
 		}
 		ifd::FileDialog::Instance().Close();
 	}

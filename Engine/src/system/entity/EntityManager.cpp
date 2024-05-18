@@ -6,6 +6,7 @@
 #include "system/editor/Editor.h"
 #include "component/Model.h"
 #include "component/Light.h"
+#include "utils/serializer/json/json.hpp"
 
 #pragma region Singleton Methods
 
@@ -195,6 +196,18 @@ const std::string EntityManager::GenerateNewEntityName(const std::string& prefix
 	}
 
 	return name;
+}
+
+nlohmann::json EntityManager::Serialize() const
+{
+	nlohmann::json json;
+
+	for (Entity* e : entities)
+	{
+	//	json["Entities"].push_back(e->Serialize());
+	}
+
+	return json;
 }
 
 #pragma endregion

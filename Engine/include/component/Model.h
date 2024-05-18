@@ -3,8 +3,8 @@
 #include <map>
 
 // data
-#include "data/mesh/Mesh.h"
 #include "component/Component.h"
+#include "data/mesh/Mesh.h"
 #include "data/Material.h"
 #include "data/mesh/MeshData.h"
 #include "data/OBoundingBox.h"
@@ -13,6 +13,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
+class EditorCollider;
 
 class Model : public Component
 {

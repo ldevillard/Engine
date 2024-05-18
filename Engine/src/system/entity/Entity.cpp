@@ -2,6 +2,9 @@
 #include <iostream>
 #include <maths/glm/gtc/quaternion.hpp>
 
+#include "component/Component.h"
+#include "component/physics/EditorCollider.h"
+#include "component/Transform.h"
 #include "system/editor/Editor.h"
 #include "system/editor/Outliner.h"
 #include "system/entity/Entity.h"

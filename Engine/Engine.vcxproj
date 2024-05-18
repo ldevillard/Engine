@@ -67,6 +67,7 @@
     <ClCompile Include="src\system\editor\Gizmo.cpp" />
     <ClCompile Include="src\utils\ImFileDialog.cpp" />
     <ClCompile Include="src\utils\ImGui_Utils.cpp" />
+    <ClCompile Include="src\utils\serializer\Serializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\imgui\imconfig.h" />
@@ -406,6 +407,8 @@
     <ClInclude Include="include\data\Color.h" />
     <ClInclude Include="include\system\editor\Gizmo.h" />
     <ClInclude Include="include\utils\ImGui_Utils.h" />
+    <ClInclude Include="include\utils\serializer\json\json.hpp" />
+    <ClInclude Include="include\utils\serializer\Serializer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\maths\glm\detail\func_common.inl" />

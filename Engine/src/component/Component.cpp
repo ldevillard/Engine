@@ -1,5 +1,10 @@
 #include "component/Component.h"
 
+#include "component/physics/EditorCollider.h"
+#include "component/Transform.h"
+#include "render/Shader.h"
+#include "system/entity/Entity.h"
+
 #pragma region Public Methods
 
 void Component::SetEditorCollider(EditorCollider* cl)

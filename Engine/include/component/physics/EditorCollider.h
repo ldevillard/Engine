@@ -1,12 +1,13 @@
 #pragma once
 
 #include <maths/glm/glm.hpp>
+
 #include "data/OBoundingBox.h"
-#include "system/entity/Entity.h"
-#include "physics/Physics.h"
 
 class Entity;
+struct Ray;
 struct RaycastHit;
+class Transform;
 
 class EditorCollider
 {
