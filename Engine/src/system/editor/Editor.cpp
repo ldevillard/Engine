@@ -329,7 +329,7 @@ void Editor::renderTopBar()
 		{
 			if (ImGui::MenuItem("Save Scene"))
 			{
-				ifd::FileDialog::Instance().Save("SaveSceneDialog", "Save Scene", "Scene file (*.devil){}");
+				ifd::FileDialog::Instance().Save("SaveSceneDialog", "Save Scene", "Scene file (*.devil){.devil},.*");
 			}
 			if (ImGui::MenuItem("Load Scene"))
 			{
@@ -344,9 +344,10 @@ void Editor::renderTopBar()
 	{
 		if (ifd::FileDialog::Instance().HasResult()) 
 		{
-			std::string res = ifd::FileDialog::Instance().GetResult().string();
-			//printf("OPEN[%s]\n", res.c_str());
-			Serializer::SaveSceneToFile(res, "Filename");
+			std::string filepath = ifd::FileDialog::Instance().GetResult().string();
+			std::string filename = ifd::FileDialog::Instance().GetResult().stem().string();
+
+			Serializer::SaveSceneToFile(filepath, filename);
 		}
 		ifd::FileDialog::Instance().Close();
 	}

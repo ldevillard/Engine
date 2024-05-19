@@ -1,5 +1,7 @@
 #include "data/Color.h"
 
+#include "utils/serializer/SerializerUtils.h"
+
 #pragma region Statics
 
 Color Color::Black = Color(glm::vec3(0));
@@ -76,13 +78,7 @@ Color Color::operator/(float scalar) const
 
 nlohmann::ordered_json Color::Serialize() const
 {
-	nlohmann::ordered_json json;
-
-	json["r"] = Value.r;
-	json["g"] = Value.g;
-	json["b"] = Value.b;
-	
-	return json;
+	return Serializer::Serialize(Value, Math::Vec3Format::RGB);
 }
 
 #pragma endregion

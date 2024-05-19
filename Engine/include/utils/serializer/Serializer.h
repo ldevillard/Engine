@@ -2,9 +2,8 @@
 
 #include <string>
 
-class Serializer
+namespace Serializer
 {
-public:
-	static void SaveSceneToFile(const std::string& path, const std::string& filename);
+	void SaveSceneToFile(const std::string& path, const std::string& filename);
 	//static void LoadSceneFromFile(const std::string& path);
 };

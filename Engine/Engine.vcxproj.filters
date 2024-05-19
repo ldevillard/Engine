@@ -219,6 +219,9 @@
     <ClCompile Include="src\utils\serializer\Serializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\serializer\SerializerUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\imgui\imconfig.h">
@@ -1236,6 +1239,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utils\serializer\json\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\serializer\SerializerUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

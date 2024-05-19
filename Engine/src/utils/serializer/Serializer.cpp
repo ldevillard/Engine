@@ -6,17 +6,28 @@
 // debug
 #include <iostream>
 
-#pragma region Public Methods
-
-void Serializer::SaveSceneToFile(const std::string& path, const std::string& filename)
+namespace Serializer
 {
-	path;
-
-	nlohmann::ordered_json json;
+	void SaveSceneToFile(const std::string& path, const std::string& filename)
+	{
+		nlohmann::ordered_json json;
+		
+		json[filename]["Scene"] = EntityManager::Get().Serialize();
 	
-	json[filename]["Scene"] = EntityManager::Get().Serialize();
+        std::ofstream outputFile(path);
 
-	std::cout << json.dump(4) << std::endl;
+        if (outputFile.is_open()) 
+        {
+            outputFile << json.dump(4) << std::endl;
+            outputFile.close();
+
+            std::cout << "File saved successfully: " << path << std::endl;
+        }
+        else 
+        {
+            std::cerr << "Error: Unable to open file for writing: " << path << std::endl;
+        }
+	}
 }
 
 //void Serializer::LoadSceneFromFile(const std::string& path)
@@ -24,4 +35,3 @@ void Serializer::SaveSceneToFile(const std::string& path, const std::string& fil
 //	path;
 //}
 
-#pragma endregion

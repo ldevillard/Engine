@@ -68,6 +68,7 @@
     <ClCompile Include="src\utils\ImFileDialog.cpp" />
     <ClCompile Include="src\utils\ImGui_Utils.cpp" />
     <ClCompile Include="src\utils\serializer\Serializer.cpp" />
+    <ClCompile Include="src\utils\serializer\SerializerUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\imgui\imconfig.h" />
@@ -409,6 +410,7 @@
     <ClInclude Include="include\utils\ImGui_Utils.h" />
     <ClInclude Include="include\utils\serializer\json\json.hpp" />
     <ClInclude Include="include\utils\serializer\Serializer.h" />
+    <ClInclude Include="include\utils\serializer\SerializerUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\maths\glm\detail\func_common.inl" />
@@ -682,7 +684,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -700,7 +702,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>

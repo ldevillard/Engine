@@ -1,3 +1,5 @@
+#include <windows.h>
+
 // std
 #include <iostream>
 
@@ -32,7 +34,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-int main()
+int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow)
 {
 	// glfw: initialize and configure
 	glfwInit();
@@ -182,6 +184,9 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+	if (width == 0 || height == 0)
+		return;
+
 	SCR_WIDTH = width;
 	SCR_HEIGHT = height;
 

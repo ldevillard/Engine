@@ -1,5 +1,7 @@
 #include "component/Transform.h"
+
 #include "system/editor/Gizmo.h"
+#include "utils/serializer/SerializerUtils.h"
 
 #pragma region Public Methods
 
@@ -106,26 +108,9 @@ nlohmann::ordered_json Transform::Serialize() const
 {
 	nlohmann::ordered_json json;
 
-	json["Position"] = 
-	{
-		{"x", Position.x},
-		{"y", Position.y},
-		{"z", Position.z}
-	};
-
-	json["Rotation"] = 
-	{
-		{"x", Rotation.x},
-		{"y", Rotation.y},
-		{"z", Rotation.z}
-	};
-
-	json["Scale"] = 
-	{
-		{"x", Scale.x},
-		{"y", Scale.y},
-		{"z", Scale.z}
-	};
+	json["Position"] = Serializer::Serialize(Position);
+	json["Rotation"] = Serializer::Serialize(Rotation);
+	json["Scale"] = Serializer::Serialize(Scale);
 
 	return json;
 }
