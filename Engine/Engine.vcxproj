@@ -411,6 +411,7 @@
     <ClInclude Include="include\utils\serializer\json\json.hpp" />
     <ClInclude Include="include\utils\serializer\Serializer.h" />
     <ClInclude Include="include\utils\serializer\SerializerUtils.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\maths\glm\detail\func_common.inl" />
@@ -569,12 +570,16 @@
     <None Include="shaders\VertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resources\DevilEngine.ico" />
     <Image Include="resources\textures\awesomeface.png" />
     <Image Include="resources\textures\container.jpg" />
     <Image Include="resources\textures\square.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="include\maths\glm\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

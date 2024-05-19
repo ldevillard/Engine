@@ -46,7 +46,7 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
 	GLFWwindow* window = glfwCreateWindow(SCENE_WIDTH, SCENE_HEIGHT, "Engine", NULL, NULL);
 	if (window == NULL)
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
+		std::cerr << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
@@ -56,10 +56,29 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
 	glfwSetScrollCallback(window, scroll_callback);
 	Input::Initialize(window);
 
+	// icon
+	int iconWidth, iconHeight, iconChannels;
+	stbi_uc* iconPixels = stbi_load("resources/DevilEngine.png", &iconWidth, &iconHeight, &iconChannels, 4);
+
+	GLFWimage images[1] = {};
+	images[0].width = iconWidth;
+	images[0].height = iconHeight;
+	images[0].pixels = iconPixels;
+
+	if (iconPixels)
+	{
+		glfwSetWindowIcon(window, 1, images);
+		stbi_image_free(iconPixels);
+	}
+	else
+	{
+		std::cerr << "Failed to load icon" << std::endl;
+	}
+
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
+		std::cerr << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
 
