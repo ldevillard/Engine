@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "utils/serializer/json/json.hpp"
+
 // Phong model
 class Material
 {
@@ -31,6 +33,9 @@ public:
 
 	void SetEmissive(bool emissive);
 	void SetFlag(int flag);
+
+	// serialization
+	nlohmann::ordered_json Serialize() const;
 
 	// These vectors are the colors of the different lights
 	glm::vec3 Ambient;

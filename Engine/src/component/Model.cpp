@@ -141,7 +141,7 @@ nlohmann::ordered_json Model::Serialize() const
     nlohmann::ordered_json json;
 
 	json["type"] = "Model";
-	//json["material"] = material.Serialize();
+	json["material"] = material.Serialize();
 	json["directory"] = directory;
 	json["modelType"] = ModelType;
 	json["modelPath"] = modelPath;

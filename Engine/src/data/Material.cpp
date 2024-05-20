@@ -2,6 +2,8 @@
 
 #include <unordered_map>
 
+#include "utils/serializer/SerializerUtils.h"
+
 #pragma region Default Materials
 
 const std::vector<const char*> Material::Names = 
@@ -137,6 +139,23 @@ void Material::SetEmissive(bool emissive)
 void Material::SetFlag(int flag)
 {
 	Flag = flag;
+}
+
+nlohmann::ordered_json Material::Serialize() const
+{
+	nlohmann::ordered_json json;
+
+	json["ambient"] = Serializer::Serialize(Ambient, Math::Vec3Format::RGB);
+	json["diffuse"] = Serializer::Serialize(Diffuse, Math::Vec3Format::RGB);
+	json["specular"] = Serializer::Serialize(Specular, Math::Vec3Format::RGB);
+	json["shininess"] = Shininess;
+	json["emissive"] = Emissive;
+	json["flag"] = Flag;
+	json["emissiveStrength"] = EmissiveStrength;
+	json["smoothness"] = Smoothness;
+	json["name"] = Name;
+
+	return json;
 }
 
 #pragma endregion
