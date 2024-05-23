@@ -37,6 +37,7 @@ public:
 
 	//serialization
 	nlohmann::ordered_json Serialize() const;
+	void Deserialize(const nlohmann::ordered_json& json);
 
 	std::string Name;
 

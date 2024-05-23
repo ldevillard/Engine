@@ -32,4 +32,23 @@ namespace Serializer
 
         return json;
 	}
+
+    glm::vec3 Deserialize(nlohmann::ordered_json json, Math::Vec3Format format)
+    {
+        glm::vec3 vec;
+
+		switch (format)
+		{
+			case Math::Vec3Format::XYZ:
+				vec = glm::vec3(json["x"], json["y"], json["z"]);
+				break;
+			case Math::Vec3Format::RGB:
+				vec = glm::vec3(json["r"], json["g"], json["b"]);
+				break;
+			default:
+				throw std::invalid_argument("Unknown format");
+		}
+
+		return vec;
+    }
 }

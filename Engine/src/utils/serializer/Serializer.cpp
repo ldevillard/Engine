@@ -30,8 +30,23 @@ namespace Serializer
 	}
 }
 
-//void Serializer::LoadSceneFromFile(const std::string& path)
-//{
-//	path;
-//}
+void Serializer::LoadSceneFromFile(const std::string& path, const std::string& filename)
+{
+    std::ifstream inputFile(path);
+
+    if (inputFile.is_open())
+    {
+        nlohmann::ordered_json json;
+        inputFile >> json;
+        inputFile.close();
+
+        EntityManager::Get().Deserialize(json[filename]["Scene"]);
+
+        std::cout << "File loaded successfully: " << path << std::endl;
+    }
+    else
+    {
+        std::cerr << "Error: Unable to open file for reading: " << path << std::endl;
+    }
+}
 

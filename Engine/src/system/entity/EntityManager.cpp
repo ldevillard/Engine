@@ -212,6 +212,19 @@ nlohmann::ordered_json EntityManager::Serialize() const
 	return json;
 }
 
+void EntityManager::Deserialize(const nlohmann::ordered_json& json)
+{
+	std::for_each(entities.begin(), entities.end(),
+		[this](Entity* e) { unregisterEntity(e); });
+	entities.clear();
+
+	for (const nlohmann::ordered_json& entityJson : json["Entities"])
+	{
+		Entity* entity = CreateEntity(entityJson["Name"]);
+		entity->Deserialize(entityJson);
+	}
+}
+
 #pragma endregion
 
 #pragma region Private Methods

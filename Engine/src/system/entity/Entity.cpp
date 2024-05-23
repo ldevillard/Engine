@@ -120,6 +120,16 @@ nlohmann::ordered_json Entity::Serialize() const
     return json;
 }
 
+void Entity::Deserialize(const nlohmann::ordered_json& json)
+{
+	transform->Deserialize(json["Transform"]);
+
+	for (const nlohmann::ordered_json& componentJson : json["Components"]) 
+	{
+
+	}
+}
+
 #pragma endregion
 
 #pragma region Private Methods

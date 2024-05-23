@@ -333,7 +333,7 @@ void Editor::renderTopBar()
 			}
 			if (ImGui::MenuItem("Load Scene"))
 			{
-				ifd::FileDialog::Instance().Open("LoadSceneDialog", "Load Scene", "Scene file (*.devil){}");
+				ifd::FileDialog::Instance().Open("LoadSceneDialog", "Load Scene", "Scene file (*.devil){.devil},.*");
 			}
 			ImGui::EndMenu();
 		}
@@ -356,8 +356,10 @@ void Editor::renderTopBar()
 	{
 		if (ifd::FileDialog::Instance().HasResult())
 		{
-			std::string res = ifd::FileDialog::Instance().GetResult().string();
-			//printf("OPEN[%s]\n", res.c_str());
+			std::string filepath = ifd::FileDialog::Instance().GetResult().string();
+			std::string filename = ifd::FileDialog::Instance().GetResult().stem().string();
+
+			Serializer::LoadSceneFromFile(filepath, filename);
 		}
 		ifd::FileDialog::Instance().Close();
 	}

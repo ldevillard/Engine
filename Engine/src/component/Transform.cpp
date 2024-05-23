@@ -108,11 +108,18 @@ nlohmann::ordered_json Transform::Serialize() const
 {
 	nlohmann::ordered_json json;
 
-	json["Position"] = Serializer::Serialize(Position);
-	json["Rotation"] = Serializer::Serialize(Rotation);
-	json["Scale"] = Serializer::Serialize(Scale);
+	json["position"] = Serializer::Serialize(Position);
+	json["rotation"] = Serializer::Serialize(Rotation);
+	json["scale"] = Serializer::Serialize(Scale);
 
 	return json;
+}
+
+void Transform::Deserialize(const nlohmann::ordered_json& json)
+{
+	Position = Serializer::Deserialize(json["position"]);
+	Rotation = Serializer::Deserialize(json["rotation"]);
+	Scale = Serializer::Deserialize(json["scale"]);
 }
 
 #pragma endregion
