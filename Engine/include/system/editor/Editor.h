@@ -85,6 +85,8 @@ private:
 	void showHierarchyContextMenu();
 	void showEntityContextMenu();
 
+	void resetEntitySelection();
+
 	static constexpr float TOP_BAR_HEIGHT = 12.0f;
 
 	// member references

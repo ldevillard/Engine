@@ -1,5 +1,6 @@
 #pragma once
 
+#include "data/Type.h"
 #include "utils/serializer/json/json.hpp"
 
 class Entity;
@@ -20,6 +21,7 @@ public:
 
 	// serialization
 	virtual nlohmann::ordered_json Serialize() const = 0;
+	virtual void Deserialize(const nlohmann::ordered_json& json) = 0;
 	
 	Transform* transform		   = nullptr;
 	Entity*	entity				   = nullptr;

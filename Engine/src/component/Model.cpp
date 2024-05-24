@@ -32,21 +32,7 @@ Model::Model(PrimitiveType type, Material mat) : Component(),
     material(mat),
     ModelType(type)
 {
-    switch (type)
-    {
-        case CubePrimitive:
-            meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::CubePrimitive]->meshes[0]));
-            break;
-        case SpherePrimitive:
-            meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::SpherePrimitive]->meshes[0]));
-            break;
-        case PlanePrimitive:
-            meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::PlanePrimitive]->meshes[0]));
-            break;
-        default:
-            std::cerr << "Primitive type not found" << std::endl;
-            break;
-    }
+    loadPrimitiveModel(type);
 }
 
 Model::Model(const Mesh& mesh, Material mat)
@@ -149,6 +135,19 @@ nlohmann::ordered_json Model::Serialize() const
 	return json;
 }
 
+void Model::Deserialize(const nlohmann::ordered_json& json)
+{
+	material.Deserialize(json["material"]);
+	directory = json["directory"];
+	ModelType = json["modelType"];
+	modelPath = json["modelPath"];
+
+    if (ModelType == PrimitiveType::None)
+        loadModel(modelPath);
+	else
+		loadPrimitiveModel(ModelType);
+}
+
 #pragma endregion
 
 #pragma region Private Methods
@@ -187,6 +186,25 @@ void Model::loadModel(std::string path)
     directory = path.substr(0, path.find_last_of('/'));
 
     processNode(scene->mRootNode, scene);
+}
+
+void Model::loadPrimitiveModel(PrimitiveType type)
+{
+    switch (type)
+    {
+    case CubePrimitive:
+        meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::CubePrimitive]->meshes[0]));
+        break;
+    case SpherePrimitive:
+        meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::SpherePrimitive]->meshes[0]));
+        break;
+    case PlanePrimitive:
+        meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::PlanePrimitive]->meshes[0]));
+        break;
+    default:
+        std::cerr << "Primitive type not found" << std::endl;
+        break;
+    }
 }
 
 void Model::processNode(aiNode* node, const aiScene* scene)

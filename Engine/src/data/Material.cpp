@@ -158,6 +158,19 @@ nlohmann::ordered_json Material::Serialize() const
 	return json;
 }
 
+void Material::Deserialize(const nlohmann::ordered_json& json)
+{
+	Ambient = Serializer::Deserialize(json["ambient"], Math::Vec3Format::RGB);
+	Diffuse = Serializer::Deserialize(json["diffuse"], Math::Vec3Format::RGB);
+	Specular = Serializer::Deserialize(json["specular"], Math::Vec3Format::RGB);
+	Shininess = json["shininess"];
+	Emissive = json["emissive"];
+	Flag= json["flag"];
+	EmissiveStrength = json["emissiveStrength"];
+	Smoothness = json["smoothness"];
+	Name = json["name"];
+}
+
 #pragma endregion
 
 #pragma region Private Methods

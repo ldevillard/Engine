@@ -81,4 +81,9 @@ nlohmann::ordered_json Color::Serialize() const
 	return Serializer::Serialize(Value, Math::Vec3Format::RGB);
 }
 
+void Color::Deserialize(const nlohmann::ordered_json& json)
+{
+	Value = Serializer::Deserialize(json, Math::Vec3Format::RGB);
+}
+
 #pragma endregion

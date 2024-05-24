@@ -32,6 +32,7 @@ public:
 
 	// serialization
 	nlohmann::ordered_json Serialize() const;
+	void Deserialize(const nlohmann::ordered_json& json);
 
 	glm::vec3 Value;
 };

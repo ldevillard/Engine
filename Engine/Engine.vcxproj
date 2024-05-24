@@ -84,6 +84,7 @@
     <ClInclude Include="include\data\physics\Ray.h" />
     <ClInclude Include="include\data\physics\RaycastHit.h" />
     <ClInclude Include="include\data\template\Singleton.h" />
+    <ClInclude Include="include\data\Type.h" />
     <ClInclude Include="include\maths\Math.h" />
     <ClInclude Include="include\physics\Physics.h" />
     <ClInclude Include="include\render\ComputeShader.h" />
@@ -689,7 +690,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\logan\Desktop\Engine\ThirdPartyLibs\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -707,7 +708,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>

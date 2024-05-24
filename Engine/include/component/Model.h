@@ -20,6 +20,7 @@ class Model : public Component
 {
 
 public:
+    Model() = default;
     Model(PrimitiveType type, Material mat = Material::Default);
     Model(std::string path, Material mat = Material::Default);
     Model(const Mesh& mesh, Material mat = Material::Default);
@@ -41,11 +42,11 @@ public:
 
     // serialization
     nlohmann::ordered_json Serialize() const override;
+    void Deserialize(const nlohmann::ordered_json& json) override;
 
     PrimitiveType ModelType = PrimitiveType::None;
 
 private:
-    Model() = default;
     void draw();
 
     // model data
@@ -58,7 +59,10 @@ private:
 
     void processOBB();
     void loadModel(std::string path);
+    void loadPrimitiveModel(PrimitiveType type);
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
     std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 };
+
+REGISTER_COMPONENT_TYPE(Model);

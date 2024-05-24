@@ -16,7 +16,8 @@ public:
 		Spot
 	};
 
-	Light(const LightType& type = Directional, const Color& color = Color::White);
+	Light() = default;
+	Light(const LightType& type, const Color& color = Color::White);
 
 	void Compute() override;
 	Component* Clone() override;
@@ -28,6 +29,7 @@ public:
 
 	// serialization
 	nlohmann::ordered_json Serialize() const override;
+	void Deserialize(const nlohmann::ordered_json& json) override;
 
 	LightType lightType;
 	Color	  color;
@@ -47,3 +49,5 @@ private:
 	void computePoint();
 	void computeSpot();
 };
+
+REGISTER_COMPONENT_TYPE(Light);

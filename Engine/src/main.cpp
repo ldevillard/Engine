@@ -34,7 +34,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow)
+int main()
 {
 	// glfw: initialize and configure
 	glfwInit();
@@ -99,44 +99,12 @@ int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszA
 	Shader raytracingShader("shaders/raytracing/RayTracerVertexShader.glsl", "shaders/raytracing/RayTracerFragmentShader.glsl");
 	ComputeShader accumulateShader("shaders/compute/AccumulateComputeShader.glsl", glm::uvec2(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT));
 
+	// initialize systems
 	Outliner::Initialize(&outlineShader, &outlineDilateShader, &outlineBlitShader);
 	RayTracer::Initialize(&raytracingShader, &accumulateShader);
 	Gizmo::InitGizmos(&gizmoShader);
-
 	EntityManager::Initialize(&shader);
 	Model::LoadPrimitives();
-
-	Entity* entity1 = EntityManager::Get().CreateEntity("Sphere Light");
-	Model* model1 = entity1->AddComponent<Model>(SpherePrimitive, Material::Default);
-	entity1->transform->SetPosition({ 0.f, 5.5f, -25.f });
-	entity1->transform->SetScale({ 6.5f, 6.5f, 6.5f });
-
-	Entity* entity2 = EntityManager::Get().CreateEntity("Sphere1");
-	Model* model2 = entity2->AddComponent<Model>(PrimitiveType::SpherePrimitive, Material::Prune);
-	entity2->transform->SetPosition({ 1.05f, 0.f, -9.44f });
-	entity2->transform->SetScale({ 1.f, 1.f, 1.f });
-
-	Entity* entity3 = EntityManager::Get().CreateEntity("Ground");
-	Model* model3 = entity3->AddComponent<Model>(PrimitiveType::CubePrimitive, Material::Turquoise);
-	entity3->transform->SetPosition({ 0.f, -2.f, 0.f });
-	entity3->transform->SetScale({ 50.f, 1.f, 50.f });
-
-	Entity* entity4 = EntityManager::Get().CreateEntity("Sphere2");
-	Model* model4 = entity4->AddComponent<Model>(PrimitiveType::SpherePrimitive);
-	entity4->transform->SetPosition({ 0.94f, -0.5f, -10.79f });
-	entity4->transform->SetScale({ .5f, .5f, .5f });
-
-	Entity* entity5 = EntityManager::Get().CreateEntity("Cube1");
-	Model* model5 = entity5->AddComponent<Model>(PrimitiveType::CubePrimitive);
-	entity5->transform->SetPosition({ 2.24f, 0.f, -10.98f });
-	entity5->transform->SetScale({ 1.f, 1.f, 1.f });
-
-	Entity* lightEntity = EntityManager::Get().CreateEntity("DirectionalLight");
-	Light* light = lightEntity->AddComponent<Light>(Light::Directional, Color::White);
-	light->Intensity = 1.f;
-	lightEntity->transform->SetPosition({ 0.f, 7.5f, 15.f });
-	lightEntity->transform->SetRotation({ -45.f, 0.f, 0.f });
-
 	Editor::Initialize(window);
 
 	// render loop

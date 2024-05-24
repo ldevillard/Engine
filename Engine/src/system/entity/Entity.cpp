@@ -5,6 +5,7 @@
 #include "component/Component.h"
 #include "component/physics/EditorCollider.h"
 #include "component/Transform.h"
+#include "data/Type.h"
 #include "system/editor/Editor.h"
 #include "system/editor/Outliner.h"
 #include "system/entity/Entity.h"
@@ -126,7 +127,10 @@ void Entity::Deserialize(const nlohmann::ordered_json& json)
 
 	for (const nlohmann::ordered_json& componentJson : json["Components"]) 
 	{
-
+        std::string type = componentJson["type"];
+		Component* component = createComponentFromName(type);
+		component->Deserialize(componentJson);
+		setupComponent(component);
 	}
 }
 
@@ -144,3 +148,20 @@ void Entity::setupComponent(Component* component)
 
     EntityManager::Get().UpdateLightsIndex();
 }
+
+Component* Entity::createComponentFromName(const std::string& name)
+{
+    auto it = Type::componentTypeMap.find(name);
+    if (it != Type::componentTypeMap.end())
+    {
+        Component* component = (it->second)();
+        return component;
+    }
+    else 
+    {
+        assert(false && "Error: Component type not registered.");
+        return nullptr;
+    }
+}
+
+#pragma endregion

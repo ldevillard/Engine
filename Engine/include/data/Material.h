@@ -36,6 +36,7 @@ public:
 
 	// serialization
 	nlohmann::ordered_json Serialize() const;
+	void Deserialize(const nlohmann::ordered_json& json);
 
 	// These vectors are the colors of the different lights
 	glm::vec3 Ambient;

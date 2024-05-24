@@ -35,7 +35,7 @@ public:
 	void Compute();
 	void ComputeOutline() const;
 
-	//serialization
+	// serialization
 	nlohmann::ordered_json Serialize() const;
 	void Deserialize(const nlohmann::ordered_json& json);
 
@@ -43,6 +43,9 @@ public:
 
 private:
 	void setupComponent(Component* component);
+	
+	// serialization
+	Component* createComponentFromName(const std::string& name);
 
 	EditorCollider* editorCollider = nullptr;
 	Shader* shader = nullptr;

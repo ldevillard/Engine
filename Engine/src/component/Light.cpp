@@ -73,6 +73,16 @@ nlohmann::ordered_json Light::Serialize() const
 	return json;
 }
 
+void Light::Deserialize(const nlohmann::ordered_json& json)
+{
+	lightType = json["lightType"];
+	color.Deserialize(json["color"]);
+	Intensity = json["intensity"];
+	Radius = json["radius"];
+	CutOff = json["cutOff"];
+	OutCutOff = json["outCutOff"];
+}
+
 #pragma endregion
 
 #pragma region Private Methods

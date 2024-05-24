@@ -359,6 +359,7 @@ void Editor::renderTopBar()
 			std::string filepath = ifd::FileDialog::Instance().GetResult().string();
 			std::string filename = ifd::FileDialog::Instance().GetResult().stem().string();
 
+			resetEntitySelection();
 			Serializer::LoadSceneFromFile(filepath, filename);
 		}
 		ifd::FileDialog::Instance().Close();
@@ -613,20 +614,24 @@ void Editor::showEntityContextMenu()
 		if (ImGui::Selectable("Delete"))
 		{
 			Entity* entity = hoveredEntity;
-			hoveredEntity = nullptr;
-			selectedEntity = nullptr;
+			resetEntitySelection();
 			EntityManager::Get().DestroyEntity(entity);
 		}
 		if (ImGui::Selectable("Duplicate"))
 		{
 			Entity* entity = hoveredEntity;
-			hoveredEntity = nullptr;
-			selectedEntity = nullptr;
+			resetEntitySelection();
 			Entity* duplicatedEntity = EntityManager::Get().DuplicateEntity(entity);
 			SelectEntity(duplicatedEntity);
 		}
 		ImGui::EndPopup();
 	}
+}
+
+void Editor::resetEntitySelection()
+{
+	selectedEntity = nullptr;
+	hoveredEntity = nullptr;
 }
 
 #pragma endregion
