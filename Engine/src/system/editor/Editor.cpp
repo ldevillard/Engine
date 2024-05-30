@@ -36,6 +36,9 @@ void Editor::initialize()
 
 	// init file browser
 	ifd::FileDialog::Instance().Initialize();
+
+	// load default scene, need to handle this properly (maybe a scene manager)
+	Serializer::LoadSceneFromFile("resources/scenes/DefaultScene.devil", "DefaultScene");
 }
 
 #pragma endregion
