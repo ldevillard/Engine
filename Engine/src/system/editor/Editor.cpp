@@ -510,6 +510,7 @@ void Editor::renderSettings()
 			}
 			ImGui_Utils::DrawIntControl("Max Bounces", parameters.MaxBounces, 1, 100.f);
 			ImGui_Utils::DrawIntControl("Rays Per Pixel", parameters.RaysPerPixel, 1, 100.f);
+			ImGui_Utils::SliderFloat("Diverge Strength", parameters.DivergeStrength, 0.0f, 10.0f, "%.3f", 135.f);
 		}
 		ImGui::TreePop();
 	}

@@ -14,6 +14,7 @@ uniform vec3 cameraUp;
 
 uniform int maxBounceCount;
 uniform int numberRaysPerPixel;
+uniform float divergeStrength;
 
 const int checkerPattern = 1;
 const int hideEmissive = 2;
@@ -111,8 +112,8 @@ vec3 RandomHemisphereDirection(vec3 normal, inout uint rngState)
 vec2 RandomPointInCircle(uint rngState)
 {
 	float angle = RandomValue(rngState) * 2.0 * 3.1415926;
-	float radius = sqrt(RandomValue(rngState));
-	return vec2(cos(angle) * radius, sin(angle) * radius);
+	vec2 pointOnCircle = vec2(cos(angle), sin(angle));
+	return pointOnCircle * sqrt(RandomValue(rngState));;
 
 }
 
@@ -310,7 +311,7 @@ void main()
 	{
 		Ray ray;
 		ray.origin = cameraPosition;
-		vec2 randomPoint = RandomPointInCircle(rngState) * (0.25 / screenSize.x);
+		vec2 randomPoint = RandomPointInCircle(rngState) * divergeStrength / screenSize.x;
 		vec3 randomPos = worldPosition + cameraRight * randomPoint.x + cameraUp * randomPoint.y;
 
 		ray.direction = normalize(randomPos - ray.origin);

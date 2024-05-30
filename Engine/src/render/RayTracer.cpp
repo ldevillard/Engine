@@ -56,6 +56,7 @@ void RayTracer::Draw()
 	raytracingShader->SetInt("cubeCount", static_cast<int>(cubes.size()));
 	raytracingShader->SetInt("maxBounceCount", Editor::Get().GetSettings().MaxBounces);
 	raytracingShader->SetInt("numberRaysPerPixel", Editor::Get().GetSettings().RaysPerPixel);
+	raytracingShader->SetFloat("divergeStrength", Editor::Get().GetSettings().DivergeStrength);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, sphereSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, spheres.size() * sizeof(RaytracingSphere), spheres.data(), GL_DYNAMIC_DRAW);
