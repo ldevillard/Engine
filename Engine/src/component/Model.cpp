@@ -107,6 +107,9 @@ void Model::ComputeOutline(Shader* outlineShader)
 
 void Model::SetMaterialFromName(std::string name)
 {
+    if (material.Name == name)
+        return;
+
 	const Material& mat = Material::GetMaterialFromName(name);
 
     material.Ambient = mat.Ambient;

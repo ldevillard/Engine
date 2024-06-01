@@ -80,6 +80,7 @@
                                 "flag": 1,
                                 "emissiveStrength": 1.0,
                                 "smoothness": 0.0,
+                                "specularProbability": 1.0,
                                 "name": "Default"
                             },
                             "directory": "",
@@ -117,20 +118,21 @@
                                     "b": 0.521569013595581
                                 },
                                 "diffuse": {
-                                    "r": 0.6156859993934631,
-                                    "g": 0.2862749993801117,
-                                    "b": 0.7294120192527771
+                                    "r": 0.3494453728199005,
+                                    "g": 0.19671551883220673,
+                                    "b": 0.4021739363670349
                                 },
                                 "specular": {
-                                    "r": 0.8118039965629578,
-                                    "g": 0.8118039965629578,
-                                    "b": 0.8118039965629578
+                                    "r": 0.4946822226047516,
+                                    "g": 0.0,
+                                    "b": 0.5760869979858398
                                 },
                                 "shininess": 0.4000000059604645,
                                 "emissive": false,
                                 "flag": 0,
                                 "emissiveStrength": 1.0,
                                 "smoothness": 0.0,
+                                "specularProbability": 1.0,
                                 "name": "Prune"
                             },
                             "directory": "",
@@ -182,6 +184,7 @@
                                 "flag": 0,
                                 "emissiveStrength": 1.0,
                                 "smoothness": 0.0,
+                                "specularProbability": 1.0,
                                 "name": "Default"
                             },
                             "directory": "",
@@ -205,8 +208,8 @@
                         },
                         "scale": {
                             "x": 7.0,
-                            "y": 0.09999869018793106,
-                            "z": 4.999916076660156
+                            "y": 0.09999868273735046,
+                            "z": 4.999915599822998
                         }
                     },
                     "Components": [
@@ -224,15 +227,16 @@
                                     "b": 0.22648000717163086
                                 },
                                 "specular": {
-                                    "r": 0.6282809972763062,
-                                    "g": 0.5558019876480103,
-                                    "b": 0.36606499552726746
+                                    "r": 1.0,
+                                    "g": 0.7235904335975647,
+                                    "b": 0.0
                                 },
                                 "shininess": 0.4000000059604645,
                                 "emissive": false,
                                 "flag": 0,
                                 "emissiveStrength": 1.0,
                                 "smoothness": 0.0,
+                                "specularProbability": 1.0,
                                 "name": "Gold"
                             },
                             "directory": "",
@@ -265,25 +269,26 @@
                             "type": "Model",
                             "material": {
                                 "ambient": {
-                                    "r": 0.10000000149011612,
-                                    "g": 0.18725000321865082,
-                                    "b": 0.1745000034570694
+                                    "r": 0.0,
+                                    "g": 1.0,
+                                    "b": 0.8538682460784912
                                 },
                                 "diffuse": {
-                                    "r": 0.3959999978542328,
-                                    "g": 0.7415099740028381,
-                                    "b": 0.6910200119018555
+                                    "r": 0.0,
+                                    "g": 1.0,
+                                    "b": 0.8538682460784912
                                 },
                                 "specular": {
-                                    "r": 0.2972539961338043,
-                                    "g": 0.3082900047302246,
-                                    "b": 0.30667799711227417
+                                    "r": 0.0,
+                                    "g": 0.58152174949646,
+                                    "b": 0.49657997488975525
                                 },
                                 "shininess": 0.10000000149011612,
                                 "emissive": false,
                                 "flag": 0,
                                 "emissiveStrength": 1.0,
                                 "smoothness": 0.0,
+                                "specularProbability": 1.0,
                                 "name": "Turquoise"
                             },
                             "directory": "",
@@ -333,8 +338,9 @@
                                 "shininess": 0.6000000238418579,
                                 "emissive": true,
                                 "flag": 0,
-                                "emissiveStrength": 7.5,
+                                "emissiveStrength": 10.0,
                                 "smoothness": 0.0,
+                                "specularProbability": 1.0,
                                 "name": "Default"
                             },
                             "directory": "",
@@ -385,7 +391,8 @@
                                 "emissive": false,
                                 "flag": 0,
                                 "emissiveStrength": 1.0,
-                                "smoothness": 0.6000000238418579,
+                                "smoothness": 1.0,
+                                "specularProbability": 0.4000000059604645,
                                 "name": "Default"
                             },
                             "directory": "",
@@ -398,7 +405,7 @@
                     "Name": "Sphere(1)",
                     "Transform": {
                         "position": {
-                            "x": 0.0,
+                            "x": -4.656612873077393e-10,
                             "y": 5.0,
                             "z": -3.0
                         },
@@ -436,7 +443,8 @@
                                 "emissive": false,
                                 "flag": 0,
                                 "emissiveStrength": 1.0,
-                                "smoothness": 0.4000000059604645,
+                                "smoothness": 1.0,
+                                "specularProbability": 0.6000000238418579,
                                 "name": "Default"
                             },
                             "directory": "",
@@ -487,7 +495,8 @@
                                 "emissive": false,
                                 "flag": 0,
                                 "emissiveStrength": 1.0,
-                                "smoothness": 0.800000011920929,
+                                "smoothness": 1.0,
+                                "specularProbability": 0.20000000298023224,
                                 "name": "Default"
                             },
                             "directory": "",
@@ -538,7 +547,8 @@
                                 "emissive": false,
                                 "flag": 0,
                                 "emissiveStrength": 1.0,
-                                "smoothness": 0.20000000298023224,
+                                "smoothness": 1.0,
+                                "specularProbability": 1.0,
                                 "name": "Default"
                             },
                             "directory": "",
@@ -590,6 +600,7 @@
                                 "flag": 0,
                                 "emissiveStrength": 1.0,
                                 "smoothness": 1.0,
+                                "specularProbability": 0.019999999552965164,
                                 "name": "Default"
                             },
                             "directory": "",

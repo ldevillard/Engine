@@ -153,6 +153,7 @@ nlohmann::ordered_json Material::Serialize() const
 	json["flag"] = Flag;
 	json["emissiveStrength"] = EmissiveStrength;
 	json["smoothness"] = Smoothness;
+	json["specularProbability"] = SpecularProbability;
 	json["name"] = Name;
 
 	return json;
@@ -168,6 +169,7 @@ void Material::Deserialize(const nlohmann::ordered_json& json)
 	Flag= json["flag"];
 	EmissiveStrength = json["emissiveStrength"];
 	Smoothness = json["smoothness"];
+	SpecularProbability = json["specularProbability"];
 	Name = json["name"];
 }
 

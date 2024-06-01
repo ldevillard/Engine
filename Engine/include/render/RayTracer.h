@@ -11,9 +11,11 @@ struct RaytracingMaterial
 {
 	alignas(16) glm::vec3 Color = {};
 	alignas(16) glm::vec3 EmissiveColor = {};
+	alignas(16) glm::vec3 SpecularColor = {};
 	int Flag = 0;
 	float EmissiveStrength = 1;
 	float Smoothness = 0;
+	float SpecularProbability = 1;
 };
 
 struct RaytracingSphere

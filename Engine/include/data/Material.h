@@ -50,6 +50,7 @@ public:
 	int Flag = 0;
 	float EmissiveStrength = 1.0f;
 	float Smoothness = 0.0f;
+	float SpecularProbability = 1.0f;
 
 	std::string Name;
 

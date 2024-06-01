@@ -84,8 +84,13 @@ void Inspector::inspectModel(Model* model) const
 	{
 		int currentItem = getMaterialIndex(model->GetMaterial());
 		ImGui_Utils::DrawComboBoxControl("Material", currentItem, Material::Names);
-		model->SetMaterialFromName(Material::Names[currentItem]);
+
+		ImGui_Utils::DrawColorControl("Ambient Color", model->GetMaterial().Ambient, 135);
+		ImGui_Utils::DrawColorControl("Diffuse Color", model->GetMaterial().Diffuse, 135);
+		ImGui_Utils::DrawColorControl("Specular Color", model->GetMaterial().Specular, 135);
 		
+		model->SetMaterialFromName(Material::Names[currentItem]);
+
 		// Ray Tracing
 		{
 			ImGui::NewLine();
@@ -98,6 +103,7 @@ void Inspector::inspectModel(Model* model) const
 
 			ImGui_Utils::DrawFloatControl("Emissive Strength", model->GetMaterial().EmissiveStrength, 1.f, 135.f);
 			ImGui_Utils::SliderFloat("Smoothness", model->GetMaterial().Smoothness, 0.0f, 1.0f, "%.2f", 135.f);
+			ImGui_Utils::SliderFloat("Specular Probability", model->GetMaterial().SpecularProbability, 0.0f, 1.0f, "%.2f", 135.f);
 		}
 
 		ImGui::TreePop();

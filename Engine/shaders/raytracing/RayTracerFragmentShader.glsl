@@ -23,9 +23,11 @@ struct Material
 {
 	vec3 color;
 	vec3 emissiveColor;
+	vec3 specularColor;
 	int flag;
 	float emissiveStrength;
 	float smoothness;
+	float specularProbability;
 };
 
 struct Sphere
@@ -276,11 +278,13 @@ vec3 Trace(Ray ray, inout uint rngState)
 			ray.origin = hitInfo.hitPoint;
 			vec3 diffuseDirection = normalize(hitInfo.normal + RandomDirection(rngState));
 			vec3 specularDirection = reflect(ray.direction, hitInfo.normal);
-			ray.direction = normalize(mix(diffuseDirection, specularDirection, material.smoothness));
+
+			bool isSpecular = RandomValue(rngState) < material.specularProbability;
+			ray.direction = mix(diffuseDirection, specularDirection, material.smoothness * int(isSpecular));
 
 			vec3 emittedLight = material.emissiveColor * material.emissiveStrength;
 			incomingLight += emittedLight * rayColor;
-			rayColor *= material.color;
+			rayColor *= isSpecular ? material.specularColor : material.color;
 		}
 		else
 		{
