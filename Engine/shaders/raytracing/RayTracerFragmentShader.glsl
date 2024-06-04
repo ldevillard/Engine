@@ -46,6 +46,19 @@ struct Cube
 	Material material;
 };
 
+struct Triangle
+{
+	vec3 pA;
+	vec3 pB;
+	vec3 pC;
+
+	vec3 nA;
+	vec3 nB;
+	vec3 nC;
+
+	Material material;
+};
+
 uniform int sphereCount;
 layout(std430, binding = 0) buffer sphereData
 {
@@ -210,6 +223,37 @@ HitInfo RayCube(Ray ray, Cube cube) // box in case
 		vec3 hitPointLocal = vec3((txi * vec4(hitPointWorld, 1.0)).xyz);
 		vec3 normal = ComputeCubeNormal(hitPointLocal, bmin, bmax);
 		hitInfo.normal = normalize(vec3((cube.transform * vec4(normal, 0.0)).xyz));
+	}
+
+	return hitInfo;
+}
+
+HitInfo RayTriangle(Ray ray, Triangle triangle)
+{
+	HitInfo hitInfo;
+	hitInfo.hit = false;
+
+	vec3 AB = triangle.pB - triangle.pA;
+    vec3 AC = triangle.pC - triangle.pA;
+
+    vec3 normal = cross(AB, AC);
+	float det = -dot(ray.direction, normal);
+	float inverseDet = 1.0 / det;
+
+    vec3 AO = ray.origin - triangle.pA;
+	vec3 DAO = cross(AO, ray.direction);
+	
+	float u =  dot(AC, DAO) * inverseDet;
+	float v = -dot(AB, DAO) * inverseDet;
+	float w = 1 - u - v;
+	float distance =  dot(AO, normal) * inverseDet;
+
+	if (det >= 1e-6 && distance >= 0.0 && u >= 0.0 && v >= 0.0 && (u + v) <= 1.0)
+	{
+		hitInfo.hit = true;
+		hitInfo.distance = distance;
+		hitInfo.hitPoint = ray.origin + ray.direction * distance;
+		hitInfo.normal = normal;
 	}
 
 	return hitInfo;
