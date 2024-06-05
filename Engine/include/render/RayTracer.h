@@ -36,6 +36,22 @@ struct RaytracingCube
 	RaytracingMaterial Material = {};
 };
 
+struct RayTracingTriangle
+{
+	alignas(16) glm::vec3 A = {};
+	alignas(16) glm::vec3 B = {};
+	alignas(16) glm::vec3 C = {};
+	
+	alignas(16) glm::vec3 NormalA = {};
+	alignas(16) glm::vec3 NormalB = {};
+	alignas(16) glm::vec3 NormalC = {};
+};
+
+struct RayTracingMesh
+{
+
+};
+
 class RayTracer
 {
 public:
@@ -47,7 +63,8 @@ public:
 
 private:
 	static void setupScreenQuad();
-	static void getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes);
+	static void getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes,
+							 std::vector<RayTracingTriangle>& inout_triangles);
 	
 	static unsigned int frameCount;
 	static bool accumulate;
@@ -57,4 +74,6 @@ private:
 	static ComputeShader* accumulateShader;
 	static GLuint sphereSSBO;
 	static GLuint cubeSSBO;
+	static GLuint triangleSSBO;
+	static GLuint meshSSBO;
 };

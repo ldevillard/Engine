@@ -30,6 +30,12 @@ struct Material
 	float specularProbability;
 };
 
+struct Ray
+{
+	vec3 origin;
+	vec3 direction;
+};
+
 struct Sphere
 {
 	vec3 position;
@@ -55,7 +61,23 @@ struct Triangle
 	vec3 nA;
 	vec3 nB;
 	vec3 nC;
+};
 
+struct HitInfo
+{
+	bool hit;
+	float distance;
+	vec3 hitPoint;
+	vec3 normal;
+	Material material;
+};
+
+struct MeshInfo
+{
+	int firstTriangleIndex;
+	int triangleCount;
+	//float3 boundsMin;
+	//float3 boundsMax;
 	Material material;
 };
 
@@ -71,21 +93,15 @@ layout(std430, binding = 1) buffer cubeData
 	Cube cubes[];
 };
 
-
-struct Ray
+uniform int meshCount;
+layout(std430, binding = 2) buffer triangleData
 {
-	vec3 origin;
-	vec3 direction;
+	Triangle triangles[];
 };
-
-struct HitInfo
-{
-	bool hit;
-	float distance;
-	vec3 hitPoint;
-	vec3 normal;
-	Material material;
-};
+//layout(std430, binding = 2) buffer meshData
+//{
+//	MeshInfo meshes[];
+//};
 
 uint NextRandom(inout uint state)
 {
@@ -236,8 +252,8 @@ HitInfo RayTriangle(Ray ray, Triangle triangle)
 	vec3 AB = triangle.pB - triangle.pA;
     vec3 AC = triangle.pC - triangle.pA;
 
-    vec3 normal = cross(AB, AC);
-	float det = -dot(ray.direction, normal);
+    vec3 n = cross(AB, AC);
+	float det = -dot(ray.direction, n);
 	float inverseDet = 1.0 / det;
 
     vec3 AO = ray.origin - triangle.pA;
@@ -246,14 +262,14 @@ HitInfo RayTriangle(Ray ray, Triangle triangle)
 	float u =  dot(AC, DAO) * inverseDet;
 	float v = -dot(AB, DAO) * inverseDet;
 	float w = 1 - u - v;
-	float distance =  dot(AO, normal) * inverseDet;
+	float distance = dot(AO, n) * inverseDet;
 
-	if (det >= 1e-6 && distance >= 0.0 && u >= 0.0 && v >= 0.0 && (u + v) <= 1.0)
+	if (det >= 1E-6 && distance >= 0 && u >= 0 && v >= 0 && w >= 0)
 	{
 		hitInfo.hit = true;
 		hitInfo.distance = distance;
 		hitInfo.hitPoint = ray.origin + ray.direction * distance;
-		hitInfo.normal = normal;
+		hitInfo.normal = normalize(triangle.nA * w + triangle.nB * u + triangle.nC * v);;
 	}
 
 	return hitInfo;
@@ -269,7 +285,7 @@ HitInfo CalculateRayCollision(Ray ray)
 	for (int i = 0; i < sphereCount; i++)
 	{
 		Sphere sphere = spheres[i];
-
+		
 		HitInfo hit = RaySphere(ray, sphere.position, sphere.radius);
 
 		if (hit.hit && hit.distance < hitInfo.distance)
@@ -289,6 +305,36 @@ HitInfo CalculateRayCollision(Ray ray)
 		{
 			hitInfo = hit;
 			hitInfo.material = cube.material;
+		}
+	}
+
+	//for (int i = 0; i < meshCount; i++)
+	//{
+	//	MeshInfo meshInfo = meshes[i];
+	//
+	//	for (int j = 0; j < meshInfo.triangleCount; j++) 
+	//	{
+	//		int triIndex = meshInfo.firstTriangleIndex + j;
+	//		Triangle tri = triangles[triIndex];
+	//		HitInfo hit = RayTriangle(ray, tri);
+	//		
+	//		if (hit.hit && hit.distance < hitInfo.distance)
+	//		{
+	//			hitInfo = hit;
+	//			hitInfo.material = meshInfo.material;
+	//		}
+	//	}
+	//}
+
+	for (int j = 0; j < meshCount; j++) 
+	{
+		Triangle tri = triangles[j];
+		HitInfo hit = RayTriangle(ray, tri);
+		
+		if (hit.hit && hit.distance < hitInfo.distance)
+		{
+			hitInfo = hit;
+			hitInfo.material = spheres[0].material;
 		}
 	}
 

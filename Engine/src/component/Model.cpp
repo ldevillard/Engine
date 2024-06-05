@@ -54,6 +54,17 @@ int Model::GetNumberOfTriangles() const
    return sum;
 }
 
+std::vector<Triangle> Model::GetTriangles() const
+{
+    std::vector<Triangle> triangles = {};
+    for (Mesh m : meshes)
+    {
+        std::vector<Triangle> mTriangles = m.GetTriangles();
+        triangles.insert(triangles.end(), mTriangles.begin(), mTriangles.end());
+    }
+    return triangles;
+}
+
 Material& Model::GetMaterial()
 {
 	return material;

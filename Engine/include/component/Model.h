@@ -8,6 +8,7 @@
 #include "data/Material.h"
 #include "data/mesh/MeshData.h"
 #include "data/OBoundingBox.h"
+#include "data/Triangle.h"
 
 // assimp
 #include <assimp/Importer.hpp>
@@ -26,6 +27,8 @@ public:
     Model(const Mesh& mesh, Material mat = Material::Default);
 
     int GetNumberOfTriangles() const;
+    std::vector<Triangle> GetTriangles() const;
+
     Material& GetMaterial();
     const OBoundingBox& GetBoundingBox() const;
 

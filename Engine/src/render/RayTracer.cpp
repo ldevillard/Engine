@@ -1,4 +1,6 @@
 #include "render/RayTracer.h"
+
+#include "data/Triangle.h"
 #include "system/editor/Editor.h"
 #include "system/entity/EntityManager.h"
 
@@ -7,6 +9,8 @@ Shader* RayTracer::raytracingShader = nullptr;
 ComputeShader* RayTracer::accumulateShader = nullptr;
 GLuint RayTracer::sphereSSBO = 0;
 GLuint RayTracer::cubeSSBO = 0;
+GLuint RayTracer::triangleSSBO = 0;
+GLuint RayTracer::meshSSBO = 0;
 unsigned int RayTracer::frameCount = 0;
 bool RayTracer::accumulate = false;
 
@@ -25,6 +29,14 @@ void RayTracer::Initialize(Shader* shader, ComputeShader* accumulate)
 	glGenBuffers(1, &cubeSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, cubeSSBO);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, cubeSSBO);
+
+	glGenBuffers(1, &triangleSSBO);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, triangleSSBO);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, triangleSSBO);
+	//
+	//glGenBuffers(1, &meshSSBO);
+	//glBindBuffer(GL_SHADER_STORAGE_BUFFER, meshSSBO);
+	//glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, meshSSBO);
 
 	setupScreenQuad();
 }
@@ -50,10 +62,12 @@ void RayTracer::Draw()
 	const std::vector<Model*> models = EntityManager::Get().GetModels();
 	std::vector<RaytracingSphere> spheres = {};
 	std::vector<RaytracingCube> cubes = {};
-	getSceneData(models, spheres, cubes);
+	std::vector<RayTracingTriangle> triangles = {};
+	getSceneData(models, spheres, cubes, triangles);
 
 	raytracingShader->SetInt("sphereCount", static_cast<int>(spheres.size()));
 	raytracingShader->SetInt("cubeCount", static_cast<int>(cubes.size()));
+	raytracingShader->SetInt("meshCount", static_cast<int>(triangles.size())); // triangleCount indeed
 	raytracingShader->SetInt("maxBounceCount", Editor::Get().GetSettings().MaxBounces);
 	raytracingShader->SetInt("numberRaysPerPixel", Editor::Get().GetSettings().RaysPerPixel);
 	raytracingShader->SetFloat("divergeStrength", Editor::Get().GetSettings().DivergeStrength);
@@ -63,6 +77,9 @@ void RayTracer::Draw()
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, cubeSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, cubes.size() * sizeof(RaytracingCube), cubes.data(), GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, triangleSSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, triangles.size() * sizeof(RayTracingTriangle), triangles.data(), GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -128,7 +145,8 @@ void RayTracer::setupScreenQuad()
 	glBindVertexArray(0);
 }
 
-void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes)
+void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes,
+							 std::vector<RayTracingTriangle>& inout_triangles)
 {
 	for (Model* model : models)
 	{
@@ -166,6 +184,29 @@ void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 			raytracingCube.Material = material;
 
 			inout_cubes.push_back(raytracingCube);
+		}
+		else
+		{
+			RayTracingTriangle raytracingTriangle = {};
+			std::vector<Triangle> meshTriangles = model->GetTriangles();
+			std::vector<RayTracingTriangle> triangles = {};
+
+			// assert vertices.size() % 3 != 0
+			for (size_t i = 0; i < meshTriangles.size(); i++)
+			{
+				glm::vec3 A = model->transform->GetTransformMatrix() * glm::vec4(meshTriangles[i].A.Position, 1.0f);
+				glm::vec3 B = model->transform->GetTransformMatrix() * glm::vec4(meshTriangles[i].B.Position, 1.0f);
+				glm::vec3 C = model->transform->GetTransformMatrix() * glm::vec4(meshTriangles[i].C.Position, 1.0f);
+
+				glm::vec3 normalA = model->transform->GetTransformMatrix() * glm::vec4(meshTriangles[i].NormalA, 0);
+				glm::vec3 normalB = model->transform->GetTransformMatrix() * glm::vec4(meshTriangles[i].NormalB, 0);
+				glm::vec3 normalC = model->transform->GetTransformMatrix() * glm::vec4(meshTriangles[i].NormalC, 0);
+
+				RayTracingTriangle triangle = { A, B, C, normalA, normalB, normalC };
+				triangles.push_back(triangle);
+			}
+
+			inout_triangles.insert(inout_triangles.end(), triangles.begin(), triangles.end());
 		}
 	}
 }

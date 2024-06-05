@@ -6,6 +6,7 @@
 #include "data/Vertex.h"
 #include "data/Texture.h"
 #include "data/mesh/MeshData.h"
+#include "data/Triangle.h"
 
 #include "render/Shader.h"
 
@@ -24,6 +25,7 @@ public:
     
     virtual void Draw(Shader* shader);
     int GetNumberOfTriangles() const;
+    std::vector<Triangle> GetTriangles() const;
 
 protected:
     //  render data

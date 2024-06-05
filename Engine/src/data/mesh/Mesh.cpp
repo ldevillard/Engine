@@ -74,6 +74,23 @@ int Mesh::GetNumberOfTriangles() const
    return (int)Indices.size() / 3;
 }
 
+std::vector<Triangle> Mesh::GetTriangles() const
+{
+    std::vector<Triangle> triangles;
+
+    triangles.reserve(GetNumberOfTriangles());
+    for (int i = 0; i < Indices.size(); i += 3)
+    {
+        Vertex v1 = Vertices[Indices[i]];
+        Vertex v2 = Vertices[Indices[i + 1]];
+        Vertex v3 = Vertices[Indices[i + 2]];
+
+        triangles.push_back({ v1, v2, v3, v1.Normal, v2.Normal, v3.Normal});
+    }
+
+    return triangles;
+}
+
 #pragma endregion
 
 #pragma region Private Methods

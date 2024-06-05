@@ -84,6 +84,7 @@
     <ClInclude Include="include\data\physics\Ray.h" />
     <ClInclude Include="include\data\physics\RaycastHit.h" />
     <ClInclude Include="include\data\template\Singleton.h" />
+    <ClInclude Include="include\data\Triangle.h" />
     <ClInclude Include="include\data\Type.h" />
     <ClInclude Include="include\maths\Math.h" />
     <ClInclude Include="include\physics\Physics.h" />
