@@ -49,7 +49,15 @@ struct RayTracingTriangle
 
 struct RayTracingMesh
 {
+	int FirstTriangleIndex = 0;
+	int TriangleCount = 0;
 
+	alignas(16) glm::vec3 boundsMin = {};
+	alignas(16) glm::vec3 boundsMax = {};
+
+	alignas(16) glm::mat4 InverseTransformMatrix = {};
+
+	RaytracingMaterial Material = {};
 };
 
 class RayTracer
@@ -64,7 +72,7 @@ public:
 private:
 	static void setupScreenQuad();
 	static void getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes,
-							 std::vector<RayTracingTriangle>& inout_triangles);
+							 std::vector<RayTracingTriangle>& inout_triangles, std::vector<RayTracingMesh>& inout_meshes);
 	
 	static unsigned int frameCount;
 	static bool accumulate;

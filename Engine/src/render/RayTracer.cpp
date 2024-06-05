@@ -33,10 +33,10 @@ void RayTracer::Initialize(Shader* shader, ComputeShader* accumulate)
 	glGenBuffers(1, &triangleSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, triangleSSBO);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, triangleSSBO);
-	//
-	//glGenBuffers(1, &meshSSBO);
-	//glBindBuffer(GL_SHADER_STORAGE_BUFFER, meshSSBO);
-	//glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, meshSSBO);
+	
+	glGenBuffers(1, &meshSSBO);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, meshSSBO);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, meshSSBO);
 
 	setupScreenQuad();
 }
@@ -63,11 +63,12 @@ void RayTracer::Draw()
 	std::vector<RaytracingSphere> spheres = {};
 	std::vector<RaytracingCube> cubes = {};
 	std::vector<RayTracingTriangle> triangles = {};
-	getSceneData(models, spheres, cubes, triangles);
+	std::vector<RayTracingMesh> meshes = {};
+	getSceneData(models, spheres, cubes, triangles, meshes);
 
 	raytracingShader->SetInt("sphereCount", static_cast<int>(spheres.size()));
 	raytracingShader->SetInt("cubeCount", static_cast<int>(cubes.size()));
-	raytracingShader->SetInt("meshCount", static_cast<int>(triangles.size())); // triangleCount indeed
+	raytracingShader->SetInt("meshCount", static_cast<int>(meshes.size()));
 	raytracingShader->SetInt("maxBounceCount", Editor::Get().GetSettings().MaxBounces);
 	raytracingShader->SetInt("numberRaysPerPixel", Editor::Get().GetSettings().RaysPerPixel);
 	raytracingShader->SetFloat("divergeStrength", Editor::Get().GetSettings().DivergeStrength);
@@ -80,6 +81,9 @@ void RayTracer::Draw()
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, triangleSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, triangles.size() * sizeof(RayTracingTriangle), triangles.data(), GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, meshSSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, meshes.size() * sizeof(RayTracingMesh), meshes.data(), GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -146,7 +150,7 @@ void RayTracer::setupScreenQuad()
 }
 
 void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes,
-							 std::vector<RayTracingTriangle>& inout_triangles)
+							 std::vector<RayTracingTriangle>& inout_triangles, std::vector<RayTracingMesh>& inout_meshes)
 {
 	for (Model* model : models)
 	{
@@ -187,11 +191,11 @@ void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 		}
 		else
 		{
+			// Triangles part
 			RayTracingTriangle raytracingTriangle = {};
 			std::vector<Triangle> meshTriangles = model->GetTriangles();
 			std::vector<RayTracingTriangle> triangles = {};
 
-			// assert vertices.size() % 3 != 0
 			for (size_t i = 0; i < meshTriangles.size(); i++)
 			{
 				glm::vec3 A = model->transform->GetTransformMatrix() * glm::vec4(meshTriangles[i].A.Position, 1.0f);
@@ -206,7 +210,22 @@ void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 				triangles.push_back(triangle);
 			}
 
+		
+			// Mesh part 
+			RayTracingMesh raytracingMesh = {};
+			const OBoundingBox& obb = model->GetBoundingBox();
+
+			raytracingMesh.FirstTriangleIndex = static_cast<int>(inout_triangles.size());
+			raytracingMesh.TriangleCount = static_cast<int>(triangles.size());
+			raytracingMesh.boundsMin = obb.Min;
+			raytracingMesh.boundsMax = obb.Max;
+
+			raytracingMesh.InverseTransformMatrix = glm::inverse(model->transform->GetTransformMatrix());
+
+			raytracingMesh.Material = material;
+
 			inout_triangles.insert(inout_triangles.end(), triangles.begin(), triangles.end());
+			inout_meshes.push_back(raytracingMesh);
 		}
 	}
 }

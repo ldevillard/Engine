@@ -76,8 +76,9 @@ struct MeshInfo
 {
 	int firstTriangleIndex;
 	int triangleCount;
-	//float3 boundsMin;
-	//float3 boundsMax;
+	vec3 boundsMin;
+	vec3 boundsMax;
+	mat4 inverseTransform;
 	Material material;
 };
 
@@ -98,10 +99,10 @@ layout(std430, binding = 2) buffer triangleData
 {
 	Triangle triangles[];
 };
-//layout(std430, binding = 2) buffer meshData
-//{
-//	MeshInfo meshes[];
-//};
+layout(std430, binding = 3) buffer meshData
+{
+	MeshInfo meshes[];
+};
 
 uint NextRandom(inout uint state)
 {
@@ -275,6 +276,21 @@ HitInfo RayTriangle(Ray ray, Triangle triangle)
 	return hitInfo;
 }
 
+bool RayBoundingBox(Ray ray, vec3 boxMin, vec3 boxMax, mat4 txi)
+{
+	vec3 ro = vec3((txi * vec4(ray.origin, 1.0)).xyz);
+	vec3 rd = vec3((txi * vec4(ray.direction, 0.0)).xyz);
+
+	vec3 invDir = 1 / rd;
+	vec3 tMin = (boxMin - ro) * invDir;
+	vec3 tMax = (boxMax - ro) * invDir;
+	vec3 t1 = min(tMin, tMax);
+	vec3 t2 = max(tMin, tMax);
+	float tNear = max(max(t1.x, t1.y), t1.z);
+	float tFar = min(min(t2.x, t2.y), t2.z);
+	return tNear <= tFar;
+};
+
 HitInfo CalculateRayCollision(Ray ray)
 {
 	HitInfo hitInfo;
@@ -308,33 +324,24 @@ HitInfo CalculateRayCollision(Ray ray)
 		}
 	}
 
-	//for (int i = 0; i < meshCount; i++)
-	//{
-	//	MeshInfo meshInfo = meshes[i];
-	//
-	//	for (int j = 0; j < meshInfo.triangleCount; j++) 
-	//	{
-	//		int triIndex = meshInfo.firstTriangleIndex + j;
-	//		Triangle tri = triangles[triIndex];
-	//		HitInfo hit = RayTriangle(ray, tri);
-	//		
-	//		if (hit.hit && hit.distance < hitInfo.distance)
-	//		{
-	//			hitInfo = hit;
-	//			hitInfo.material = meshInfo.material;
-	//		}
-	//	}
-	//}
-
-	for (int j = 0; j < meshCount; j++) 
+	for (int i = 0; i < meshCount; i++)
 	{
-		Triangle tri = triangles[j];
-		HitInfo hit = RayTriangle(ray, tri);
-		
-		if (hit.hit && hit.distance < hitInfo.distance)
+		MeshInfo meshInfo = meshes[i];
+
+		if (!RayBoundingBox(ray, meshInfo.boundsMin, meshInfo.boundsMax, meshInfo.inverseTransform))
+			continue;
+	
+		for (int j = 0; j < meshInfo.triangleCount; j++) 
 		{
-			hitInfo = hit;
-			hitInfo.material = spheres[0].material;
+			int triIndex = meshInfo.firstTriangleIndex + j;
+			Triangle tri = triangles[triIndex];
+			HitInfo hit = RayTriangle(ray, tri);
+			
+			if (hit.hit && hit.distance < hitInfo.distance)
+			{
+				hitInfo = hit;
+				hitInfo.material = meshInfo.material;
+			}
 		}
 	}
 
