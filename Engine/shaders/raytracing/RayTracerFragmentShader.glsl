@@ -179,34 +179,6 @@ HitInfo RaySphere(Ray ray, vec3 sphereCenter, float sphereRadius)
 	return hitInfo;
 }
 
-vec3 ComputeCubeNormal(vec3 i, vec3 bmin, vec3 bmax)
-{
-    float epsilon = 0.001;
-
-    float cx = abs(i.x - bmin.x);
-    float fx = abs(i.x - bmax.x);
-    float cy = abs(i.y - bmin.y);
-    float fy = abs(i.y - bmax.y);
-    float cz = abs(i.z - bmin.z);
-    float fz = abs(i.z - bmax.z);
-
-    if(cx < epsilon)
-        return vec3(-1.0, 0.0, 0.0);
-    else if (fx < epsilon)
-        return vec3(1.0, 0.0, 0.0);
-    else if (cy < epsilon)
-        return vec3(0.0, -1.0, 0.0);
-    else if (fy < epsilon)
-        return vec3(0.0, 1.0, 0.0);
-    else if (cz < epsilon)
-        return vec3(0.0, 0.0, -1.0);
-    else if (fz < epsilon)
-        return vec3(0.0, 0.0, 1.0);
-    
-    return vec3(0.0, 0.0, 0.0);
-}
-
-
 HitInfo RayCube(Ray ray, Cube cube) // box in case
 {
 	HitInfo hitInfo;
@@ -238,7 +210,21 @@ HitInfo RayCube(Ray ray, Cube cube) // box in case
 		vec3 hitPointWorld = ray.origin + ray.direction * tNearMax;
 		hitInfo.hitPoint = hitPointWorld;
 		vec3 hitPointLocal = vec3((txi * vec4(hitPointWorld, 1.0)).xyz);
-		vec3 normal = ComputeCubeNormal(hitPointLocal, bmin, bmax);
+
+		// compute normal
+		vec3 normal = vec3(0);
+		vec3 center = (bmin + bmax) * 0.5;
+		vec3 dir = normalize(hitPointLocal - center);
+		
+		vec3 absDir = abs(dir);
+		
+		if (absDir.x > absDir.y && absDir.x > absDir.z)
+		    normal =  vec3(sign(dir.x), 0.0, 0.0);
+		else if (absDir.y > absDir.x && absDir.y > absDir.z)
+		    normal = vec3(0.0, sign(dir.y), 0.0);
+		else
+		    normal =  vec3(0.0, 0.0, sign(dir.z));
+
 		hitInfo.normal = normalize(vec3((cube.transform * vec4(normal, 0.0)).xyz));
 	}
 
