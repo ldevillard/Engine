@@ -107,6 +107,11 @@ int main()
 	Model::LoadPrimitives();
 	Editor::Initialize(window);
 
+	{
+	//	Entity* e = EntityManager::Get().CreateEntity("ZOB");
+	//	e->AddComponent<Model>("resources/models/other/Giant Worm Creature.obj");
+	}
+
 	// render loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -134,6 +139,7 @@ int main()
 
 		// unbind framebuffer
 		Editor::Get().GetSceneBuffer()->Unbind();
+		Editor::Get().GetSceneBuffer()->Blit();
 
 		// raytracing
 		if (Editor::Get().GetSettings().RayTracing)

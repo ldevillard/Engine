@@ -96,7 +96,7 @@ void Entity::ComputeOutline() const
     Editor::Get().RenderCamera(Outliner::OutlineShader);
     transform->Compute(Outliner::OutlineShader);
     
-	 model->ComputeOutline(Outliner::OutlineShader);
+	model->ComputeOutline(Outliner::OutlineShader);
 
     Outliner::Draw();
 

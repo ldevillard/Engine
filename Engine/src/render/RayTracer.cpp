@@ -89,6 +89,7 @@ void RayTracer::Draw()
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	Editor::Get().GetRaytracingBuffer()->Unbind();
+	Editor::Get().GetRaytracingBuffer()->Blit();
 
 	// accumulate rays 
 	if (Editor::Get().GetSettings().Accumulate)
@@ -113,7 +114,6 @@ void RayTracer::Draw()
 	{
 		accumulate = false;
 	}
-
 }
 
 void RayTracer::ResetFrameCount()

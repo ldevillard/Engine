@@ -52,11 +52,11 @@ void Editor::Initialize(GLFWwindow* win)
 
 	// setup
 	instance->editorCamera = new EditorCamera(glm::vec3(0.0f, 5.f, 30.0f));
-	instance->sceneBuffer = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
-	instance->raytracingBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT);
-	instance->accumulationBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT);
-	instance->outlineBuffer[0] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
-	instance->outlineBuffer[1] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT);
+	instance->sceneBuffer = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT, 4);
+	instance->raytracingBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT, 4);
+	instance->accumulationBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT, 4);
+	instance->outlineBuffer[0] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT, 4);
+	instance->outlineBuffer[1] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT, 4);
 	instance->inspector = Inspector();
 
 	instance->initialize();
@@ -224,11 +224,11 @@ void Editor::FramebufferSizeCallback(int width, int height)
 	RAYTRACED_SCENE_WIDTH = width;
 	RAYTRACED_SCENE_HEIGHT = height;
 
-	sceneBuffer->RescaleFrameBuffer(width, height);
-	raytracingBuffer->RescaleFrameBuffer(width, height);
-	accumulationBuffer->RescaleFrameBuffer(width, height);
-	outlineBuffer[0]->RescaleFrameBuffer(width, height);
-	outlineBuffer[1]->RescaleFrameBuffer(width, height);
+	sceneBuffer->RescaleFrameBuffer(width, height, 4);
+	raytracingBuffer->RescaleFrameBuffer(width, height, 4);
+	accumulationBuffer->RescaleFrameBuffer(width, height, 4);
+	outlineBuffer[0]->RescaleFrameBuffer(width, height, 4);
+	outlineBuffer[1]->RescaleFrameBuffer(width, height, 4);
 }
 
 void Editor::ScrollCallback(double xoffset, double yoffset)
