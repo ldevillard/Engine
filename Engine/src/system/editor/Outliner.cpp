@@ -11,7 +11,7 @@ Color Outliner::OutlineColor = glm::vec3(1.f, 0.565f, 0.161f);
 float Outliner::OutlineWidth = 0.04f;
 
 ScreenQuad Outliner::screenQuad = {};
-float Outliner::radius = 2.5f;
+float Outliner::radius = 2;
 
 #pragma region Static Methods
 
@@ -47,6 +47,9 @@ void Outliner::Reset()
 
 void Outliner::Draw()
 {
+	Editor::Get().GetOutlineBuffer(0)->Unbind();
+	Editor::Get().GetOutlineBuffer(0)->Blit();
+
 	// dillate outline
 	Editor::Get().GetOutlineBuffer(1)->Bind();
 	OutlineDilatingShader->Use();
@@ -58,8 +61,12 @@ void Outliner::Draw()
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
+	Editor::Get().GetOutlineBuffer(1)->Bind();
+	Editor::Get().GetOutlineBuffer(1)->Blit();
+
 	// bind to main frame buffer
 	Editor::Get().GetSceneBuffer()->Bind();
+	Editor::Get().GetSceneBuffer()->Blit();
 
 	OutlineBlitShader->SetWorkSize(glm::uvec2(SCR_WIDTH, SCR_HEIGHT));
 

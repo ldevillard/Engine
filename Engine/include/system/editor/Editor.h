@@ -27,6 +27,8 @@ inline unsigned int RAYTRACED_SCENE_HEIGHT = 720;
 inline unsigned int SCR_WIDTH = 1280;
 inline unsigned int SCR_HEIGHT = 720;
 
+inline unsigned int MULTISAMPLES = 4;
+
 struct EditorSettings
 {
 	// scene
