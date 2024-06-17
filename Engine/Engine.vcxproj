@@ -33,6 +33,7 @@
     <ClCompile Include="include\maths\glm\detail\glm.cpp" />
     <ClCompile Include="include\maths\glm\glm.cppm" />
     <ClCompile Include="src\component\physics\EditorCollider.cpp" />
+    <ClCompile Include="src\data\CubeMap.cpp" />
     <ClCompile Include="src\maths\Maths.cpp" />
     <ClCompile Include="src\physics\Physics.cpp" />
     <ClCompile Include="src\render\ComputeShader.cpp" />
@@ -81,6 +82,7 @@
     <ClInclude Include="..\imgui\imstb_textedit.h" />
     <ClInclude Include="..\imgui\imstb_truetype.h" />
     <ClInclude Include="include\component\physics\EditorCollider.h" />
+    <ClInclude Include="include\data\CubeMap.h" />
     <ClInclude Include="include\data\physics\Ray.h" />
     <ClInclude Include="include\data\physics\RaycastHit.h" />
     <ClInclude Include="include\data\template\Singleton.h" />
@@ -569,6 +571,8 @@
     <None Include="shaders\outline\OutlineVertexShader.glsl" />
     <None Include="shaders\raytracing\RayTracerFragmentShader.glsl" />
     <None Include="shaders\raytracing\RayTracerVertexShader.glsl" />
+    <None Include="shaders\skybox\SkyboxFragmentShader.glsl" />
+    <None Include="shaders\skybox\SkyboxVertexShader.glsl" />
     <None Include="shaders\VertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>

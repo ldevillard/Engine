@@ -222,6 +222,9 @@
     <ClCompile Include="src\utils\serializer\SerializerUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\data\CubeMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\imgui\imconfig.h">
@@ -1253,6 +1256,9 @@
     <ClInclude Include="include\data\Triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\data\CubeMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\VertexShader.glsl" />
@@ -1685,6 +1691,8 @@
     <None Include="shaders\raytracing\RayTracerVertexShader.glsl" />
     <None Include="shaders\raytracing\RayTracerFragmentShader.glsl" />
     <None Include="shaders\compute\AccumulateComputeShader.glsl" />
+    <None Include="shaders\skybox\SkyboxVertexShader.glsl" />
+    <None Include="shaders\skybox\SkyboxFragmentShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\awesomeface.png">

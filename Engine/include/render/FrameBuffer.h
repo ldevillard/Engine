@@ -17,6 +17,7 @@ public:
     void Bind() const;
     void Unbind() const;
     void Blit() const;
+    void ReverseBlit() const;
 
 private:
     unsigned int fbo;

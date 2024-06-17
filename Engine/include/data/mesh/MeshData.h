@@ -26,13 +26,65 @@ struct ScreenQuad
 
     float vertices[24] =
     {
-        // Positions       // Texture coordinates
-        -1.0f,  1.0f,      0.0f, 1.0f, // Top-left
-        -1.0f, -1.0f,      0.0f, 0.0f, // Top-right
-         1.0f, -1.0f,      1.0f, 0.0f, // Bottom-left
-        -1.0f,  1.0f,      0.0f, 1.0f, // Bottom-right
-         1.0f, -1.0f,      1.0f, 0.0f, // Bottom-right
-         1.0f,  1.0f,      1.0f, 1.0f  // Top-right
+        // positions       // texture coordinates
+        -1.0f,  1.0f,      0.0f, 1.0f, // top-left
+        -1.0f, -1.0f,      0.0f, 0.0f, // top-right
+         1.0f, -1.0f,      1.0f, 0.0f, // bottom-left
+        -1.0f,  1.0f,      0.0f, 1.0f, // bottom-right
+         1.0f, -1.0f,      1.0f, 0.0f, // bottom-right
+         1.0f,  1.0f,      1.0f, 1.0f  // top-right
+    };
+};
+
+struct ScreenCube
+{
+    unsigned int VAO = 0;
+    unsigned int VBO = 0;
+
+    float vertices[108] = 
+    {
+        // positions          
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        -1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f
     };
 };
 

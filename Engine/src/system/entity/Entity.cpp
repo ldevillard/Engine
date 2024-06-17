@@ -63,16 +63,6 @@ bool Entity::IsSelectedEntity() const
 
 void Entity::Compute()
 {
-    if (this == Editor::Get().GetSelectedEntity()) 
-    {
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glStencilMask(0xFF);
-    }
-    else
-    {
-        glStencilMask(0x00);
-    }
-
     transform->Compute(shader);
     
     for (Component* c : components)

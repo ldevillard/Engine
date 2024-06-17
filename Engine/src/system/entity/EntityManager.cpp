@@ -68,8 +68,6 @@ void EntityManager::ComputeEntities() const
 	{
 		e->Compute();
 	}
-
-	ComputeSelectedEntity();
 }
 
 void EntityManager::ComputeSelectedEntity() const

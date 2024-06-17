@@ -14,21 +14,22 @@
 #include <maths/glm/gtc/type_ptr.hpp>
 
 // engine
-#include "system/Input.h"
-#include "system/Time.h"
-#include "system/editor/Gizmo.h"
-#include "system/editor/Outliner.h"
-#include "system/editor/Editor.h"
-#include "system/entity/EntityManager.h"
-#include "data/Texture.h"
-#include "data/Material.h"
+#include "component/Light.h"
 #include "component/Model.h"
 #include "data/Color.h"
-#include "component/Light.h"
-#include "render/Shader.h"
+#include "data/CubeMap.h"
+#include "data/Material.h"
+#include "data/Texture.h"
+#include "debug/DebugMenu.h"
 #include "render/ComputeShader.h"
 #include "render/RayTracer.h"
-#include "debug/DebugMenu.h"
+#include "render/Shader.h"
+#include "system/editor/Editor.h"
+#include "system/entity/EntityManager.h"
+#include "system/editor/Gizmo.h"
+#include "system/editor/Outliner.h"
+#include "system/Input.h"
+#include "system/Time.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -94,10 +95,22 @@ int main()
 	Shader gizmoShader("shaders/gizmo/GizmoVertexShader.glsl", "shaders/gizmo/GizmoFragmentShader.glsl");
 	Shader outlineShader("shaders/outline/OutlineVertexShader.glsl", "shaders/outline/OutlineFragmentShader.glsl");
 	Shader outlineDilateShader("shaders/outline/OutlineQuadVertexShader.glsl", "shaders/outline/OutlineDilatingFragmentShader.glsl");
+	Shader cubeMapShader("shaders/skybox/SkyboxVertexShader.glsl", "shaders/skybox/SkyboxFragmentShader.glsl");
 	ComputeShader outlineBlitShader("shaders/compute/BlitTexturesComputeShader.glsl", glm::uvec2(SCENE_WIDTH, SCENE_HEIGHT));
 	
 	Shader raytracingShader("shaders/raytracing/RayTracerVertexShader.glsl", "shaders/raytracing/RayTracerFragmentShader.glsl");
 	ComputeShader accumulateShader("shaders/compute/AccumulateComputeShader.glsl", glm::uvec2(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT));
+	
+	const std::vector<std::string> faces = 
+	{
+		"resources/skybox/right.png",
+		"resources/skybox/left.png",
+		"resources/skybox/top.png",
+		"resources/skybox/bottom.png",
+		"resources/skybox/front.png",
+		"resources/skybox/back.png",
+	};
+	CubeMap cubemap(faces, &cubeMapShader);
 
 	// initialize systems
 	Outliner::Initialize(&outlineShader, &outlineDilateShader, &outlineBlitShader);
@@ -131,6 +144,8 @@ int main()
 		
 		Editor::Get().RenderCamera(&shader);
 		EntityManager::Get().ComputeEntities();
+		cubemap.Draw();
+		EntityManager::Get().ComputeSelectedEntity();
 
 		// unbind framebuffer
 		Editor::Get().GetSceneBuffer()->Unbind();

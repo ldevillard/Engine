@@ -1,5 +1,8 @@
 #include "data/Texture.h"
 
+#include <utils/glad/glad.h> // include glad to get all the required OpenGL headers
+#include <render/stb_image.h>
+
 #pragma region Public Methods
 
 Texture::Texture(const char* texturePath, std::string name, TextureParam params) : Name(name), ID(0), Path(texturePath)

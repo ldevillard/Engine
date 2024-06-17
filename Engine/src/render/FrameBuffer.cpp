@@ -128,4 +128,12 @@ void FrameBuffer::Blit() const
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void FrameBuffer::ReverseBlit() const
+{
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, msaaFBO);
+    glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 #pragma endregion
