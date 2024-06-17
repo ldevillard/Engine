@@ -9,6 +9,8 @@ enum PrimitiveType
     CubePrimitive,
     SpherePrimitive,
     PlanePrimitive,
+    CylinderPrimitive,
+    TorusPrimitive
 };
 
 enum GizmoType

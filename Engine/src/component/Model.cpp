@@ -16,6 +16,8 @@ void Model::LoadPrimitives()
 	PrimitivesModels[CubePrimitive] = std::make_unique<Model>("resources/models/primitive/cube.obj", Material::Default);
 	PrimitivesModels[SpherePrimitive] = std::make_unique<Model>("resources/models/primitive/sphere.obj", Material::Default);
     PrimitivesModels[PlanePrimitive] = std::make_unique<Model>("resources/models/primitive/plane.obj", Material::Default);
+    PrimitivesModels[CylinderPrimitive] = std::make_unique<Model>("resources/models/primitive/cylinder.obj", Material::Default);
+    PrimitivesModels[TorusPrimitive] = std::make_unique<Model>("resources/models/primitive/torus.obj", Material::Default);
 }
 
 #pragma endregion
@@ -204,21 +206,13 @@ void Model::loadModel(std::string path)
 
 void Model::loadPrimitiveModel(PrimitiveType type)
 {
-    switch (type)
+    if (PrimitivesModels[type] == nullptr)
     {
-    case CubePrimitive:
-        meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::CubePrimitive]->meshes[0]));
-        break;
-    case SpherePrimitive:
-        meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::SpherePrimitive]->meshes[0]));
-        break;
-    case PlanePrimitive:
-        meshes.push_back(Mesh(PrimitivesModels[PrimitiveType::PlanePrimitive]->meshes[0]));
-        break;
-    default:
         std::cerr << "Primitive type not found" << std::endl;
-        break;
+        return;
     }
+
+    meshes.push_back(Mesh(PrimitivesModels[type]->meshes[0]));
 }
 
 void Model::processNode(aiNode* node, const aiScene* scene)

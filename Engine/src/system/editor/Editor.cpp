@@ -593,6 +593,30 @@ void Editor::showHierarchyContextMenu()
 					entity->AddComponent<Model>(CubePrimitive);
 					SelectEntity(entity);
 				}
+				if (ImGui::MenuItem("Plane"))
+				{
+					const std::string name = EntityManager::Get().GenerateNewEntityName("Plane");
+					Entity* entity = EntityManager::Get().CreateEntity(name);
+					entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 15.0f);
+					entity->AddComponent<Model>(PlanePrimitive);
+					SelectEntity(entity);
+				}
+				if (ImGui::MenuItem("Cylinder"))
+				{
+					const std::string name = EntityManager::Get().GenerateNewEntityName("Cylinder");
+					Entity* entity = EntityManager::Get().CreateEntity(name);
+					entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 15.0f);
+					entity->AddComponent<Model>(CylinderPrimitive);
+					SelectEntity(entity);
+				}
+				if (ImGui::MenuItem("Torus"))
+				{
+					const std::string name = EntityManager::Get().GenerateNewEntityName("Torus");
+					Entity* entity = EntityManager::Get().CreateEntity(name);
+					entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 15.0f);
+					entity->AddComponent<Model>(TorusPrimitive);
+					SelectEntity(entity);
+				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndPopup();
