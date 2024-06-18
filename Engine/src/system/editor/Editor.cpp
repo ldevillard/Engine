@@ -577,6 +577,7 @@ void Editor::showHierarchyContextMenu()
 		{
 			if (ImGui::BeginMenu("Create"))
 			{
+				// TODO make a method instead of redondant code
 				if (ImGui::MenuItem("Sphere"))
 				{
 					const std::string name = EntityManager::Get().GenerateNewEntityName("Sphere");

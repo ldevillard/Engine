@@ -25,11 +25,6 @@ void DebugMenu::Render(FrameBuffer& frameBuffer)
    if (*parameters.DeltaTime > 0)
       fps = 1.0f / *parameters.DeltaTime;
 
-  // if (*parameters.Wireframe)
-      //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-   //else
-   //   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
    ImGui::Begin("Editor");
    ImGui::Text("FPS: %.1f", fps);
    ImGui::Text("Triangles: %d", *parameters.TrianglesNumber);

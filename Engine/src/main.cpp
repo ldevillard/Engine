@@ -125,8 +125,9 @@ int main()
 	{
 		// per-frame time logic
 		Time::Update();
+		EditorSettings settings = Editor::Get().GetSettings();
 
-		if (Editor::Get().GetSettings().Wireframe)
+		if (settings.Wireframe)
 		{
 			glDisable(GL_CULL_FACE);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -149,18 +150,15 @@ int main()
 
 		// unbind framebuffer
 		Editor::Get().GetSceneBuffer()->Unbind();
+		
 		// set the multisampled texture to the rendered texture only if there's no selected entity because outliner modifying de raw texutre directly
 		// TODO encapsulate all these Editor calls in the Editor class 
-		if (Editor::Get().GetSelectedEntity() == nullptr)
-		{
+		if (Editor::Get().GetSelectedEntity() == nullptr || settings.Wireframe)
 			Editor::Get().GetSceneBuffer()->Blit(); 
-		}
 
 		// raytracing
-		if (Editor::Get().GetSettings().RayTracing)
-		{
+		if (settings.RayTracing)
 			RayTracer::Draw();
-		}
 
 		// editor
 		Editor::Get().RenderEditor();
