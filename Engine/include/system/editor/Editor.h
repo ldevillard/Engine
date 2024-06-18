@@ -18,6 +18,8 @@
 #include "render/FrameBuffer.h"
 #include "data/template/Singleton.h"
 
+class CubeMap;
+
 inline unsigned int SCENE_WIDTH = 1280;
 inline unsigned int SCENE_HEIGHT = 720;
 
@@ -46,6 +48,7 @@ struct EditorSettings
 	bool Accumulate = false;
 };
 
+// TODO: Think about split this class to not centralize all the logic here 
 class Editor : public Singleton<Editor>
 {
 public:
@@ -62,6 +65,7 @@ public:
 	FrameBuffer* GetOutlineBuffer(int idx) const;
 	const Entity* GetSelectedEntity() const;
 
+	void RenderFrame(Shader* shader, CubeMap* cubemap);
 	void RenderCamera(Shader* shader);
 	void RenderEditor();
 	void ProcessInputs();

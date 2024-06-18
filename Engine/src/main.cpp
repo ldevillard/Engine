@@ -138,23 +138,8 @@ int main()
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
-		// render
-		Editor::Get().GetSceneBuffer()->Bind(); // bind to framebuffer
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		
-		Editor::Get().RenderCamera(&shader);
-		EntityManager::Get().ComputeEntities();
-		cubemap.Draw();
-		EntityManager::Get().ComputeSelectedEntity();
-
-		// unbind framebuffer
-		Editor::Get().GetSceneBuffer()->Unbind();
-		
-		// set the multisampled texture to the rendered texture only if there's no selected entity because outliner modifying de raw texutre directly
-		// TODO encapsulate all these Editor calls in the Editor class 
-		if (Editor::Get().GetSelectedEntity() == nullptr || settings.Wireframe)
-			Editor::Get().GetSceneBuffer()->Blit(); 
+		// 3D rendering
+		Editor::Get().RenderFrame(&shader, &cubemap);
 
 		// raytracing
 		if (settings.RayTracing)
@@ -163,12 +148,12 @@ int main()
 		// editor
 		Editor::Get().RenderEditor();
 
-		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	// glfw: terminate, clearing all previously allocated GLFW resources.
+	// terminate, clearing all previously allocated GLFW resources.
 	glfwDestroyWindow(window);
 	glfwTerminate();
 

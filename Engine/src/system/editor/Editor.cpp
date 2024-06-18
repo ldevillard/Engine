@@ -2,12 +2,13 @@
 
 #include <glfw3.h>
 
+#include "data/CubeMap.h"
 #include "maths/Math.h"
 #include "physics/Physics.h"
 #include "render/RayTracer.h"
-#include "system/Time.h"
-#include "system/Input.h"
 #include "system/entity/EntityManager.h"
+#include "system/Input.h"
+#include "system/Time.h"
 #include "utils/ImFileDialog.h"
 #include "utils/ImGui_Utils.h"
 #include "utils/serializer/Serializer.h"
@@ -171,6 +172,25 @@ void Editor::RenderEditor()
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Editor::RenderFrame(Shader* shader, CubeMap* cubemap)
+{
+	GetSceneBuffer()->Bind(); // bind to framebuffer
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	Editor::Get().RenderCamera(shader);
+	EntityManager::Get().ComputeEntities();
+	cubemap->Draw();
+	EntityManager::Get().ComputeSelectedEntity();
+
+	// unbind framebuffer
+	Editor::Get().GetSceneBuffer()->Unbind();
+
+	// set the multisampled texture to the rendered texture only if there's no selected entity because outliner modifying de raw texutre directly
+	if (Editor::Get().GetSelectedEntity() == nullptr || parameters.Wireframe)
+		Editor::Get().GetSceneBuffer()->Blit();
 }
 
 #pragma endregion
