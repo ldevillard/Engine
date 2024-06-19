@@ -27,7 +27,7 @@ const BoundingBox& EditorCollider::GetBoundingBox() const
 
 void EditorCollider::UpdateBoundingBox(const std::vector<Mesh>& meshes)
 {
-    for (Mesh mesh : meshes)
+    for (const Mesh& mesh : meshes)
         boundingBox.InsertMesh(mesh);
 }
 

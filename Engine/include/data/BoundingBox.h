@@ -19,11 +19,9 @@ public:
 	BoundingBox();
 	BoundingBox(const glm::vec3& min, const glm::vec3& max);
 
-	void InsertTriangle(const Triangle& triangle);
 	void InsertMesh(const Mesh& mesh);
+	void InsertTriangle(const Triangle& triangle);
+	void InsertPoint(const glm::vec3& point);
 
 	void Draw(const Transform& transform, const Color& color = Color::Green) const;
-
-private:
-	void insertPoint(const glm::vec3& point);
 };

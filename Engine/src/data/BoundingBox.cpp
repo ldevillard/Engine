@@ -21,17 +21,28 @@ BoundingBox::BoundingBox(const glm::vec3& min, const glm::vec3& max) :
 {
 }
 
-void BoundingBox::InsertTriangle(const Triangle& triangle)
-{
-    insertPoint(triangle.A.Position);
-    insertPoint(triangle.B.Position);
-    insertPoint(triangle.C.Position);
-}
-
 void BoundingBox::InsertMesh(const Mesh& mesh)
 {
-    for (Triangle triangle : mesh.GetTriangles())
+    for (const Triangle& triangle : mesh.GetTriangles())
         InsertTriangle(triangle);
+}
+
+void BoundingBox::InsertTriangle(const Triangle& triangle)
+{
+    InsertPoint(triangle.A.Position);
+    InsertPoint(triangle.B.Position);
+    InsertPoint(triangle.C.Position);
+}
+
+void BoundingBox::InsertPoint(const glm::vec3& point)
+{
+    Min.x = std::min(Min.x, point.x);
+    Min.y = std::min(Min.y, point.y);
+    Min.z = std::min(Min.z, point.z);
+
+    Max.x = std::max(Max.x, point.x);
+    Max.y = std::max(Max.y, point.y);
+    Max.z = std::max(Max.z, point.z);
 }
 
 // Apply the transformation to the bounding box and draw it
@@ -56,21 +67,6 @@ void BoundingBox::Draw(const Transform& transform, const Color& color) const
 
    if (Editor::Get().GetSettings().BoundingBoxGizmo)
         Gizmo::DrawWireCube(color, tr);
-}
-
-#pragma endregion
-
-#pragma region Private Methods
-
-void BoundingBox::insertPoint(const glm::vec3& point)
-{
-    Min.x = std::min(Min.x, point.x);
-    Min.y = std::min(Min.y, point.y);
-    Min.z = std::min(Min.z, point.z);
-
-    Max.x = std::max(Max.x, point.x);
-    Max.y = std::max(Max.y, point.y);
-    Max.z = std::max(Max.z, point.z);
 }
 
 #pragma endregion
