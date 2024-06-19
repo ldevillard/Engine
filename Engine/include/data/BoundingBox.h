@@ -19,6 +19,8 @@ public:
 	BoundingBox();
 	BoundingBox(const glm::vec3& min, const glm::vec3& max);
 
+	glm::vec3 GetSize() const;
+
 	void InsertMesh(const Mesh& mesh);
 	void InsertTriangle(const Triangle& triangle);
 	void InsertPoint(const glm::vec3& point);
