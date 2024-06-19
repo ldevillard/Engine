@@ -3,8 +3,11 @@
 #include <maths/glm/glm.hpp>
 #include <maths/glm/gtc/matrix_transform.hpp>
 
-#include "component/Transform.h"
 #include "data/Color.h"
+
+class Mesh;
+class Transform;
+struct Triangle;
 
 class BoundingBox
 {
@@ -16,5 +19,11 @@ public:
 	BoundingBox();
 	BoundingBox(const glm::vec3& min, const glm::vec3& max);
 
-	void DrawDebug(const Transform& transform, const Color& color = Color::Green);
+	void InsertTriangle(const Triangle& triangle);
+	void InsertMesh(const Mesh& mesh);
+
+	void Draw(const Transform& transform, const Color& color = Color::Green) const;
+
+private:
+	void insertPoint(const glm::vec3& point);
 };

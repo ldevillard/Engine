@@ -1,7 +1,9 @@
 #include "component/physics/EditorCollider.h"
 
-#include "system/entity/Entity.h"
+#include "component/Transform.h"
+#include "data/mesh/Mesh.h"
 #include "physics/Physics.h"
+#include "system/entity/Entity.h"
 
 #pragma region Public Methods
 
@@ -15,7 +17,7 @@ EditorCollider::EditorCollider(const EditorCollider& other) : boundingBox(other.
 
 void EditorCollider::ApplyTransform(const Transform& transform)
 {
-	boundingBox.DrawDebug(transform);
+	boundingBox.Draw(transform);
 }
 
 const BoundingBox& EditorCollider::GetBoundingBox() const
@@ -23,9 +25,10 @@ const BoundingBox& EditorCollider::GetBoundingBox() const
 	return boundingBox;
 }
 
-void EditorCollider::SetBoundingBox(const BoundingBox& bb)
+void EditorCollider::UpdateBoundingBox(const std::vector<Mesh>& meshes)
 {
-	boundingBox = bb;
+    for (Mesh mesh : meshes)
+        boundingBox.InsertMesh(mesh);
 }
 
 bool EditorCollider::IntersectRay(const Ray& ray, RaycastHit& outRaycastHit) const

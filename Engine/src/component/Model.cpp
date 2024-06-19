@@ -135,7 +135,7 @@ void Model::SetMaterialFromName(std::string name)
 void Model::SetEditorCollider(EditorCollider* cl)
 {
     Component::SetEditorCollider(cl);
-	processOBB();
+	updateBoundingBox();
 }
 
 nlohmann::ordered_json Model::Serialize() const
@@ -174,19 +174,9 @@ void Model::draw()
         meshes[i].Draw(shader);
 }
 
-void Model::processOBB()
+void Model::updateBoundingBox()
 {
-    BoundingBox obb = editorCollider->GetBoundingBox();
-    for (Mesh mesh : meshes)
-    {
-        for (const Vertex& vertex : mesh.Vertices)
-        {
-            obb.Min = glm::min(obb.Min, vertex.Position);
-            obb.Max = glm::max(obb.Max, vertex.Position);
-		}
-	}
-    obb.Center = (obb.Min + obb.Max) * 0.5f;
-    editorCollider->SetBoundingBox(obb);
+    editorCollider->UpdateBoundingBox(meshes);
 }
 
 void Model::loadModel(std::string path)

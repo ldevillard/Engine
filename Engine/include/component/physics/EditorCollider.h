@@ -5,6 +5,7 @@
 #include "data/BoundingBox.h"
 
 class Entity;
+class Mesh;
 struct Ray;
 struct RaycastHit;
 class Transform;
@@ -18,7 +19,7 @@ public:
 	void ApplyTransform(const Transform& transform);
 	
 	const BoundingBox& GetBoundingBox() const;
-	void SetBoundingBox(const BoundingBox& bb);
+	void UpdateBoundingBox(const std::vector<Mesh>& meshes);
 
 	bool IntersectRay(const Ray& ray, RaycastHit& outRaycastHit) const;
 

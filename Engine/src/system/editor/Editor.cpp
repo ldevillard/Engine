@@ -2,6 +2,7 @@
 
 #include <glfw3.h>
 
+#include "component/Transform.h"
 #include "data/CubeMap.h"
 #include "maths/Math.h"
 #include "physics/Physics.h"

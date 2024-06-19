@@ -1,7 +1,9 @@
 #include "system/editor/Inspector.h"
-#include "system/editor/Editor.h"
 
 #include <algorithm>
+
+#include "component/Transform.h"
+#include "system/editor/Editor.h"
 
 #pragma region Public Methods
 

@@ -1,5 +1,6 @@
 #include "render/RayTracer.h"
 
+#include "component/Transform.h"
 #include "data/Triangle.h"
 #include "system/editor/Editor.h"
 #include "system/entity/EntityManager.h"

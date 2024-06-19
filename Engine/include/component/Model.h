@@ -60,7 +60,7 @@ private:
 
     Material material = Material::Default;
 
-    void processOBB();
+    void updateBoundingBox();
     void loadModel(std::string path);
     void loadPrimitiveModel(PrimitiveType type);
     void processNode(aiNode* node, const aiScene* scene);

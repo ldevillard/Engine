@@ -1,4 +1,7 @@
 #include "data/BoundingBox.h"
+
+#include "component/Transform.h"
+#include "data/Triangle.h"
 #include "system/editor/Gizmo.h"
 #include "system/editor/Editor.h"
 
@@ -18,8 +21,21 @@ BoundingBox::BoundingBox(const glm::vec3& min, const glm::vec3& max) :
 {
 }
 
+void BoundingBox::InsertTriangle(const Triangle& triangle)
+{
+    insertPoint(triangle.A.Position);
+    insertPoint(triangle.B.Position);
+    insertPoint(triangle.C.Position);
+}
+
+void BoundingBox::InsertMesh(const Mesh& mesh)
+{
+    for (Triangle triangle : mesh.GetTriangles())
+        InsertTriangle(triangle);
+}
+
 // Apply the transformation to the bounding box and draw it
-void BoundingBox::DrawDebug(const Transform& transform, const Color& color)
+void BoundingBox::Draw(const Transform& transform, const Color& color) const
 {
     Transform tr(transform);
 
@@ -40,6 +56,21 @@ void BoundingBox::DrawDebug(const Transform& transform, const Color& color)
 
    if (Editor::Get().GetSettings().BoundingBoxGizmo)
         Gizmo::DrawWireCube(color, tr);
+}
+
+#pragma endregion
+
+#pragma region Private Methods
+
+void BoundingBox::insertPoint(const glm::vec3& point)
+{
+    Min.x = std::min(Min.x, point.x);
+    Min.y = std::min(Min.y, point.y);
+    Min.z = std::min(Min.z, point.z);
+
+    Max.x = std::max(Max.x, point.x);
+    Max.y = std::max(Max.y, point.y);
+    Max.z = std::max(Max.z, point.z);
 }
 
 #pragma endregion
