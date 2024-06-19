@@ -174,9 +174,11 @@ void Model::draw()
         meshes[i].Draw(shader);
 }
 
+// TODO rename in updateBoundingVolume
 void Model::updateBoundingBox()
 {
     editorCollider->UpdateBoundingBox(meshes);
+    editorCollider->UpdateBVH(meshes);
 }
 
 void Model::loadModel(std::string path)

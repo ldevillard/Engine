@@ -21,6 +21,11 @@ BoundingBox::BoundingBox(const glm::vec3& min, const glm::vec3& max) :
 {
 }
 
+glm::vec3 BoundingBox::GetSize() const
+{
+    return Max - Min;
+}
+
 void BoundingBox::InsertMesh(const Mesh& mesh)
 {
     for (const Triangle& triangle : mesh.GetTriangles())
@@ -43,6 +48,8 @@ void BoundingBox::InsertPoint(const glm::vec3& point)
     Max.x = std::max(Max.x, point.x);
     Max.y = std::max(Max.y, point.y);
     Max.z = std::max(Max.z, point.z);
+
+    Center = (Min + Max) * 0.5f;
 }
 
 // Apply the transformation to the bounding box and draw it

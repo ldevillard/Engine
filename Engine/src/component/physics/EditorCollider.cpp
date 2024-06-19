@@ -15,9 +15,11 @@ EditorCollider::EditorCollider(const EditorCollider& other) : boundingBox(other.
 {
 }
 
+// TODO rename in draw
 void EditorCollider::ApplyTransform(const Transform& transform)
 {
 	boundingBox.Draw(transform);
+    bvh.DrawNodes(transform);
 }
 
 const BoundingBox& EditorCollider::GetBoundingBox() const
@@ -29,6 +31,11 @@ void EditorCollider::UpdateBoundingBox(const std::vector<Mesh>& meshes)
 {
     for (const Mesh& mesh : meshes)
         boundingBox.InsertMesh(mesh);
+}
+
+void EditorCollider::UpdateBVH(const std::vector<Mesh>& meshes)
+{
+    bvh.Update(meshes);
 }
 
 bool EditorCollider::IntersectRay(const Ray& ray, RaycastHit& outRaycastHit) const
