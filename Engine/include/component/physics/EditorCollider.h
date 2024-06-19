@@ -2,7 +2,7 @@
 
 #include <maths/glm/glm.hpp>
 
-#include "data/OBoundingBox.h"
+#include "data/BoundingBox.h"
 
 class Entity;
 struct Ray;
@@ -17,13 +17,13 @@ public:
 
 	void ApplyTransform(const Transform& transform);
 	
-	const OBoundingBox& GetBoundingBox() const;
-	void SetBoundingBox(const OBoundingBox& bb);
+	const BoundingBox& GetBoundingBox() const;
+	void SetBoundingBox(const BoundingBox& bb);
 
 	bool IntersectRay(const Ray& ray, RaycastHit& outRaycastHit) const;
 
 	Entity* entity = nullptr;
 
 private:
-	OBoundingBox boundingBox;
+	BoundingBox boundingBox;
 };

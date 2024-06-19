@@ -33,7 +33,8 @@ public:
 	Transform* transform = nullptr;
 
 	void Compute();
-	void ComputeOutline() const;
+	// return true if the outline is computed successfully
+	bool ComputeOutline() const;
 
 	// serialization
 	nlohmann::ordered_json Serialize() const;

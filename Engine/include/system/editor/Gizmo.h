@@ -21,6 +21,8 @@ public:
 	static void DrawArrow(const Color& color = Color(), Transform transform = Transform());
 	static void DrawWireConeFrustum(const Color& color = Color(), const Transform& transform = Transform());
 
+	static constexpr float GIZMO_WIDTH = 2;
+
 private:
 	static void bindShader(const Color& color, const Transform& transform);
 

@@ -71,12 +71,12 @@ void Entity::Compute()
     editorCollider->ApplyTransform(*transform);
 }
 
-void Entity::ComputeOutline() const
+bool Entity::ComputeOutline() const
 {
     Model* model = nullptr;
     if (!TryGetComponent<Model>(model))
     {
-        return;
+        return false;
     }
 
     // setup stencil buffer and depth buffer for outline
@@ -92,6 +92,7 @@ void Entity::ComputeOutline() const
 
     // reset them
     Outliner::Reset();
+    return true;
 }
 
 nlohmann::ordered_json Entity::Serialize() const

@@ -72,7 +72,7 @@ Material& Model::GetMaterial()
 	return material;
 }
 
-const OBoundingBox& Model::GetBoundingBox() const
+const BoundingBox& Model::GetBoundingBox() const
 {
    return editorCollider->GetBoundingBox();
 }
@@ -176,7 +176,7 @@ void Model::draw()
 
 void Model::processOBB()
 {
-    OBoundingBox obb = editorCollider->GetBoundingBox();
+    BoundingBox obb = editorCollider->GetBoundingBox();
     for (Mesh mesh : meshes)
     {
         for (const Vertex& vertex : mesh.Vertices)

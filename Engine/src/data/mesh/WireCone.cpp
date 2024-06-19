@@ -1,5 +1,7 @@
 #include "data/mesh/WireCone.h"
 
+#include "system/editor/Gizmo.h"
+
 #pragma region Public Methods
 
 WireCone::WireCone() : Mesh()
@@ -12,7 +14,7 @@ WireCone::WireCone() : Mesh()
 void WireCone::Draw(Shader* shader)
 {
 	glBindVertexArray(VAO);
-	glLineWidth(3); // maybe set up in a constant file
+	glLineWidth(Gizmo::GIZMO_WIDTH); // maybe set up in a constant file
 	glDrawElements(GL_LINES, static_cast<GLsizei>(Indices.size()), GL_UNSIGNED_INT, 0);
 	glLineWidth(1); // reset to default
 	glBindVertexArray(0);

@@ -7,7 +7,7 @@
 #include "data/mesh/Mesh.h"
 #include "data/Material.h"
 #include "data/mesh/MeshData.h"
-#include "data/OBoundingBox.h"
+#include "data/BoundingBox.h"
 #include "data/Triangle.h"
 
 // assimp
@@ -30,7 +30,7 @@ public:
     std::vector<Triangle> GetTriangles() const;
 
     Material& GetMaterial();
-    const OBoundingBox& GetBoundingBox() const;
+    const BoundingBox& GetBoundingBox() const;
 
     void Compute() override;
     Component* Clone() override;

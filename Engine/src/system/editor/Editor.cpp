@@ -183,13 +183,13 @@ void Editor::RenderFrame(Shader* shader, CubeMap* cubemap)
 	Editor::Get().RenderCamera(shader);
 	EntityManager::Get().ComputeEntities();
 	cubemap->Draw();
-	EntityManager::Get().ComputeSelectedEntity();
+	bool success = EntityManager::Get().ComputeSelectedEntity();
 
 	// unbind framebuffer
 	Editor::Get().GetSceneBuffer()->Unbind();
 
 	// set the multisampled texture to the rendered texture only if there's no selected entity because outliner modifying de raw texutre directly
-	if (Editor::Get().GetSelectedEntity() == nullptr || parameters.Wireframe)
+	if (!success)
 		Editor::Get().GetSceneBuffer()->Blit();
 }
 
@@ -357,6 +357,14 @@ void Editor::renderTopBar()
 			if (ImGui::MenuItem("Load Scene"))
 			{
 				ifd::FileDialog::Instance().Open("LoadSceneDialog", "Load Scene", "Scene file (*.devil){.devil},.*");
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Tools"))
+		{
+			if (ImGui::MenuItem("Logger"))
+			{
+
 			}
 			ImGui::EndMenu();
 		}

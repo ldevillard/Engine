@@ -179,7 +179,7 @@ void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 		else if (model->ModelType == PrimitiveType::CubePrimitive)
 		{
 			RaytracingCube raytracingCube = {};
-			const OBoundingBox& obb = model->GetBoundingBox();
+			const BoundingBox& obb = model->GetBoundingBox();
 
 			raytracingCube.Min = obb.Min;
 			raytracingCube.Max = obb.Max;
@@ -213,7 +213,7 @@ void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 		
 			// Mesh part 
 			RayTracingMesh raytracingMesh = {};
-			const OBoundingBox& obb = model->GetBoundingBox();
+			const BoundingBox& obb = model->GetBoundingBox();
 
 			raytracingMesh.FirstTriangleIndex = static_cast<int>(inout_triangles.size());
 			raytracingMesh.TriangleCount = static_cast<int>(triangles.size());

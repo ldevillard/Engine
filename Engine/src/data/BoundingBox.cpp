@@ -1,17 +1,17 @@
-#include "data/OBoundingBox.h"
+#include "data/BoundingBox.h"
 #include "system/editor/Gizmo.h"
 #include "system/editor/Editor.h"
 
 #pragma region Public Methods
 
-OBoundingBox::OBoundingBox() :
+BoundingBox::BoundingBox() :
 	Min(glm::vec3(0.5f)),
 	Max(glm::vec3(-0.5f)),
 	Center(glm::vec3(0.0f))
 {
 }
 
-OBoundingBox::OBoundingBox(const glm::vec3& min, const glm::vec3& max) :
+BoundingBox::BoundingBox(const glm::vec3& min, const glm::vec3& max) :
 	Min(min),
 	Max(max),
 	Center((min + max) * 0.5f)
@@ -19,7 +19,7 @@ OBoundingBox::OBoundingBox(const glm::vec3& min, const glm::vec3& max) :
 }
 
 // Apply the transformation to the bounding box and draw it
-void OBoundingBox::ApplyTransform(const Transform& transform)
+void BoundingBox::DrawDebug(const Transform& transform, const Color& color)
 {
     Transform tr(transform);
 
@@ -39,7 +39,7 @@ void OBoundingBox::ApplyTransform(const Transform& transform)
     tr.Position = obbCenter;
 
    if (Editor::Get().GetSettings().BoundingBoxGizmo)
-        Gizmo::DrawWireCube(Color::Green, tr);
+        Gizmo::DrawWireCube(color, tr);
 }
 
 #pragma endregion

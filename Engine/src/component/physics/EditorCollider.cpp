@@ -15,15 +15,15 @@ EditorCollider::EditorCollider(const EditorCollider& other) : boundingBox(other.
 
 void EditorCollider::ApplyTransform(const Transform& transform)
 {
-	boundingBox.ApplyTransform(transform);
+	boundingBox.DrawDebug(transform);
 }
 
-const OBoundingBox& EditorCollider::GetBoundingBox() const
+const BoundingBox& EditorCollider::GetBoundingBox() const
 {
 	return boundingBox;
 }
 
-void EditorCollider::SetBoundingBox(const OBoundingBox& bb)
+void EditorCollider::SetBoundingBox(const BoundingBox& bb)
 {
 	boundingBox = bb;
 }

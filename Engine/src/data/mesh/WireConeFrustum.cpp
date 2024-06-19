@@ -1,5 +1,7 @@
 #include "data/mesh/WireConeFrustum.h"
 
+#include "system/editor/Gizmo.h"
+
 #pragma region Public Methods
 
 WireConeFrustum::WireConeFrustum() : Mesh()
@@ -11,7 +13,7 @@ WireConeFrustum::WireConeFrustum() : Mesh()
 void WireConeFrustum::Draw(Shader* shader)
 {
     glBindVertexArray(VAO);
-    glLineWidth(3); // maybe set up in a constant file
+    glLineWidth(Gizmo::GIZMO_WIDTH); // maybe set up in a constant file
     glDrawElements(GL_LINES, static_cast<GLsizei>(Indices.size()), GL_UNSIGNED_INT, 0);
     glLineWidth(1); // reset to default
     glBindVertexArray(0);

@@ -33,6 +33,7 @@
     <ClCompile Include="include\maths\glm\detail\glm.cpp" />
     <ClCompile Include="include\maths\glm\glm.cppm" />
     <ClCompile Include="src\component\physics\EditorCollider.cpp" />
+    <ClCompile Include="src\data\BVH.cpp" />
     <ClCompile Include="src\data\CubeMap.cpp" />
     <ClCompile Include="src\maths\Maths.cpp" />
     <ClCompile Include="src\physics\Physics.cpp" />
@@ -41,7 +42,7 @@
     <ClCompile Include="src\system\editor\EditorCamera.cpp" />
     <ClCompile Include="src\component\Component.cpp" />
     <ClCompile Include="src\component\Light.cpp" />
-    <ClCompile Include="src\data\OBoundingBox.cpp" />
+    <ClCompile Include="src\data\BoundingBox.cpp" />
     <ClCompile Include="src\data\mesh\WireCone.cpp" />
     <ClCompile Include="src\data\mesh\WireConeFrustum.cpp" />
     <ClCompile Include="src\data\mesh\WireCube.cpp" />
@@ -82,6 +83,7 @@
     <ClInclude Include="..\imgui\imstb_textedit.h" />
     <ClInclude Include="..\imgui\imstb_truetype.h" />
     <ClInclude Include="include\component\physics\EditorCollider.h" />
+    <ClInclude Include="include\data\BVH.h" />
     <ClInclude Include="include\data\CubeMap.h" />
     <ClInclude Include="include\data\physics\Ray.h" />
     <ClInclude Include="include\data\physics\RaycastHit.h" />
@@ -95,7 +97,7 @@
     <ClInclude Include="include\system\editor\EditorCamera.h" />
     <ClInclude Include="include\component\Component.h" />
     <ClInclude Include="include\component\Light.h" />
-    <ClInclude Include="include\data\OBoundingBox.h" />
+    <ClInclude Include="include\data\BoundingBox.h" />
     <ClInclude Include="include\data\mesh\MeshData.h" />
     <ClInclude Include="include\data\mesh\WireCone.h" />
     <ClInclude Include="include\data\mesh\WireConeFrustum.h" />

@@ -201,7 +201,7 @@
     <ClCompile Include="src\physics\Physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\data\OBoundingBox.cpp">
+    <ClCompile Include="src\data\BoundingBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\system\editor\Outliner.cpp">
@@ -223,6 +223,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\data\CubeMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data\BVH.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1220,7 +1223,7 @@
     <ClInclude Include="include\physics\Physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\data\OBoundingBox.h">
+    <ClInclude Include="include\data\BoundingBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\system\editor\Outliner.h">
@@ -1257,6 +1260,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\data\CubeMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\BVH.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

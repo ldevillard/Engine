@@ -22,7 +22,7 @@ public:
 	Entity* DuplicateEntity(Entity* entity);
 
 	void ComputeEntities() const;
-	void ComputeSelectedEntity() const;
+	bool ComputeSelectedEntity() const;
 	const unsigned int GetNumberOfTriangles() const;
 
 	unsigned int GetLightIndex(Transform* transform) const;

@@ -70,16 +70,17 @@ void EntityManager::ComputeEntities() const
 	}
 }
 
-void EntityManager::ComputeSelectedEntity() const
+bool EntityManager::ComputeSelectedEntity() const
 {
 	if (!Editor::Get().GetSettings().Wireframe)
 	{
 		const Entity* selectedEntity = Editor::Get().GetSelectedEntity();
 		if (selectedEntity != nullptr)
 		{
-			selectedEntity->ComputeOutline();
+			return selectedEntity->ComputeOutline();
 		}
 	}
+	return false;
 }
 
 const unsigned int EntityManager::GetNumberOfTriangles() const
