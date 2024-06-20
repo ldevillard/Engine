@@ -326,4 +326,24 @@ namespace ImGui_Utils
 		ImGui::PopID();
 	}
 
+	void SliderInt(const std::string& label, int& value, int min, int max, const std::string& format, float columnWidth)
+	{
+		ImGui::PushID(label.c_str());
+
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
+
+		ImGui::PushItemWidth(-1);
+		ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.8f, 0.4f, 0.8f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(1.0f, 0.2f, 0.35f, 1.0f));
+		ImGui::SliderInt("##SliderInt", &value, min, max, format.c_str());
+		ImGui::PopStyleColor(2);
+		ImGui::PopItemWidth();
+
+		ImGui::Columns(1);
+
+		ImGui::PopID();
+	}
 }

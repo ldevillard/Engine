@@ -87,7 +87,7 @@ const unsigned int EntityManager::GetNumberOfTriangles() const
 {
 	unsigned int sum = 0;
 
-	for (Entity* e : entities)
+	for (const Entity* e : entities)
 	{
 		Model* model = nullptr;
 		if (e->TryGetComponent<Model>(model))

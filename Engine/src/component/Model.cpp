@@ -48,7 +48,7 @@ int Model::GetNumberOfTriangles() const
 {
    int sum = 0;
 
-   for (Mesh mesh : meshes)
+   for (const Mesh& mesh : meshes)
    {
       sum += mesh.GetNumberOfTriangles();
    }
@@ -135,7 +135,7 @@ void Model::SetMaterialFromName(std::string name)
 void Model::SetEditorCollider(EditorCollider* cl)
 {
     Component::SetEditorCollider(cl);
-	updateBoundingBox();
+	updateBoundingVolumes();
 }
 
 nlohmann::ordered_json Model::Serialize() const
@@ -174,8 +174,7 @@ void Model::draw()
         meshes[i].Draw(shader);
 }
 
-// TODO rename in updateBoundingVolume
-void Model::updateBoundingBox()
+void Model::updateBoundingVolumes()
 {
     editorCollider->UpdateBoundingBox(meshes);
     editorCollider->UpdateBVH(meshes);

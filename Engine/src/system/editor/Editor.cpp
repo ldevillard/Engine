@@ -40,7 +40,7 @@ void Editor::initialize()
 	ifd::FileDialog::Instance().Initialize();
 
 	// load default scene, need to handle this properly (maybe a scene manager)
-	Serializer::LoadSceneFromFile("resources/scenes/DefaultScene.devil", "DefaultScene");
+	Serializer::LoadSceneFromFile("resources/scenes/Dragon.devil", "Dragon");
 }
 
 #pragma endregion
@@ -168,8 +168,8 @@ void Editor::RenderEditor()
 	renderSettings();
 	renderHierarchy();
 	renderInspector();
-	renderScene(w, h);
 	renderRayTracer();
+	renderScene(w, h);
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -497,7 +497,18 @@ void Editor::renderSettings()
 	if (ImGui::TreeNode("Gizmos"))
 	{
 		ImGui_Utils::DrawBoolControl("Gizmos", parameters.Gizmo, 100.f);
-		ImGui_Utils::DrawBoolControl("Bounding Box", parameters.BoundingBoxGizmo, 100.f);
+		if (parameters.Gizmo)
+		{
+			ImGui_Utils::DrawBoolControl("Bounding Box", parameters.BoundingBoxGizmo, 100.f);
+			if (parameters.BoundingBoxGizmo)
+			{
+				ImGui_Utils::DrawBoolControl("BVH", parameters.BVHGizmo, 100.f);
+				if (parameters.BVHGizmo)
+				{
+					ImGui_Utils::SliderInt("Visual Depth", BVH::VISUAL_MAX_DEPTH, 0, BVH::GetMaxDepth(), "%d", 100.f);
+				}
+			}
+		}
 
 		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 		if (ImGui::TreeNode("Transform"))

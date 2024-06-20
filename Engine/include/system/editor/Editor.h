@@ -39,6 +39,7 @@ struct EditorSettings
 	
 	bool Gizmo = true;
 	bool BoundingBoxGizmo = false;
+	bool BVHGizmo = false;
 
 	// ray tracing
 	bool RayTracing = false;

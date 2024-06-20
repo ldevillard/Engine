@@ -68,7 +68,7 @@ void Entity::Compute()
     for (Component* c : components)
         c->Compute();
     
-    editorCollider->ApplyTransform(*transform);
+    editorCollider->Draw(*transform);
 }
 
 bool Entity::ComputeOutline() const

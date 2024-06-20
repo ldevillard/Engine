@@ -17,7 +17,7 @@ public:
 	EditorCollider(Entity* e);
 	EditorCollider(const EditorCollider& other);
 
-	void ApplyTransform(const Transform& transform);
+	void Draw(const Transform& transform);
 	
 	const BoundingBox& GetBoundingBox() const;
 	void UpdateBoundingBox(const std::vector<Mesh>& meshes);

@@ -22,6 +22,9 @@ public:
 
 	void DrawNodes(const Transform& transform, const Color& color = Color::Cyan) const;
 
+	static int GetMaxDepth();
+	static int VISUAL_MAX_DEPTH;
+
 private:
 	struct Node
 	{
@@ -33,11 +36,11 @@ private:
 		std::shared_ptr<Node> Right;
 	};
 
-	static constexpr uint32_t maxDepth = 10;
+	static constexpr int maxDepth = 20;
 
 	std::shared_ptr<Node> hierarchy;
 	
-	void drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, uint32_t depth, const Color& color) const;
-	void split(std::shared_ptr<Node>& node, uint32_t depth = 0);
+	void drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const Color& color) const;
+	void split(std::shared_ptr<Node>& node, int depth = 0);
 
 };

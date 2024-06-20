@@ -59,21 +59,20 @@ void BoundingBox::Draw(const Transform& transform, const Color& color) const
 
     tr.Scale *= glm::abs(Max - Min) * 0.5f;
 
-    glm::vec3 obbCenter = (Min + Max) * 0.5f;
-    obbCenter *= transform.Scale;
+    glm::vec3 center = Center;
+    center *= transform.Scale;
 
     glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.z), glm::vec3(.0f, 0.0f, 1.0f))
                              * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
                              * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, .0f));
 
-    obbCenter = glm::vec3(rotationMatrix * glm::vec4(obbCenter, 1.0f));
+    center = glm::vec3(rotationMatrix * glm::vec4(center, 1.0f));
 
-    obbCenter += tr.Position;
+    center += tr.Position;
 
-    tr.Position = obbCenter;
+    tr.Position = center;
 
-   if (Editor::Get().GetSettings().BoundingBoxGizmo)
-        Gizmo::DrawWireCube(color, tr);
+    Gizmo::DrawWireCube(color, tr);
 }
 
 #pragma endregion

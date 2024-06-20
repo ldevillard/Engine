@@ -3,6 +3,7 @@
 #include "component/Transform.h"
 #include "data/mesh/Mesh.h"
 #include "physics/Physics.h"
+#include "system/editor/Editor.h"
 #include "system/entity/Entity.h"
 
 #pragma region Public Methods
@@ -15,11 +16,13 @@ EditorCollider::EditorCollider(const EditorCollider& other) : boundingBox(other.
 {
 }
 
-// TODO rename in draw
-void EditorCollider::ApplyTransform(const Transform& transform)
+void EditorCollider::Draw(const Transform& transform)
 {
-	boundingBox.Draw(transform);
-    bvh.DrawNodes(transform);
+    if (Editor::Get().GetSettings().BoundingBoxGizmo)
+    {
+	    boundingBox.Draw(transform);
+        bvh.DrawNodes(transform);
+    }
 }
 
 const BoundingBox& EditorCollider::GetBoundingBox() const

@@ -2,6 +2,8 @@
 
 #include "data/mesh/Mesh.h"
 
+int BVH::VISUAL_MAX_DEPTH = 0;
+
 #pragma region Public Methods
 
 BVH::BVH()
@@ -36,13 +38,18 @@ void BVH::DrawNodes(const Transform& transform, const Color& color) const
 	drawNodes(transform, hierarchy, 0, color);
 }
 
+int BVH::GetMaxDepth()
+{
+	return maxDepth;
+}
+
 #pragma endregion
 
 #pragma region Private Methods
 
-void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, uint32_t depth, const Color& color) const
+void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const Color& color) const
 {
-	if (depth == maxDepth || node == nullptr)
+	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH || node == nullptr)
 		return;
 
 	if (node->Triangles.size() == 0)
@@ -54,7 +61,7 @@ void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& nod
 	drawNodes(transform, node->Right, depth + 1, color);
 }
 
-void BVH::split(std::shared_ptr<Node>& node, uint32_t depth)
+void BVH::split(std::shared_ptr<Node>& node, int depth)
 {
 	if (depth == maxDepth)
 		return;
