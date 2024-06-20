@@ -7,12 +7,12 @@ int BVH::VISUAL_MAX_DEPTH = 0;
 
 #pragma region Public Methods
 
-BVH::BVH() : size(0)
+BVH::BVH()
 {
 	hierarchy = std::make_shared<Node>();
 }
 
-BVH::BVH(const std::vector<Mesh>& meshes) : size(0)
+BVH::BVH(const std::vector<Mesh>& meshes)
 {
 	hierarchy = std::make_shared<Node>();
 
