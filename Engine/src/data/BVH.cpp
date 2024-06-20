@@ -1,17 +1,18 @@
 #include "data/BVH.h"
 
+#include "component/Transform.h"
 #include "data/mesh/Mesh.h"
 
 int BVH::VISUAL_MAX_DEPTH = 0;
 
 #pragma region Public Methods
 
-BVH::BVH()
+BVH::BVH() : size(0)
 {
 	hierarchy = std::make_shared<Node>();
 }
 
-BVH::BVH(const std::vector<Mesh>& meshes)
+BVH::BVH(const std::vector<Mesh>& meshes) : size(0)
 {
 	hierarchy = std::make_shared<Node>();
 
@@ -35,7 +36,11 @@ void BVH::Update(const std::vector<Mesh>& meshes)
 
 void BVH::DrawNodes(const Transform& transform, const Color& color) const
 {
-	drawNodes(transform, hierarchy, 0, color);
+	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.z), glm::vec3(.0f, 0.0f, 1.0f))
+							 * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
+							 * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, .0f));
+
+	drawNodes(transform, hierarchy, 0, rotationMatrix, color);
 }
 
 int BVH::GetMaxDepth()
@@ -47,7 +52,7 @@ int BVH::GetMaxDepth()
 
 #pragma region Private Methods
 
-void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const Color& color) const
+void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix, const Color& color) const
 {
 	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH || node == nullptr)
 		return;
@@ -55,10 +60,10 @@ void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& nod
 	if (node->Triangles.size() == 0)
 		return;
 
-	node->Bounds.Draw(transform, color);
+	node->Bounds.Draw(transform, rotationMatrix, color);
 
-	drawNodes(transform, node->Left, depth + 1, color);
-	drawNodes(transform, node->Right, depth + 1, color);
+	drawNodes(transform, node->Left, depth + 1, rotationMatrix, color);
+	drawNodes(transform, node->Right, depth + 1, rotationMatrix, color);
 }
 
 void BVH::split(std::shared_ptr<Node>& node, int depth)

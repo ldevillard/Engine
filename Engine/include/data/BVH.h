@@ -36,11 +36,11 @@ private:
 		std::shared_ptr<Node> Right;
 	};
 
-	static constexpr int maxDepth = 20;
+	static constexpr int maxDepth = 10;
 
 	std::shared_ptr<Node> hierarchy;
 	
-	void drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const Color& color) const;
+	void drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix, const Color& color) const;
 	void split(std::shared_ptr<Node>& node, int depth = 0);
 
 };

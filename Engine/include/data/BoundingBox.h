@@ -26,4 +26,5 @@ public:
 	void InsertPoint(const glm::vec3& point);
 
 	void Draw(const Transform& transform, const Color& color = Color::Green) const;
+	void Draw(const Transform& transform, glm::mat4 rotationMatrix , const Color& color = Color::Green) const;
 };
