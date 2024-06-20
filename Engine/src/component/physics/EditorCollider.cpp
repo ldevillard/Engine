@@ -3,6 +3,7 @@
 #include "component/Transform.h"
 #include "data/mesh/Mesh.h"
 #include "physics/Physics.h"
+#include "physics/RayIntersection.h"
 #include "system/editor/Editor.h"
 #include "system/entity/Entity.h"
 
@@ -19,10 +20,9 @@ EditorCollider::EditorCollider(const EditorCollider& other) : boundingBox(other.
 void EditorCollider::Draw(const Transform& transform)
 {
     if (Editor::Get().GetSettings().BoundingBoxGizmo)
-    {
 	    boundingBox.Draw(transform);
+	if (Editor::Get().GetSettings().BVHGizmo)
         bvh.DrawNodes(transform);
-    }
 }
 
 const BoundingBox& EditorCollider::GetBoundingBox() const
@@ -50,35 +50,13 @@ bool EditorCollider::IntersectRay(const Ray& ray, RaycastHit& outRaycastHit) con
 
 	Ray localRay(origin, direction);
 
-	 // check if the ray intersects the bounding box
-    // calculate the intersections of the ray with each axis-aligned plane of the bounding box
-    glm::vec3 tMin = (boundingBox.Min - localRay.origin) / localRay.direction;
-    glm::vec3 tMax = (boundingBox.Max - localRay.origin) / localRay.direction;
+	//if (RayAABoxIntersection(localRay, boundingBox, outRaycastHit.hitInfo))
+	//	outRaycastHit.editorCollider = const_cast<EditorCollider*>(this);
 
-    // find the nearest and farthest intersections
-    glm::vec3 tNear = glm::min(tMin, tMax);
-    glm::vec3 tFar = glm::max(tMin, tMax);
+	if (bvh.IntersectRay(localRay, outRaycastHit.hitInfo))
+		outRaycastHit.editorCollider = const_cast<EditorCollider*>(this);
 
-    // find the maximum of the nearest intersections
-    float tNearMax = glm::max(glm::max(tNear.x, tNear.y), tNear.z);
-    // find the minimum of the farthest intersections
-    float tFarMin = glm::min(glm::min(tFar.x, tFar.y), tFar.z);
-
-    // check if the ray intersects the bounding box
-    if (tNearMax <= tFarMin && outRaycastHit.distance > tNearMax)
-    {
-        // ray intersects the bounding box
-        // calculate the intersection point
-        glm::vec3 intersectionPoint = localRay.origin + localRay.direction * tNearMax;
-        outRaycastHit.point = intersectionPoint;
-        outRaycastHit.distance = tNearMax;
-        outRaycastHit.editorCollider = const_cast<EditorCollider*>(this);
-        outRaycastHit.hit = true;
-        return true;
-    }
-
-    // ray does not intersect the bounding box
-    return false;
+	return outRaycastHit.hitInfo.hit;
 }
 
 #pragma endregion

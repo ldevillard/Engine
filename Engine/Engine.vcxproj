@@ -37,6 +37,7 @@
     <ClCompile Include="src\data\CubeMap.cpp" />
     <ClCompile Include="src\maths\Maths.cpp" />
     <ClCompile Include="src\physics\Physics.cpp" />
+    <ClCompile Include="src\physics\RayIntersection.cpp" />
     <ClCompile Include="src\render\ComputeShader.cpp" />
     <ClCompile Include="src\render\RayTracer.cpp" />
     <ClCompile Include="src\system\editor\EditorCamera.cpp" />
@@ -85,6 +86,7 @@
     <ClInclude Include="include\component\physics\EditorCollider.h" />
     <ClInclude Include="include\data\BVH.h" />
     <ClInclude Include="include\data\CubeMap.h" />
+    <ClInclude Include="include\data\physics\HitInfo.h" />
     <ClInclude Include="include\data\physics\Ray.h" />
     <ClInclude Include="include\data\physics\RaycastHit.h" />
     <ClInclude Include="include\data\template\Singleton.h" />
@@ -92,6 +94,7 @@
     <ClInclude Include="include\data\Type.h" />
     <ClInclude Include="include\maths\Math.h" />
     <ClInclude Include="include\physics\Physics.h" />
+    <ClInclude Include="include\physics\RayIntersection.h" />
     <ClInclude Include="include\render\ComputeShader.h" />
     <ClInclude Include="include\render\RayTracer.h" />
     <ClInclude Include="include\system\editor\EditorCamera.h" />

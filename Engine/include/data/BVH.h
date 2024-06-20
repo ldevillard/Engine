@@ -10,6 +10,8 @@
 #include "data/Color.h"
 
 class Mesh;
+struct HitInfo;
+struct Ray;
 struct Triangle;
 
 class BVH
@@ -21,6 +23,8 @@ public:
 	void Update(const std::vector<Mesh>& meshes);
 
 	void DrawNodes(const Transform& transform, const Color& color = Color::Cyan) const;
+	// we assume that ray is in bvh' local space
+	bool IntersectRay(const Ray& ray, HitInfo& outHitInfo) const;
 
 	static int GetMaxDepth();
 	static int VISUAL_MAX_DEPTH;
@@ -40,7 +44,8 @@ private:
 
 	std::shared_ptr<Node> hierarchy;
 	
-	void drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix, const Color& color) const;
 	void split(std::shared_ptr<Node>& node, int depth = 0);
+	void drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix, const Color& color) const;
+	bool intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInfo& outHitInfo) const;
 
 };

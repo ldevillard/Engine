@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+#include "maths/Math.h"
 #include "system/entity/EntityManager.h"
 
 namespace Physics
@@ -18,6 +19,6 @@ namespace Physics
 
 			collider->IntersectRay(ray, outRayCastHit);
 		}
-		return outRayCastHit.hit;
+		return outRayCastHit.hitInfo.hit;
 	}
 }

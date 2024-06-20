@@ -500,13 +500,10 @@ void Editor::renderSettings()
 		if (parameters.Gizmo)
 		{
 			ImGui_Utils::DrawBoolControl("Bounding Box", parameters.BoundingBoxGizmo, 100.f);
-			if (parameters.BoundingBoxGizmo)
+			ImGui_Utils::DrawBoolControl("BVH", parameters.BVHGizmo, 100.f);
+			if (parameters.BVHGizmo)
 			{
-				ImGui_Utils::DrawBoolControl("BVH", parameters.BVHGizmo, 100.f);
-				if (parameters.BVHGizmo)
-				{
-					ImGui_Utils::SliderInt("Visual Depth", BVH::VISUAL_MAX_DEPTH, 0, BVH::GetMaxDepth(), "%d", 100.f);
-				}
+				ImGui_Utils::SliderInt("Visual Depth", BVH::VISUAL_MAX_DEPTH, 0, BVH::GetMaxDepth(), "%d", 100.f);
 			}
 		}
 

@@ -228,6 +228,9 @@
     <ClCompile Include="src\data\BVH.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\physics\RayIntersection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\imgui\imconfig.h">
@@ -1263,6 +1266,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\data\BVH.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\physics\RayIntersection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\physics\HitInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

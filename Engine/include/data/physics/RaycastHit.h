@@ -2,16 +2,11 @@
 
 #include <maths/glm/glm.hpp>
 #include "component/physics/EditorCollider.h"
-
-class EditorCollider;
+#include "data/physics/HitInfo.h"
 
 struct RaycastHit
 {
-	bool hit = false;
-
-	glm::vec3 point = glm::vec3(0);
-	float distance = std::numeric_limits<float>::max();
-
+	HitInfo hitInfo;
 	EditorCollider* editorCollider = nullptr;
 
 	// add collider pointer when physics is implemented

@@ -2,6 +2,9 @@
 
 #include "component/Transform.h"
 #include "data/mesh/Mesh.h"
+#include "data/physics/HitInfo.h"
+#include "data/physics/Ray.h"
+#include "physics/RayIntersection.h"
 
 int BVH::VISUAL_MAX_DEPTH = 0;
 
@@ -43,6 +46,13 @@ void BVH::DrawNodes(const Transform& transform, const Color& color) const
 	drawNodes(transform, hierarchy, 0, rotationMatrix, color);
 }
 
+// we assume that ray is in bvh' local space
+bool BVH::IntersectRay(const Ray& ray, HitInfo& outHitInfo) const
+{
+	return intersectRay(ray, hierarchy, outHitInfo);
+}
+
+
 int BVH::GetMaxDepth()
 {
 	return maxDepth;
@@ -51,20 +61,6 @@ int BVH::GetMaxDepth()
 #pragma endregion
 
 #pragma region Private Methods
-
-void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix, const Color& color) const
-{
-	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH || node == nullptr)
-		return;
-
-	if (node->Triangles.size() == 0)
-		return;
-
-	node->Bounds.Draw(transform, rotationMatrix, color);
-
-	drawNodes(transform, node->Left, depth + 1, rotationMatrix, color);
-	drawNodes(transform, node->Right, depth + 1, rotationMatrix, color);
-}
 
 void BVH::split(std::shared_ptr<Node>& node, int depth)
 {
@@ -90,6 +86,50 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 
 	split(node->Left, depth + 1);
 	split(node->Right, depth + 1);
+}
+
+void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix, const Color& color) const
+{
+	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH || node == nullptr)
+		return;
+
+	if (node->Triangles.size() == 0)
+		return;
+
+	node->Bounds.Draw(transform, rotationMatrix, color);
+
+	drawNodes(transform, node->Left, depth + 1, rotationMatrix, color);
+	drawNodes(transform, node->Right, depth + 1, rotationMatrix, color);
+}
+
+bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInfo& outHitInfo) const
+{
+	HitInfo boxHitInfo;
+	return RayAABoxIntersection(ray, node->Bounds, boxHitInfo);
+
+	if (boxHitInfo.hit)
+	{
+		if (node->Left == nullptr && node->Right == nullptr)
+		{
+			HitInfo triangleHitInfo;
+			for (const Triangle& triangle : node->Triangles)
+			{
+				RayTriangleIntersection(ray, triangle, triangleHitInfo);
+				if (triangleHitInfo.distance < outHitInfo.distance)
+				{
+					outHitInfo.hit = triangleHitInfo.hit;
+					outHitInfo.hitPoint = triangleHitInfo.hitPoint;
+					outHitInfo.distance = triangleHitInfo.distance;
+				}
+			}
+		}
+		else
+		{
+			intersectRay(ray, node->Left, outHitInfo);
+			intersectRay(ray, node->Right, outHitInfo);
+		}
+	}
+	return outHitInfo.hit;
 }
 
 #pragma endregion
