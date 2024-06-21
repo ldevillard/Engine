@@ -41,7 +41,7 @@ void EditorCollider::UpdateBVH(const std::vector<Mesh>& meshes)
     bvh.Update(meshes);
 }
 
-bool EditorCollider::IntersectRay(const Ray& ray, RaycastHit& outRaycastHit) const
+bool EditorCollider::IntersectRayBVH(const Ray& ray, RaycastHit& outRaycastHit) const
 {
 	// transform the ray to the local space of the entity
 	glm::vec3 origin = glm::inverse(entity->transform->GetTransformMatrix()) * glm::vec4(ray.origin, 1.0f);
@@ -50,10 +50,22 @@ bool EditorCollider::IntersectRay(const Ray& ray, RaycastHit& outRaycastHit) con
 
 	Ray localRay(origin, direction);
 
-	//if (RayAABoxIntersection(localRay, boundingBox, outRaycastHit.hitInfo))
-	//	outRaycastHit.editorCollider = const_cast<EditorCollider*>(this);
-
 	if (bvh.IntersectRay(localRay, outRaycastHit.hitInfo))
+		outRaycastHit.editorCollider = const_cast<EditorCollider*>(this);
+
+	return outRaycastHit.hitInfo.hit;
+}
+
+bool EditorCollider::IntersectRayBoundingBox(const Ray& ray, RaycastHit& outRaycastHit) const
+{
+	// transform the ray to the local space of the entity
+	glm::vec3 origin = glm::inverse(entity->transform->GetTransformMatrix()) * glm::vec4(ray.origin, 1.0f);
+	// transform the direction to the local space of the entity
+	glm::vec3 direction = glm::inverse(entity->transform->GetTransformMatrix()) * glm::vec4(ray.direction, 0.0f);
+
+	Ray localRay(origin, direction);
+
+	if (RayAABoxIntersection(localRay, boundingBox, outRaycastHit.hitInfo))
 		outRaycastHit.editorCollider = const_cast<EditorCollider*>(this);
 
 	return outRaycastHit.hitInfo.hit;

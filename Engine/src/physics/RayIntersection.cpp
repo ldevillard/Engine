@@ -41,25 +41,24 @@ bool RayTriangleIntersection(const Ray& ray, const Triangle& triangle, HitInfo& 
 {
     glm::vec3 AB = triangle.B.Position - triangle.A.Position;
     glm::vec3 AC = triangle.C.Position - triangle.A.Position;
+    glm::vec3 rayOriginAOffset = ray.origin - triangle.A.Position;
 
-    glm::vec3 n = cross(AB, AC);
-    float det = -dot(ray.direction, n);
-    float inverseDet = 1.0f / det;
+    glm::vec3  n = cross(AB, AC);
+    glm::vec3  q = cross(rayOriginAOffset, ray.direction);
 
-    glm::vec3 AO = ray.origin - triangle.A.Position;
-    glm::vec3 DAO = cross(AO, ray.direction);
+    float d = 1.0f / dot(ray.direction, n);
+    float u = d * dot(-q, AC);
+    float v = d * dot(q, AB);
+    float t = d * dot(-n, rayOriginAOffset);
 
-    float u = dot(AC, DAO) * inverseDet;
-    float v = -dot(AB, DAO) * inverseDet;
-    float w = 1 - u - v;
-    float distance = dot(AO, n) * inverseDet;
+    if (u < 0.0f || v < 0.0f || (u + v) >1.0f)
+        t = -1.0f;
 
-    if (det >= 1E-6f && distance >= 0 && u >= 0 && v >= 0 && w >= 0)
+    if (t > 0)
     {
         outHitInfo.hit = true;
-        outHitInfo.distance = distance;
-        outHitInfo.hitPoint = ray.origin + ray.direction * distance;
-    
+        outHitInfo.distance = t;
+        outHitInfo.hitPoint = ray.origin + t * ray.direction;
         return true;
     }
 

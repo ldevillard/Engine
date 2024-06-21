@@ -24,7 +24,8 @@ public:
 
 	void UpdateBVH(const std::vector<Mesh>& meshes);
 
-	bool IntersectRay(const Ray& ray, RaycastHit& outRaycastHit) const;
+	bool IntersectRayBVH(const Ray& ray, RaycastHit& outRaycastHit) const;
+	bool IntersectRayBoundingBox(const Ray& ray, RaycastHit& outRaycastHit) const;
 
 	Entity* entity = nullptr;
 

@@ -34,7 +34,7 @@ void BVH::Update(const std::vector<Mesh>& meshes)
 	}
 
 	hierarchy->Triangles = triangles;
-	split(hierarchy);
+	split(hierarchy, 1);
 }
 
 void BVH::DrawNodes(const Transform& transform, const Color& color) const
@@ -105,7 +105,7 @@ void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& nod
 bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInfo& outHitInfo) const
 {
 	HitInfo boxHitInfo;
-	return RayAABoxIntersection(ray, node->Bounds, boxHitInfo);
+	RayAABoxIntersection(ray, node->Bounds, boxHitInfo);
 
 	if (boxHitInfo.hit)
 	{

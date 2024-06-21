@@ -40,7 +40,7 @@ private:
 		std::shared_ptr<Node> Right;
 	};
 
-	static constexpr int maxDepth = 10;
+	static constexpr int maxDepth = 15;
 
 	std::shared_ptr<Node> hierarchy;
 	

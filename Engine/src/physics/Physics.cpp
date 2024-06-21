@@ -17,7 +17,15 @@ namespace Physics
 			
 			assert(collider != nullptr && "Entity has no editor collider -> mouse picking purpose");
 
-			collider->IntersectRay(ray, outRayCastHit);
+			RaycastHit hit;
+			Model* model = nullptr;
+			if (e->TryGetComponent<Model>(model))
+				collider->IntersectRayBVH(ray, hit);
+			else
+				collider->IntersectRayBoundingBox(ray, hit);
+
+			if (hit.hitInfo.distance < outRayCastHit.hitInfo.distance)
+				outRayCastHit = hit;
 		}
 		return outRayCastHit.hitInfo.hit;
 	}
