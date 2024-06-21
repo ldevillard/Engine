@@ -22,7 +22,7 @@ public:
 
 	void Update(const std::vector<Mesh>& meshes);
 
-	void DrawNodes(const Transform& transform, const Color& color = Color::Cyan) const;
+	void DrawNodes(const Transform& transform) const;
 	// we assume that ray is in bvh' local space
 	bool IntersectRay(const Ray& ray, HitInfo& outHitInfo) const;
 
@@ -45,7 +45,7 @@ private:
 	std::shared_ptr<Node> hierarchy;
 	
 	void split(std::shared_ptr<Node>& node, int depth = 0);
-	void drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix, const Color& color) const;
+	void drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix) const;
 	bool intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInfo& outHitInfo) const;
-
+	Color getColorForDepth(int depth) const;
 };

@@ -30,6 +30,9 @@ public:
 	static Color Magenta;
 	static Color Orange;
 
+	// utility
+	static glm::vec3 HSLToRGB(float h, float s, float v);
+
 	// serialization
 	nlohmann::ordered_json Serialize() const;
 	void Deserialize(const nlohmann::ordered_json& json);

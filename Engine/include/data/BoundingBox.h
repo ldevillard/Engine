@@ -12,9 +12,9 @@ struct Triangle;
 class BoundingBox
 {
 public:
-	glm::vec3 Min;
-	glm::vec3 Max;
-	glm::vec3 Center;
+	glm::vec3 Min = glm::vec3(0);
+	glm::vec3 Max = glm::vec3(0);
+	glm::vec3 Center = glm::vec3(0);
 
 	BoundingBox();
 	BoundingBox(const glm::vec3& min, const glm::vec3& max);

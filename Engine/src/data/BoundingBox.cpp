@@ -41,13 +41,8 @@ void BoundingBox::InsertTriangle(const Triangle& triangle)
 
 void BoundingBox::InsertPoint(const glm::vec3& point)
 {
-    Min.x = std::min(Min.x, point.x);
-    Min.y = std::min(Min.y, point.y);
-    Min.z = std::min(Min.z, point.z);
-
-    Max.x = std::max(Max.x, point.x);
-    Max.y = std::max(Max.y, point.y);
-    Max.z = std::max(Max.z, point.z);
+    Min = glm::min(Min, point);
+    Max = glm::max(Max, point);
 
     Center = (Min + Max) * 0.5f;
 }

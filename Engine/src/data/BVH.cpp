@@ -37,13 +37,13 @@ void BVH::Update(const std::vector<Mesh>& meshes)
 	split(hierarchy, 1);
 }
 
-void BVH::DrawNodes(const Transform& transform, const Color& color) const
+void BVH::DrawNodes(const Transform& transform) const
 {
 	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.z), glm::vec3(.0f, 0.0f, 1.0f))
 							 * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
 							 * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, .0f));
 
-	drawNodes(transform, hierarchy, 0, rotationMatrix, color);
+	drawNodes(transform, hierarchy, 0, rotationMatrix);
 }
 
 // we assume that ray is in bvh' local space
@@ -71,7 +71,7 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 	node->Right = std::make_shared<Node>();
 
 	glm::vec3 size = node->Bounds.GetSize();
-	int longestAxis = size.x > size.y ? (size.x > size.z ? 0 : 2) : 1;
+	int longestAxis = size.x > std::max(size.y, size.z) ? 0 : size.y > size.z ? 1 : 2;
 	float splitValue = node->Bounds.Center[longestAxis];
 
 	for (const Triangle& triangle : node->Triangles)
@@ -88,7 +88,7 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 	split(node->Right, depth + 1);
 }
 
-void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix, const Color& color) const
+void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix) const
 {
 	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH || node == nullptr)
 		return;
@@ -96,10 +96,12 @@ void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& nod
 	if (node->Triangles.size() == 0)
 		return;
 
-	node->Bounds.Draw(transform, rotationMatrix, color);
+	Color color = getColorForDepth(depth);
 
-	drawNodes(transform, node->Left, depth + 1, rotationMatrix, color);
-	drawNodes(transform, node->Right, depth + 1, rotationMatrix, color);
+	if (depth == VISUAL_MAX_DEPTH - 1) node->Bounds.Draw(transform, rotationMatrix, color);
+
+	drawNodes(transform, node->Left, depth + 1, rotationMatrix);
+	drawNodes(transform, node->Right, depth + 1, rotationMatrix);
 }
 
 bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInfo& outHitInfo) const
@@ -130,6 +132,13 @@ bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInf
 		}
 	}
 	return outHitInfo.hit;
+}
+
+Color BVH::getColorForDepth(int depth) const
+{
+	// 10 can be replaced by maxDepth if more depth color are needed
+	float hue = (1.0f - static_cast<float>(depth) / 10) * 300.0f;
+	return Color::HSLToRGB(hue / 360.0f, 1, 1);
 }
 
 #pragma endregion
