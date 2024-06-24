@@ -145,8 +145,8 @@ void BVH::chooseSplit(const std::shared_ptr<Node>& node, int& outAxis, float& ou
 
 float BVH::evaluateSplit(const std::shared_ptr<Node>& node, int& splitAxis, float& splitPos) const
 {
-	BoundingBox boundsA;
-	BoundingBox boundsB;
+	BoundingBox boundsA(std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
+	BoundingBox boundsB(std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
 	int inACount = 0;
 	int inBCount = 0;
 

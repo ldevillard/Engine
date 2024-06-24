@@ -17,6 +17,7 @@ public:
 
 	BoundingBox();
 	BoundingBox(const glm::vec3& min, const glm::vec3& max);
+	BoundingBox(const float& min, const float& max);
 
 	glm::vec3 GetSize() const;
 	glm::vec3 GetCenter() const;

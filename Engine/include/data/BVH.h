@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <limits>
 
 #include <maths/glm/glm.hpp>
 #include <maths/glm/gtc/matrix_transform.hpp>
@@ -32,7 +33,7 @@ public:
 private:
 	struct Node
 	{
-		BoundingBox Bounds = BoundingBox(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0));
+		BoundingBox Bounds = BoundingBox(std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
 		
 		int TriangleIndex = 0;
 		int TriangleCount = 0;

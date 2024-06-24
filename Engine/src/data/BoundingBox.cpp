@@ -19,6 +19,12 @@ BoundingBox::BoundingBox(const glm::vec3& min, const glm::vec3& max) :
 {
 }
 
+BoundingBox::BoundingBox(const float& min, const float& max) :
+    Min(glm::vec3(min)),
+    Max(glm::vec3(max))
+{
+}
+
 glm::vec3 BoundingBox::GetSize() const
 {
     return Max - Min;
