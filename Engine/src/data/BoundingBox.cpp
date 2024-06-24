@@ -9,21 +9,24 @@
 
 BoundingBox::BoundingBox() :
 	Min(glm::vec3(0.5f)),
-	Max(glm::vec3(-0.5f)),
-	Center(glm::vec3(0.0f))
+	Max(glm::vec3(-0.5f))
 {
 }
 
 BoundingBox::BoundingBox(const glm::vec3& min, const glm::vec3& max) :
 	Min(min),
-	Max(max),
-	Center((min + max) * 0.5f)
+	Max(max)
 {
 }
 
 glm::vec3 BoundingBox::GetSize() const
 {
     return Max - Min;
+}
+
+glm::vec3 BoundingBox::GetCenter() const
+{
+    return (Min + Max) * 0.5f;
 }
 
 void BoundingBox::InsertMesh(const Mesh& mesh)
@@ -34,17 +37,14 @@ void BoundingBox::InsertMesh(const Mesh& mesh)
 
 void BoundingBox::InsertTriangle(const Triangle& triangle)
 {
-    InsertPoint(triangle.A.Position);
-    InsertPoint(triangle.B.Position);
-    InsertPoint(triangle.C.Position);
+    Min = glm::min(Min, triangle.Min);
+    Max = glm::max(Max, triangle.Max);
 }
 
 void BoundingBox::InsertPoint(const glm::vec3& point)
 {
     Min = glm::min(Min, point);
     Max = glm::max(Max, point);
-
-    Center = (Min + Max) * 0.5f;
 }
 
 // Apply the transformation to the bounding box and draw it
@@ -54,7 +54,7 @@ void BoundingBox::Draw(const Transform& transform, const Color& color) const
     
     tr.Scale *= glm::abs(Max - Min) * 0.5f;
     
-    glm::vec3 center = Center * transform.Scale;
+    glm::vec3 center = GetCenter() * transform.Scale;
     
     glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.z), glm::vec3(.0f, 0.0f, 1.0f))
                              * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
@@ -73,7 +73,7 @@ void BoundingBox::Draw(const Transform& transform, glm::mat4 rotationMatrix, con
 
     tr.Scale *= glm::abs(Max - Min) * 0.5f;
 
-    glm::vec3 center = Center * transform.Scale;
+    glm::vec3 center = GetCenter() * transform.Scale;
 
     center = glm::vec3(rotationMatrix * glm::vec4(center, 1.0f)) + tr.Position;
 

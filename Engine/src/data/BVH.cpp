@@ -69,7 +69,7 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 
 	int splitAxis = 0; float splitPos = 0; float cost = 0;
 	chooseSplit(node, splitAxis, splitPos, cost);
-	if (cost >= nodeCost(node->Bounds.GetSize(), node->Triangles.size()))
+	if (cost >= nodeCost(node->Bounds.GetSize(), static_cast<int>(node->Triangles.size())))
 		return;
 
 	node->Left = std::make_shared<Node>();
@@ -79,9 +79,7 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 
 	for (const Triangle& triangle : node->Triangles)
 	{
-		glm::vec3 triangleCenter = (triangle.A.Position + triangle.B.Position + triangle.C.Position) / 3.0f;
-
-		bool isInLeft = triangleCenter[splitAxis] < splitPos;
+		bool isInLeft = triangle.Center[splitAxis] < splitPos;
 		std::shared_ptr<Node>& child = isInLeft ? node->Left : node->Right;
 		child->Triangles.push_back(triangle);
 		child->Bounds.InsertTriangle(triangle);
@@ -93,7 +91,7 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 
 void BVH::chooseSplit(const std::shared_ptr<Node>& node, int& outAxis, float& outPos, float& outCost) const
 {
-	const int testPerAxisCount = 10; // TODO: set as constexpr in .h file
+	constexpr int testPerAxisCount = 20;
 	float bestCost = std::numeric_limits<float>::max();
 	float bestPos = 0;
 	int bestAxis = 0;
@@ -133,10 +131,7 @@ float BVH::evaluateSplit(const std::shared_ptr<Node>& node, int& splitAxis, floa
 
 	for (const Triangle& triangle : node->Triangles)
 	{
-		// TODO: set triangleCenter in triangle class to compute it only one time
-		glm::vec3 triangleCenter = (triangle.A.Position + triangle.B.Position + triangle.C.Position) / 3.0f;
-
-		if (triangleCenter[splitAxis] < splitPos)
+		if (triangle.Center[splitAxis] < splitPos)
 		{
 			boundsA.InsertTriangle(triangle);
 			inACount++;
