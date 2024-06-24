@@ -32,16 +32,17 @@ public:
 private:
 	struct Node
 	{
-		BoundingBox Bounds;
+		BoundingBox Bounds = {};
+		
+		int TriangleIndex = 0;
+		int TriangleCount = 0;
 
-		std::vector<Triangle> Triangles;
-
-		std::shared_ptr<Node> Left;
-		std::shared_ptr<Node> Right;
+		int ChildIndex = 0;
 	};
-
 	static constexpr int maxDepth = 20;
 
+	std::vector<Triangle>  allTriangles;
+	std::vector<std::shared_ptr<Node>> allNodes;
 	std::shared_ptr<Node> hierarchy;
 	
 	void split(std::shared_ptr<Node>& node, int depth = 0);

@@ -1,5 +1,7 @@
 #include "data/BVH.h"
 
+#include <algorithm>
+
 #include "component/Transform.h"
 #include "data/mesh/Mesh.h"
 #include "data/physics/HitInfo.h"
@@ -33,12 +35,17 @@ void BVH::Update(const std::vector<Mesh>& meshes)
 		triangles.insert(triangles.end(), meshTriangles.begin(), meshTriangles.end());
 	}
 
-	hierarchy->Triangles = triangles;
+	allTriangles = triangles;
+	hierarchy->TriangleIndex = 0;
+	hierarchy->TriangleCount = static_cast<int>(allTriangles.size());
+
 	split(hierarchy, 1);
 }
 
 void BVH::DrawNodes(const Transform& transform) const
 {
+	if (allNodes.size() == 0) return;
+
 	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.z), glm::vec3(.0f, 0.0f, 1.0f))
 							 * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
 							 * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, .0f));
@@ -51,7 +58,6 @@ bool BVH::IntersectRay(const Ray& ray, HitInfo& outHitInfo) const
 {
 	return intersectRay(ray, hierarchy, outHitInfo);
 }
-
 
 int BVH::GetMaxDepth()
 {
@@ -69,24 +75,36 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 
 	int splitAxis = 0; float splitPos = 0; float cost = 0;
 	chooseSplit(node, splitAxis, splitPos, cost);
-	if (cost >= nodeCost(node->Bounds.GetSize(), static_cast<int>(node->Triangles.size())))
+	if (cost >= nodeCost(node->Bounds.GetSize(), node->TriangleCount))
 		return;
 
-	node->Left = std::make_shared<Node>();
-	node->Right = std::make_shared<Node>();
+	std::shared_ptr<Node> leftChild = std::make_shared<Node>();
+	std::shared_ptr<Node> rightChild = std::make_shared<Node>();
 
-	glm::vec3 size = node->Bounds.GetSize();
+	leftChild->TriangleIndex = node->TriangleIndex;
+	rightChild->TriangleIndex = node->TriangleIndex;
 
-	for (const Triangle& triangle : node->Triangles)
+	for (int i = node->TriangleIndex; i < node->TriangleIndex + node->TriangleCount; ++i)
 	{
-		bool isInLeft = triangle.Center[splitAxis] < splitPos;
-		std::shared_ptr<Node>& child = isInLeft ? node->Left : node->Right;
-		child->Triangles.push_back(triangle);
-		child->Bounds.InsertTriangle(triangle);
+		bool isInLeft = allTriangles[i].Center[splitAxis] < splitPos;
+		std::shared_ptr<Node>& child = isInLeft ? leftChild : rightChild;
+		child->Bounds.InsertTriangle(allTriangles[i]);
+		child->TriangleCount++;
+
+		if (isInLeft)
+		{
+			int swap = child->TriangleIndex + child->TriangleCount - 1;
+			std::swap(allTriangles[i], allTriangles[swap]);
+			rightChild->TriangleIndex++;
+		}
 	}
 
-	split(node->Left, depth + 1);
-	split(node->Right, depth + 1);
+	node->ChildIndex = static_cast<int>(allNodes.size());
+	allNodes.push_back(leftChild);
+	allNodes.push_back(rightChild);
+
+	split(leftChild, depth + 1);
+	split(rightChild, depth + 1);
 }
 
 void BVH::chooseSplit(const std::shared_ptr<Node>& node, int& outAxis, float& outPos, float& outCost) const
@@ -100,6 +118,9 @@ void BVH::chooseSplit(const std::shared_ptr<Node>& node, int& outAxis, float& ou
 	{
 		float boundsStart = node->Bounds.Min[axis];
 		float boundsEnd = node->Bounds.Max[axis];
+
+		if (boundsStart == boundsEnd)
+			continue;
 
 		for (int i = 0; i < testPerAxisCount; i++)
 		{
@@ -129,8 +150,9 @@ float BVH::evaluateSplit(const std::shared_ptr<Node>& node, int& splitAxis, floa
 	int inACount = 0;
 	int inBCount = 0;
 
-	for (const Triangle& triangle : node->Triangles)
+	for (int i = node->TriangleIndex; i < node->TriangleIndex + node->TriangleCount; ++i)
 	{
+		const Triangle& triangle = allTriangles[i];
 		if (triangle.Center[splitAxis] < splitPos)
 		{
 			boundsA.InsertTriangle(triangle);
@@ -159,12 +181,12 @@ bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInf
 
 	if (boxHitInfo.hit)
 	{
-		if (node->Left == nullptr && node->Right == nullptr)
+		if (node->ChildIndex == 0 && node != hierarchy)
 		{
 			HitInfo triangleHitInfo;
-			for (const Triangle& triangle : node->Triangles)
+			for (int i = node->TriangleIndex; i < node->TriangleIndex + node->TriangleCount; ++i)
 			{
-				RayTriangleIntersection(ray, triangle, triangleHitInfo);
+				RayTriangleIntersection(ray, allTriangles[i], triangleHitInfo);
 				if (triangleHitInfo.distance < outHitInfo.distance)
 				{
 					outHitInfo.hit = triangleHitInfo.hit;
@@ -175,8 +197,8 @@ bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInf
 		}
 		else
 		{
-			intersectRay(ray, node->Left, outHitInfo);
-			intersectRay(ray, node->Right, outHitInfo);
+			intersectRay(ray, allNodes[node->ChildIndex], outHitInfo);
+			intersectRay(ray, allNodes[node->ChildIndex + 1], outHitInfo);
 		}
 	}
 	return outHitInfo.hit;
@@ -184,19 +206,20 @@ bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInf
 
 void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix) const
 {
-	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH || node == nullptr)
+	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH)
 		return;
 
-	if (node->Triangles.size() == 0)
-		return;
-
-	Color color = getColorForDepth(depth);
-
-	if (depth == VISUAL_MAX_DEPTH - 1) 
+	if (node->TriangleCount > 0 && depth == VISUAL_MAX_DEPTH - 1)
+	{
+		Color color = getColorForDepth(depth);
 		node->Bounds.Draw(transform, rotationMatrix, color);
+	}
 
-	drawNodes(transform, node->Left, depth + 1, rotationMatrix);
-	drawNodes(transform, node->Right, depth + 1, rotationMatrix);
+	if (node->ChildIndex > 0 || node == hierarchy)
+	{
+		drawNodes(transform, allNodes[node->ChildIndex + 1], depth + 1, rotationMatrix);
+		drawNodes(transform, allNodes[node->ChildIndex], depth + 1, rotationMatrix);
+	}
 }
 
 Color BVH::getColorForDepth(int depth) const
