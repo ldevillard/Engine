@@ -177,7 +177,7 @@ void Model::draw()
 void Model::updateBoundingVolumes()
 {
     editorCollider->UpdateBoundingBox(meshes);
-    editorCollider->UpdateBVH(meshes);
+    editorCollider->BuildBVH(meshes);
 }
 
 void Model::loadModel(std::string path)

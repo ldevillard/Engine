@@ -22,7 +22,7 @@ public:
 	const BoundingBox& GetBoundingBox() const;
 	void UpdateBoundingBox(const std::vector<Mesh>& meshes);
 
-	void UpdateBVH(const std::vector<Mesh>& meshes);
+	void BuildBVH(const std::vector<Mesh>& meshes);
 
 	bool IntersectRayBVH(const Ray& ray, RaycastHit& outRaycastHit) const;
 	bool IntersectRayBoundingBox(const Ray& ray, RaycastHit& outRaycastHit) const;

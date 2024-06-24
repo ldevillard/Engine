@@ -21,10 +21,10 @@ BVH::BVH(const std::vector<Mesh>& meshes)
 {
 	hierarchy = std::make_shared<Node>();
 
-	Update(meshes);
+	BuildBVH(meshes);
 }
 
-void BVH::Update(const std::vector<Mesh>& meshes)
+void BVH::BuildBVH(const std::vector<Mesh>& meshes)
 {
 	std::vector<Triangle> triangles;
 
@@ -56,6 +56,7 @@ void BVH::DrawNodes(const Transform& transform) const
 // we assume that ray is in bvh' local space
 bool BVH::IntersectRay(const Ray& ray, HitInfo& outHitInfo) const
 {
+	if (allTriangles.size() == 0) return false; 
 	return intersectRay(ray, hierarchy, outHitInfo);
 }
 
@@ -109,7 +110,7 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 
 void BVH::chooseSplit(const std::shared_ptr<Node>& node, int& outAxis, float& outPos, float& outCost) const
 {
-	constexpr int testPerAxisCount = 20;
+	constexpr int testPerAxisCount = 5;
 	float bestCost = std::numeric_limits<float>::max();
 	float bestPos = 0;
 	int bestAxis = 0;
@@ -181,7 +182,7 @@ bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInf
 
 	if (boxHitInfo.hit)
 	{
-		if (node->ChildIndex == 0 && node != hierarchy)
+		if ((node->ChildIndex == 0 && node != hierarchy) || allTriangles.size() < 10)
 		{
 			HitInfo triangleHitInfo;
 			for (int i = node->TriangleIndex; i < node->TriangleIndex + node->TriangleCount; ++i)

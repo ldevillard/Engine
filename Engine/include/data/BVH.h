@@ -21,7 +21,7 @@ public:
 	BVH();
 	BVH(const std::vector<Mesh>& meshes);
 
-	void Update(const std::vector<Mesh>& meshes);
+	void BuildBVH(const std::vector<Mesh>& meshes);
 
 	void DrawNodes(const Transform& transform) const;
 	// we assume that ray is in bvh' local space
@@ -40,7 +40,7 @@ private:
 
 		int ChildIndex = 0;
 	};
-	static constexpr int maxDepth = 20;
+	static constexpr int maxDepth = 15;
 
 	std::vector<Triangle>  allTriangles;
 	std::vector<std::shared_ptr<Node>> allNodes;

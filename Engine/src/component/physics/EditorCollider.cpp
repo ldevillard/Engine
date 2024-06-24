@@ -36,9 +36,10 @@ void EditorCollider::UpdateBoundingBox(const std::vector<Mesh>& meshes)
         boundingBox.InsertMesh(mesh);
 }
 
-void EditorCollider::UpdateBVH(const std::vector<Mesh>& meshes)
+void EditorCollider::BuildBVH(const std::vector<Mesh>& meshes)
 {
-    bvh.Update(meshes);
+    bvh.BuildBVH(meshes);
+	std::cout << "The BVH of entity: " << entity->Name << " successfully built" << std::endl;
 }
 
 bool EditorCollider::IntersectRayBVH(const Ray& ray, RaycastHit& outRaycastHit) const
