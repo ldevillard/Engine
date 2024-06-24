@@ -67,18 +67,21 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 	if (depth == maxDepth)
 		return;
 
+	int splitAxis = 0; float splitPos = 0; float cost = 0;
+	chooseSplit(node, splitAxis, splitPos, cost);
+	if (cost >= nodeCost(node->Bounds.GetSize(), node->Triangles.size()))
+		return;
+
 	node->Left = std::make_shared<Node>();
 	node->Right = std::make_shared<Node>();
 
 	glm::vec3 size = node->Bounds.GetSize();
-	int longestAxis = size.x > std::max(size.y, size.z) ? 0 : size.y > size.z ? 1 : 2;
-	float splitValue = node->Bounds.Center[longestAxis];
 
 	for (const Triangle& triangle : node->Triangles)
 	{
 		glm::vec3 triangleCenter = (triangle.A.Position + triangle.B.Position + triangle.C.Position) / 3.0f;
 
-		bool isInLeft = triangleCenter[longestAxis] < splitValue;
+		bool isInLeft = triangleCenter[splitAxis] < splitPos;
 		std::shared_ptr<Node>& child = isInLeft ? node->Left : node->Right;
 		child->Triangles.push_back(triangle);
 		child->Bounds.InsertTriangle(triangle);
@@ -88,20 +91,70 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 	split(node->Right, depth + 1);
 }
 
-void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix) const
+void BVH::chooseSplit(const std::shared_ptr<Node>& node, int& outAxis, float& outPos, float& outCost) const
 {
-	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH || node == nullptr)
-		return;
+	const int testPerAxisCount = 10; // TODO: set as constexpr in .h file
+	float bestCost = std::numeric_limits<float>::max();
+	float bestPos = 0;
+	int bestAxis = 0;
 
-	if (node->Triangles.size() == 0)
-		return;
+	for (int axis = 0; axis < 3; axis++)
+	{
+		float boundsStart = node->Bounds.Min[axis];
+		float boundsEnd = node->Bounds.Max[axis];
 
-	Color color = getColorForDepth(depth);
+		for (int i = 0; i < testPerAxisCount; i++)
+		{
+			float splitT = (i + 1) / (testPerAxisCount + 1.f);
 
-	if (depth == VISUAL_MAX_DEPTH - 1) node->Bounds.Draw(transform, rotationMatrix, color);
+			float pos = std::lerp(boundsStart, boundsEnd, splitT);
+			float cost = evaluateSplit(node, axis, pos);
 
-	drawNodes(transform, node->Left, depth + 1, rotationMatrix);
-	drawNodes(transform, node->Right, depth + 1, rotationMatrix);
+			if (cost < bestCost)
+			{
+				bestCost = cost;
+				bestPos = pos;
+				bestAxis = axis;
+			}
+		}
+	}
+
+	outAxis = bestAxis;
+	outPos = bestPos;
+	outCost = bestCost;
+}
+
+float BVH::evaluateSplit(const std::shared_ptr<Node>& node, int& splitAxis, float& splitPos) const
+{
+	BoundingBox boundsA;
+	BoundingBox boundsB;
+	int inACount = 0;
+	int inBCount = 0;
+
+	for (const Triangle& triangle : node->Triangles)
+	{
+		// TODO: set triangleCenter in triangle class to compute it only one time
+		glm::vec3 triangleCenter = (triangle.A.Position + triangle.B.Position + triangle.C.Position) / 3.0f;
+
+		if (triangleCenter[splitAxis] < splitPos)
+		{
+			boundsA.InsertTriangle(triangle);
+			inACount++;
+		}
+		else
+		{
+			boundsB.InsertTriangle(triangle);
+			inBCount++;
+		}
+	}
+
+	return nodeCost(boundsA.GetSize(), inACount) + nodeCost(boundsB.GetSize(), inBCount);
+}
+
+float BVH::nodeCost(const glm::vec3& size, int trianglesCount) const
+{
+	float halfArea = size.x * (size.y + size.z) + size.y * size.z;
+	return halfArea * trianglesCount;
 }
 
 bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInfo& outHitInfo) const
@@ -132,6 +185,23 @@ bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInf
 		}
 	}
 	return outHitInfo.hit;
+}
+
+void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix) const
+{
+	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH || node == nullptr)
+		return;
+
+	if (node->Triangles.size() == 0)
+		return;
+
+	Color color = getColorForDepth(depth);
+
+	if (depth == VISUAL_MAX_DEPTH - 1) 
+		node->Bounds.Draw(transform, rotationMatrix, color);
+
+	drawNodes(transform, node->Left, depth + 1, rotationMatrix);
+	drawNodes(transform, node->Right, depth + 1, rotationMatrix);
 }
 
 Color BVH::getColorForDepth(int depth) const
