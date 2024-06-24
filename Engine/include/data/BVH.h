@@ -32,7 +32,7 @@ public:
 private:
 	struct Node
 	{
-		BoundingBox Bounds = {};
+		BoundingBox Bounds = BoundingBox(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0));
 		
 		int TriangleIndex = 0;
 		int TriangleCount = 0;
