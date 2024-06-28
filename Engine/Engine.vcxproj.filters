@@ -1278,10 +1278,6 @@
   <ItemGroup>
     <None Include="shaders\VertexShader.glsl" />
     <None Include="shaders\FragmentShader.glsl" />
-    <None Include="shaders\light\Color.vs" />
-    <None Include="shaders\light\Color.fs" />
-    <None Include="shaders\light\LightCube.vs" />
-    <None Include="shaders\light\LightCube.fs" />
     <None Include="include\maths\glm\gtx\associated_min_max.inl">
       <Filter>Header Files\other</Filter>
     </None>

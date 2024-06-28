@@ -565,10 +565,6 @@
     <None Include="shaders\FragmentShader.glsl" />
     <None Include="shaders\gizmo\GizmoFragmentShader.glsl" />
     <None Include="shaders\gizmo\GizmoVertexShader.glsl" />
-    <None Include="shaders\light\Color.fs" />
-    <None Include="shaders\light\Color.vs" />
-    <None Include="shaders\light\LightCube.fs" />
-    <None Include="shaders\light\LightCube.vs" />
     <None Include="shaders\compute\BlitTexturesComputeShader.glsl" />
     <None Include="shaders\outline\OutlineDilatingFragmentShader.glsl" />
     <None Include="shaders\outline\OutlineFragmentShader.glsl" />

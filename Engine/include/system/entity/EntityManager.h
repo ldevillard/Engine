@@ -9,6 +9,8 @@
 
 #define MAX_LIGHTS 8
 
+class Light;
+
 class EntityManager : public Singleton<EntityManager>
 {
 public:	
@@ -30,6 +32,7 @@ public:
 
 	const std::vector<Entity*>& GetEntities() const;
 	const std::vector<Model*> GetModels() const;
+	const Light* GetMainLight() const;
 	const std::string GenerateNewEntityName(const std::string& prefix) const;
 
 	// serialization

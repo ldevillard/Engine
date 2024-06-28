@@ -22,6 +22,8 @@ public:
 	void Compute() override;
 	Component* Clone() override;
 
+	const glm::vec3 GetDirection() const;
+	
 	void SetLightTypeFromString(const std::string& type);
 	static const std::vector<const char*> Names; // = { "Directional", "Point", "Spot" };
 

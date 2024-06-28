@@ -43,6 +43,11 @@ Component* Light::Clone()
 	return newLight;
 }
 
+const glm::vec3 Light::GetDirection() const
+{
+	return transform->GetForwardVector();
+}
+
 void Light::SetLightTypeFromString(const std::string& type)
 {
 	if (type == "Directional")

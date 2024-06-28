@@ -6,6 +6,7 @@
 
 #include "render/Shader.h"
 #include "system/editor/Editor.h"
+#include "system/entity/EntityManager.h"
 
 #pragma region Public Methods
 
@@ -25,11 +26,23 @@ void CubeMap::Draw() const
     shader->Use();
 
     const EditorCamera* camera = Editor::Get().GetCamera();
-
+    const Light* light = EntityManager::Get().GetMainLight();
+    
     glm::mat4 view = glm::mat4(glm::mat3(camera->GetViewMatrix())); // remove translation from the view matrix
     shader->SetMat4("view", view);
     shader->SetMat4("projection", camera->GetProjectionMatrix(static_cast<float>(SCR_WIDTH), static_cast<float>(SCR_WIDTH)));
 
+    if (light != nullptr)
+    {
+        shader->SetVec3("lightDirection", light->GetDirection());
+        shader->SetFloat("lightIntensity", light->Intensity);
+    }
+    else
+    {
+        shader->SetVec3("lightDirection", glm::vec3(0, 0, -1));
+        shader->SetFloat("lightIntensity", 1);
+    }
+    
     // skybox cube
     glBindVertexArray(screenCube.VAO);
     glActiveTexture(GL_TEXTURE0);

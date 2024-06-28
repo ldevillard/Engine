@@ -62,7 +62,8 @@ vec3 ComputeDirectionalLighting(Light light)
 
     vec3 specular = spec * light.color * material.specular;
 
-	return (ambient + diffuse + specular) * light.intensity;
+    float lightAngleT = clamp((light.direction.y + 1.0) * 0.5, 0.0, 1.0);
+    return mix((ambient + diffuse + specular) * light.intensity, vec3(0), lightAngleT);
 }
 
 vec3 ComputePointLighting(Light light)

@@ -166,6 +166,24 @@ const std::vector<Model*> EntityManager::GetModels() const
 	return models;
 }
 
+const Light* EntityManager::GetMainLight() const
+{
+	Light* mainLight = nullptr;
+	for (Entity* e : entities)
+	{
+		Light* light = nullptr;
+		if (e->TryGetComponent<Light>(light))
+		{
+			if (light->lightType == Light::LightType::Directional)
+			{
+				mainLight = light;
+				break;
+			}
+		}
+	}
+	return mainLight;
+}
+
 const std::string EntityManager::GenerateNewEntityName(const std::string& prefix) const
 {
 	std::string name(prefix);
