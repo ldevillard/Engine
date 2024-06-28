@@ -1,6 +1,7 @@
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 #include <regex>
+#include <thread>
 
 #include "system/entity/EntityManager.h"
 #include "system/editor/Editor.h"
@@ -221,6 +222,21 @@ void EntityManager::Deserialize(const nlohmann::ordered_json& json)
 	{
 		Entity* entity = CreateEntity(entityJson["Name"]);
 		entity->Deserialize(entityJson);
+	}
+
+	std::vector<std::thread> threads;
+	auto bvhBuilder = [](Entity* entity) 
+	{
+		entity->BuildBVH();
+	};
+	
+	for (Entity* entity : entities)
+		threads.emplace_back(bvhBuilder, entity);
+
+	for (std::thread& thread : threads)
+	{
+		if (thread.joinable())
+			thread.join();
 	}
 }
 

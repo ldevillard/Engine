@@ -47,6 +47,8 @@ public:
     nlohmann::ordered_json Serialize() const override;
     void Deserialize(const nlohmann::ordered_json& json) override;
 
+    void BuildBVH() const;
+
     PrimitiveType ModelType = PrimitiveType::None;
 
 private:
@@ -60,7 +62,6 @@ private:
 
     Material material = Material::Default;
 
-    void updateBoundingVolumes();
     void loadModel(std::string path);
     void loadPrimitiveModel(PrimitiveType type);
     void processNode(aiNode* node, const aiScene* scene);

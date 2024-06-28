@@ -9,11 +9,11 @@
 
 #pragma region Public Methods
 
-EditorCollider::EditorCollider(Entity* e) : boundingBox(), entity(e)
+EditorCollider::EditorCollider(Entity* e) : boundingBox(), entity(e), bvh()
 {
 }
 
-EditorCollider::EditorCollider(const EditorCollider& other) : boundingBox(other.boundingBox), entity(other.entity)
+EditorCollider::EditorCollider(const EditorCollider& other) : boundingBox(other.boundingBox), entity(other.entity), bvh(other.bvh)
 {
 }
 

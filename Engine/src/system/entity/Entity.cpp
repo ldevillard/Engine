@@ -125,6 +125,15 @@ void Entity::Deserialize(const nlohmann::ordered_json& json)
 	}
 }
 
+void Entity::BuildBVH() const
+{
+    Model* model = nullptr;
+    if (TryGetComponent<Model>(model))
+    {
+        model->BuildBVH();
+    }
+}
+
 #pragma endregion
 
 #pragma region Private Methods

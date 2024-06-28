@@ -30,7 +30,6 @@ public:
 	const EditorCollider* GetEditorCollider() const;
 	bool IsSelectedEntity() const;
 
-	Transform* transform = nullptr;
 
 	void Compute();
 	// return true if the outline is computed successfully
@@ -40,7 +39,10 @@ public:
 	nlohmann::ordered_json Serialize() const;
 	void Deserialize(const nlohmann::ordered_json& json);
 
+	void BuildBVH() const;
+
 	std::string Name;
+	Transform* transform = nullptr;
 
 private:
 	void setupComponent(Component* component);
@@ -94,5 +96,6 @@ T* Entity::AddComponent(Args&&... args)
 		return nullptr;
 	}
 	setupComponent(component);
+	BuildBVH(); // TODO: Build bvh only if model and call directly editorCollider->BuildBVH() method
 	return newComponent;
 }

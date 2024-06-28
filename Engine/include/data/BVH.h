@@ -20,6 +20,7 @@ class BVH
 public:
 	BVH();
 	BVH(const std::vector<Mesh>& meshes);
+	BVH(const BVH& other);
 
 	void BuildBVH(const std::vector<Mesh>& meshes);
 

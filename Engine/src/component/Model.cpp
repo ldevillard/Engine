@@ -135,7 +135,7 @@ void Model::SetMaterialFromName(std::string name)
 void Model::SetEditorCollider(EditorCollider* cl)
 {
     Component::SetEditorCollider(cl);
-	updateBoundingVolumes();
+    editorCollider->UpdateBoundingBox(meshes);
 }
 
 nlohmann::ordered_json Model::Serialize() const
@@ -164,6 +164,11 @@ void Model::Deserialize(const nlohmann::ordered_json& json)
 		loadPrimitiveModel(ModelType);
 }
 
+void Model::BuildBVH() const
+{
+    editorCollider->BuildBVH(meshes);
+}
+
 #pragma endregion
 
 #pragma region Private Methods
@@ -172,12 +177,6 @@ void Model::draw()
 {
     for (unsigned int i = 0; i < meshes.size(); i++)
         meshes[i].Draw(shader);
-}
-
-void Model::updateBoundingVolumes()
-{
-    editorCollider->UpdateBoundingBox(meshes);
-    editorCollider->BuildBVH(meshes);
 }
 
 void Model::loadModel(std::string path)

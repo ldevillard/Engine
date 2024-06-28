@@ -24,6 +24,10 @@ BVH::BVH(const std::vector<Mesh>& meshes)
 	BuildBVH(meshes);
 }
 
+BVH::BVH(const BVH& other) : hierarchy(other.hierarchy), allNodes(other.allNodes), allTriangles(other.allTriangles)
+{
+}
+
 void BVH::BuildBVH(const std::vector<Mesh>& meshes)
 {
 	std::vector<Triangle> triangles;
