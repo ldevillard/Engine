@@ -77,6 +77,11 @@ const BoundingBox& Model::GetBoundingBox() const
    return editorCollider->GetBoundingBox();
 }
 
+const BVH& Model::GetBVH() const
+{
+    return editorCollider->GetBVH();
+}
+
 void Model::Compute()
 {
     shader->Use();

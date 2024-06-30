@@ -14,18 +14,28 @@ int BVH::VISUAL_MAX_DEPTH = 0;
 
 BVH::BVH()
 {
-	hierarchy = std::make_shared<Node>();
+	hierarchy = std::make_shared<BVHNode>();
 }
 
 BVH::BVH(const std::vector<Mesh>& meshes)
 {
-	hierarchy = std::make_shared<Node>();
+	hierarchy = std::make_shared<BVHNode>();
 
 	BuildBVH(meshes);
 }
 
 BVH::BVH(const BVH& other) : hierarchy(other.hierarchy), allNodes(other.allNodes), allTriangles(other.allTriangles)
 {
+}
+
+const std::vector<Triangle>& BVH::GetTriangles() const
+{
+	return allTriangles;
+}
+
+const std::vector<std::shared_ptr<BVHNode>>& BVH::GetNodes() const
+{
+	return allNodes;
 }
 
 void BVH::BuildBVH(const std::vector<Mesh>& meshes)
@@ -42,6 +52,7 @@ void BVH::BuildBVH(const std::vector<Mesh>& meshes)
 	allTriangles = triangles;
 	hierarchy->TriangleIndex = 0;
 	hierarchy->TriangleCount = static_cast<int>(allTriangles.size());
+	allNodes.push_back(hierarchy);
 
 	split(hierarchy, 1);
 }
@@ -73,7 +84,7 @@ int BVH::GetMaxDepth()
 
 #pragma region Private Methods
 
-void BVH::split(std::shared_ptr<Node>& node, int depth)
+void BVH::split(std::shared_ptr<BVHNode>& node, int depth)
 {
 	if (depth == maxDepth)
 		return;
@@ -83,8 +94,8 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 	if (cost >= nodeCost(node->Bounds.GetSize(), node->TriangleCount))
 		return;
 
-	std::shared_ptr<Node> leftChild = std::make_shared<Node>();
-	std::shared_ptr<Node> rightChild = std::make_shared<Node>();
+	std::shared_ptr<BVHNode> leftChild = std::make_shared<BVHNode>();
+	std::shared_ptr<BVHNode> rightChild = std::make_shared<BVHNode>();
 
 	leftChild->TriangleIndex = node->TriangleIndex;
 	rightChild->TriangleIndex = node->TriangleIndex;
@@ -92,7 +103,7 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 	for (int i = node->TriangleIndex; i < node->TriangleIndex + node->TriangleCount; ++i)
 	{
 		bool isInLeft = allTriangles[i].Center[splitAxis] < splitPos;
-		std::shared_ptr<Node>& child = isInLeft ? leftChild : rightChild;
+		std::shared_ptr<BVHNode>& child = isInLeft ? leftChild : rightChild;
 		child->Bounds.InsertTriangle(allTriangles[i]);
 		child->TriangleCount++;
 
@@ -112,7 +123,7 @@ void BVH::split(std::shared_ptr<Node>& node, int depth)
 	split(rightChild, depth + 1);
 }
 
-void BVH::chooseSplit(const std::shared_ptr<Node>& node, int& outAxis, float& outPos, float& outCost) const
+void BVH::chooseSplit(const std::shared_ptr<BVHNode>& node, int& outAxis, float& outPos, float& outCost) const
 {
 	constexpr int testPerAxisCount = 5;
 	float bestCost = std::numeric_limits<float>::max();
@@ -148,7 +159,7 @@ void BVH::chooseSplit(const std::shared_ptr<Node>& node, int& outAxis, float& ou
 	outCost = bestCost;
 }
 
-float BVH::evaluateSplit(const std::shared_ptr<Node>& node, int& splitAxis, float& splitPos) const
+float BVH::evaluateSplit(const std::shared_ptr<BVHNode>& node, int& splitAxis, float& splitPos) const
 {
 	BoundingBox boundsA(std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
 	BoundingBox boundsB(std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
@@ -179,7 +190,7 @@ float BVH::nodeCost(const glm::vec3& size, int trianglesCount) const
 	return halfArea * trianglesCount;
 }
 
-bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInfo& outHitInfo) const
+bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<BVHNode>& node, HitInfo& outHitInfo) const
 {
 	HitInfo boxHitInfo;
 	RayAABoxIntersection(ray, node->Bounds, boxHitInfo);
@@ -209,7 +220,7 @@ bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<Node>& node, HitInf
 	return outHitInfo.hit;
 }
 
-void BVH::drawNodes(const Transform& transform, const std::shared_ptr<Node>& node, int depth, const glm::mat4& rotationMatrix) const
+void BVH::drawNodes(const Transform& transform, const std::shared_ptr<BVHNode>& node, int depth, const glm::mat4& rotationMatrix) const
 {
 	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH)
 		return;

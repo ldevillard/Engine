@@ -16,6 +16,8 @@ uniform int maxBounceCount;
 uniform int numberRaysPerPixel;
 uniform float divergeStrength;
 
+#define BVH_DEPTH 15
+
 const int checkerPattern = 1;
 const int hideEmissive = 2;
 
@@ -75,11 +77,19 @@ struct HitInfo
 struct MeshInfo
 {
 	int firstTriangleIndex;
-	int triangleCount;
-	vec3 boundsMin;
-	vec3 boundsMax;
+	int firstNodeIndex;
 	mat4 inverseTransform;
 	Material material;
+};
+
+struct BVHNode
+{
+	vec3 boundsMin;
+	vec3 boundsMax;
+
+	int triangleIndex;
+	int triangleCount;
+	int childIndex;
 };
 
 uniform int sphereCount;
@@ -94,14 +104,20 @@ layout(std430, binding = 1) buffer cubeData
 	Cube cubes[];
 };
 
-uniform int meshCount;
 layout(std430, binding = 2) buffer triangleData
 {
 	Triangle triangles[];
 };
+
+uniform int meshCount;
 layout(std430, binding = 3) buffer meshData
 {
 	MeshInfo meshes[];
+};
+
+layout(std430, binding = 4) buffer bvhNodesData
+{
+	BVHNode bvhNodes[];
 };
 
 uint NextRandom(inout uint state)
@@ -262,10 +278,12 @@ HitInfo RayTriangle(Ray ray, Triangle triangle)
 	return hitInfo;
 }
 
-bool RayBoundingBox(Ray ray, vec3 boxMin, vec3 boxMax, mat4 txi)
+bool RayBoundingBox(Ray ray, vec3 boxMin, vec3 boxMax)
 {
-	vec3 ro = vec3((txi * vec4(ray.origin, 1.0)).xyz);
-	vec3 rd = vec3((txi * vec4(ray.direction, 0.0)).xyz);
+	//vec3 ro = vec3((txi * vec4(ray.origin, 1.0)).xyz);
+	//vec3 rd = vec3((txi * vec4(ray.direction, 0.0)).xyz);
+	vec3 ro = ray.origin;
+	vec3 rd = ray.direction;
 
 	vec3 invDir = 1 / rd;
 	vec3 tMin = (boxMin - ro) * invDir;
@@ -276,6 +294,46 @@ bool RayBoundingBox(Ray ray, vec3 boxMin, vec3 boxMax, mat4 txi)
 	float tFar = min(min(t2.x, t2.y), t2.z);
 	return tNear <= tFar;
 };
+
+HitInfo RayTriangleBVH(Ray ray, int triangleIndex, int nodeIndex, mat4 txi)
+{
+	BVHNode nodeStack[BVH_DEPTH];
+	int stackIndex = 0;
+	nodeStack[stackIndex++] = bvhNodes[nodeIndex];
+
+	HitInfo hitInfo;
+	hitInfo.hit = false;
+	hitInfo.distance = 1.0 / 0.0; // infinity
+
+	Ray localRay = ray;
+	localRay.origin = vec3((txi * vec4(ray.origin, 1.0)).xyz);
+	localRay.direction = vec3((txi * vec4(ray.direction, 0.0)).xyz);
+
+	while (stackIndex > 0)
+	{
+		BVHNode node = nodeStack[--stackIndex];
+
+		if (RayBoundingBox(localRay, node.boundsMin, node.boundsMax))
+		{
+			if (node.childIndex == 0) // leaf node
+			{
+				for (int i = triangleIndex + node.triangleIndex; i < triangleIndex + node.triangleIndex + node.triangleCount; i++)
+				{
+					HitInfo triangleHitInfo = RayTriangle(localRay, triangles[i]);
+					if (triangleHitInfo.hit && triangleHitInfo.distance < hitInfo.distance)
+						hitInfo = triangleHitInfo;
+				}
+			}
+			else
+			{
+				nodeStack[stackIndex++] = bvhNodes[nodeIndex + node.childIndex + 1];
+				nodeStack[stackIndex++] = bvhNodes[nodeIndex + node.childIndex + 0];
+			}
+		}
+	}
+
+	return hitInfo;
+}
 
 HitInfo CalculateRayCollision(Ray ray)
 {
@@ -314,20 +372,12 @@ HitInfo CalculateRayCollision(Ray ray)
 	{
 		MeshInfo meshInfo = meshes[i];
 
-		if (!RayBoundingBox(ray, meshInfo.boundsMin, meshInfo.boundsMax, meshInfo.inverseTransform))
-			continue;
+		HitInfo hit = RayTriangleBVH(ray, meshInfo.firstTriangleIndex, meshInfo.firstNodeIndex, meshInfo.inverseTransform);
 	
-		for (int j = 0; j < meshInfo.triangleCount; j++) 
+		if (hit.hit && hit.distance < hitInfo.distance)
 		{
-			int triIndex = meshInfo.firstTriangleIndex + j;
-			Triangle tri = triangles[triIndex];
-			HitInfo hit = RayTriangle(ray, tri);
-			
-			if (hit.hit && hit.distance < hitInfo.distance)
-			{
-				hitInfo = hit;
-				hitInfo.material = meshInfo.material;
-			}
+			hitInfo = hit;
+			hitInfo.material = meshInfo.material;
 		}
 	}
 

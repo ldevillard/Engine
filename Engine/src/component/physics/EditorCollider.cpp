@@ -30,6 +30,11 @@ const BoundingBox& EditorCollider::GetBoundingBox() const
 	return boundingBox;
 }
 
+const BVH& EditorCollider::GetBVH() const
+{
+	return bvh;
+}
+
 void EditorCollider::UpdateBoundingBox(const std::vector<Mesh>& meshes)
 {
     for (const Mesh& mesh : meshes)

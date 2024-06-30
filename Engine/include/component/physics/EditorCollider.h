@@ -20,8 +20,9 @@ public:
 	void Draw(const Transform& transform);
 	
 	const BoundingBox& GetBoundingBox() const;
-	void UpdateBoundingBox(const std::vector<Mesh>& meshes);
+	const BVH& GetBVH() const;
 
+	void UpdateBoundingBox(const std::vector<Mesh>& meshes);
 	void BuildBVH(const std::vector<Mesh>& meshes);
 
 	bool IntersectRayBVH(const Ray& ray, RaycastHit& outRaycastHit) const;

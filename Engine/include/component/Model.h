@@ -15,6 +15,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+class BVH;
 class EditorCollider;
 
 class Model : public Component
@@ -31,6 +32,7 @@ public:
 
     Material& GetMaterial();
     const BoundingBox& GetBoundingBox() const;
+    const BVH& GetBVH() const;
 
     void Compute() override;
     Component* Clone() override;
