@@ -142,7 +142,7 @@ int main()
 		Editor::Get().RenderFrame(&shader, &cubemap);
 
 		// raytracing
-		if (settings.RayTracing)
+		if (settings.Raytracing)
 			RayTracer::Draw();
 
 		// editor
