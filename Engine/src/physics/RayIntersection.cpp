@@ -51,7 +51,7 @@ bool RayTriangleIntersection(const Ray& ray, const Triangle& triangle, HitInfo& 
     float v = d * dot(q, AB);
     float t = d * dot(-n, rayOriginAOffset);
 
-    if (u < 0.0f || v < 0.0f || (u + v) >1.0f)
+    if (u < 0.0f || v < 0.0f || (u + v) > 1.0f)
         t = -1.0f;
 
     if (t > 0)

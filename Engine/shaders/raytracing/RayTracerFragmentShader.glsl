@@ -16,6 +16,8 @@ uniform int maxBounceCount;
 uniform int numberRaysPerPixel;
 uniform float divergeStrength;
 
+uniform uint bvhEnabled;
+
 #define BVH_DEPTH 15
 
 const int checkerPattern = 1;
@@ -78,6 +80,7 @@ struct MeshInfo
 {
 	int firstTriangleIndex;
 	int firstNodeIndex;
+	mat4 transform;
 	mat4 inverseTransform;
 	Material material;
 };
@@ -235,7 +238,7 @@ HitInfo RayCube(Ray ray, Cube cube) // box in case
 		vec3 absDir = abs(dir);
 		
 		if (absDir.x > absDir.y && absDir.x > absDir.z)
-		    normal =  vec3(sign(dir.x), 0.0, 0.0);
+		    normal = vec3(sign(dir.x), 0.0, 0.0);
 		else if (absDir.y > absDir.x && absDir.y > absDir.z)
 		    normal = vec3(0.0, sign(dir.y), 0.0);
 		else
@@ -247,47 +250,50 @@ HitInfo RayCube(Ray ray, Cube cube) // box in case
 	return hitInfo;
 }
 
-HitInfo RayTriangle(Ray ray, Triangle triangle)
-{
+HitInfo RayTriangle(Ray ray, Ray localRay, Triangle triangle, mat4 tx)
+{	
 	HitInfo hitInfo;
 	hitInfo.hit = false;
 
 	vec3 AB = triangle.pB - triangle.pA;
     vec3 AC = triangle.pC - triangle.pA;
-
-    vec3 n = cross(AB, AC);
-	float det = -dot(ray.direction, n);
-	float inverseDet = 1.0 / det;
-
-    vec3 AO = ray.origin - triangle.pA;
-	vec3 DAO = cross(AO, ray.direction);
 	
-	float u =  dot(AC, DAO) * inverseDet;
-	float v = -dot(AB, DAO) * inverseDet;
-	float w = 1 - u - v;
-	float distance = dot(AO, n) * inverseDet;
-
-	if (det >= 1E-6 && distance >= 0 && u >= 0 && v >= 0 && w >= 0)
+    vec3 n = cross(AB, AC);
+	float det = -dot(localRay.direction, n);
+	
+	if (det >= 1e-20)
 	{
-		hitInfo.hit = true;
-		hitInfo.distance = distance;
-		hitInfo.hitPoint = ray.origin + ray.direction * distance;
-		hitInfo.normal = normalize(triangle.nA * w + triangle.nB * u + triangle.nC * v);;
+		float inverseDet = 1.0 / det;
+		vec3 AO = localRay.origin - triangle.pA;
+		vec3 DAO = cross(AO, localRay.direction);
+		
+		float u = dot(AC, DAO) * inverseDet;
+		float v = -dot(AB, DAO) * inverseDet;
+		float w = 1 - u - v;
+		
+		if (u >= 0 && v >= 0 && w >= 0)
+		{
+			float distance = dot(AO, n) * inverseDet;
+			if (distance >= 0)
+			{
+				hitInfo.hit = true;
+				hitInfo.distance = distance;
+				hitInfo.hitPoint = ray.origin + ray.direction * distance;
+				
+				vec3 localNormal = normalize(triangle.nA * w + triangle.nB * u + triangle.nC * v);
+				hitInfo.normal = normalize((tx * vec4(localNormal, 0.0)).xyz);
+			}
+		}
 	}
-
+	
 	return hitInfo;
 }
 
 bool RayBoundingBox(Ray ray, vec3 boxMin, vec3 boxMax)
 {
-	//vec3 ro = vec3((txi * vec4(ray.origin, 1.0)).xyz);
-	//vec3 rd = vec3((txi * vec4(ray.direction, 0.0)).xyz);
-	vec3 ro = ray.origin;
-	vec3 rd = ray.direction;
-
-	vec3 invDir = 1 / rd;
-	vec3 tMin = (boxMin - ro) * invDir;
-	vec3 tMax = (boxMax - ro) * invDir;
+	vec3 invDir = 1 / ray.direction;
+	vec3 tMin = (boxMin - ray.origin) * invDir;
+	vec3 tMax = (boxMax - ray.origin) * invDir;
 	vec3 t1 = min(tMin, tMax);
 	vec3 t2 = max(tMin, tMax);
 	float tNear = max(max(t1.x, t1.y), t1.z);
@@ -295,7 +301,7 @@ bool RayBoundingBox(Ray ray, vec3 boxMin, vec3 boxMax)
 	return tNear <= tFar;
 };
 
-HitInfo RayTriangleBVH(Ray ray, int triangleIndex, int nodeIndex, mat4 txi)
+HitInfo RayTriangleBVH(Ray ray, int triangleIndex, int nodeIndex, mat4 tx, mat4 txi)
 {
 	BVHNode nodeStack[BVH_DEPTH];
 	int stackIndex = 0;
@@ -315,16 +321,16 @@ HitInfo RayTriangleBVH(Ray ray, int triangleIndex, int nodeIndex, mat4 txi)
 
 		if (RayBoundingBox(localRay, node.boundsMin, node.boundsMax))
 		{
-			if (node.childIndex == 0) // leaf node
+			if ((node.childIndex == 0 && bvhEnabled == 1) || bvhEnabled == 0) // leaf node
 			{
 				for (int i = triangleIndex + node.triangleIndex; i < triangleIndex + node.triangleIndex + node.triangleCount; i++)
 				{
-					HitInfo triangleHitInfo = RayTriangle(localRay, triangles[i]);
+					HitInfo triangleHitInfo = RayTriangle(ray, localRay, triangles[i], tx);
 					if (triangleHitInfo.hit && triangleHitInfo.distance < hitInfo.distance)
 						hitInfo = triangleHitInfo;
 				}
 			}
-			else
+			else if (bvhEnabled == 1)
 			{
 				nodeStack[stackIndex++] = bvhNodes[nodeIndex + node.childIndex + 1];
 				nodeStack[stackIndex++] = bvhNodes[nodeIndex + node.childIndex + 0];
@@ -372,7 +378,7 @@ HitInfo CalculateRayCollision(Ray ray)
 	{
 		MeshInfo meshInfo = meshes[i];
 
-		HitInfo hit = RayTriangleBVH(ray, meshInfo.firstTriangleIndex, meshInfo.firstNodeIndex, meshInfo.inverseTransform);
+		HitInfo hit = RayTriangleBVH(ray, meshInfo.firstTriangleIndex, meshInfo.firstNodeIndex, meshInfo.transform, meshInfo.inverseTransform);
 	
 		if (hit.hit && hit.distance < hitInfo.distance)
 		{

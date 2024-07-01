@@ -231,7 +231,7 @@ void BVH::drawNodes(const Transform& transform, const std::shared_ptr<BVHNode>& 
 		node->Bounds.Draw(transform, rotationMatrix, color);
 	}
 
-	if (node->ChildIndex > 0 || node == hierarchy)
+	if ((node->ChildIndex > 0 || node == hierarchy) && allNodes.size() > 1)
 	{
 		drawNodes(transform, allNodes[node->ChildIndex + 1], depth + 1, rotationMatrix);
 		drawNodes(transform, allNodes[node->ChildIndex], depth + 1, rotationMatrix);

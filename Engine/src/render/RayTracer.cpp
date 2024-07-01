@@ -57,13 +57,15 @@ void RayTracer::Draw()
 	raytracingShader->SetVec2("screenSize", glm::vec2(SCR_WIDTH, SCR_HEIGHT));
 	raytracingShader->SetUInt("frameCount", frameCount);
 
+	const EditorCamera* camera = Editor::Get().GetCamera();
+
 	glm::mat4 projection = Editor::Get().GetCamera()->GetProjectionMatrix(static_cast<float>(RAYTRACED_SCENE_WIDTH), static_cast<float>(RAYTRACED_SCENE_HEIGHT));
 	glm::mat4 view = Editor::Get().GetCamera()->GetViewMatrix();
 	raytracingShader->SetMat4("invProjection", glm::inverse(projection));
 	raytracingShader->SetMat4("invView", glm::inverse(view));
-	raytracingShader->SetVec3("cameraPosition", Editor::Get().GetCamera()->Position);
-	raytracingShader->SetVec3("cameraRight", Editor::Get().GetCamera()->Right);
-	raytracingShader->SetVec3("cameraUp", Editor::Get().GetCamera()->Up);
+	raytracingShader->SetVec3("cameraPosition", camera->Position);
+	raytracingShader->SetVec3("cameraRight", camera->Right);
+	raytracingShader->SetVec3("cameraUp", camera->Up);
 
 	// convert scene data to raytracing data (sphere at this moment)
 	const std::vector<Model*> models = EntityManager::Get().GetModels();
@@ -74,12 +76,15 @@ void RayTracer::Draw()
 	std::vector<RayTracingBVHNode> nodes = {};
 	getSceneData(models, spheres, cubes, triangles, meshes, nodes);
 
+	const EditorSettings& settings = Editor::Get().GetSettings();
+
 	raytracingShader->SetInt("sphereCount", static_cast<int>(spheres.size()));
 	raytracingShader->SetInt("cubeCount", static_cast<int>(cubes.size()));
 	raytracingShader->SetInt("meshCount", static_cast<int>(meshes.size()));
-	raytracingShader->SetInt("maxBounceCount", Editor::Get().GetSettings().MaxBounces);
-	raytracingShader->SetInt("numberRaysPerPixel", Editor::Get().GetSettings().RaysPerPixel);
-	raytracingShader->SetFloat("divergeStrength", Editor::Get().GetSettings().DivergeStrength);
+	raytracingShader->SetInt("maxBounceCount", settings.MaxBounces);
+	raytracingShader->SetInt("numberRaysPerPixel", settings.RaysPerPixel);
+	raytracingShader->SetFloat("divergeStrength", settings.DivergeStrength);
+	raytracingShader->SetUInt("bvhEnabled", settings.BVH == true ? 1u : 0u);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, sphereSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, spheres.size() * sizeof(RaytracingSphere), spheres.data(), GL_DYNAMIC_DRAW);
@@ -237,11 +242,13 @@ void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 				nodes.push_back(node);
 			}
 		
+			const glm::mat4& transformMatrix = model->transform->GetTransformMatrix();
 			// Mesh part 
 			RayTracingMesh raytracingMesh = {};
 			raytracingMesh.FirstTriangleIndex = static_cast<int>(inout_triangles.size());
 			raytracingMesh.FirstNodeIndex = static_cast<int>(inout_nodes.size());
-			raytracingMesh.InverseTransformMatrix = glm::inverse(model->transform->GetTransformMatrix());
+			raytracingMesh.TransformMatrix = transformMatrix;
+			raytracingMesh.InverseTransformMatrix = glm::inverse(transformMatrix);
 			raytracingMesh.Material = material;
 
 			inout_triangles.insert(inout_triangles.end(), triangles.begin(), triangles.end());

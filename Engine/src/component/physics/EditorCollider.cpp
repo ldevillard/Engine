@@ -22,7 +22,7 @@ void EditorCollider::Draw(const Transform& transform)
     if (Editor::Get().GetSettings().BoundingBoxGizmo)
 	    boundingBox.Draw(transform);
 	if (Editor::Get().GetSettings().BVHGizmo)
-        bvh.DrawNodes(transform);
+       bvh.DrawNodes(transform);
 }
 
 const BoundingBox& EditorCollider::GetBoundingBox() const

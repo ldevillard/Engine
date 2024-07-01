@@ -52,6 +52,7 @@ struct RayTracingMesh
 	int FirstTriangleIndex = 0;
 	int FirstNodeIndex = 0;
 
+	alignas(16) glm::mat4 TransformMatrix = {};
 	alignas(16) glm::mat4 InverseTransformMatrix = {};
 
 	RaytracingMaterial Material = {};

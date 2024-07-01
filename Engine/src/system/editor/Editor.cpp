@@ -532,8 +532,9 @@ void Editor::renderSettings()
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::TreeNode("RayTracing"))
 	{
-		ImGui_Utils::DrawBoolControl("Enabled", parameters.RayTracing, 100.f);
-		if (parameters.RayTracing)
+		ImGui_Utils::DrawBoolControl("Enabled", parameters.Raytracing, 100.f);
+		ImGui_Utils::DrawBoolControl("BVH", parameters.BVH, 100.f);
+		//if (parameters.RayTracing)
 		{
 			ImGui_Utils::DrawBoolControl("Accumulate", parameters.Accumulate, 100.f);
 			if (parameters.Accumulate)
