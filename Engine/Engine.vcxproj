@@ -39,7 +39,7 @@
     <ClCompile Include="src\physics\Physics.cpp" />
     <ClCompile Include="src\physics\RayIntersection.cpp" />
     <ClCompile Include="src\render\ComputeShader.cpp" />
-    <ClCompile Include="src\render\RayTracer.cpp" />
+    <ClCompile Include="src\render\Raytracer.cpp" />
     <ClCompile Include="src\system\editor\EditorCamera.cpp" />
     <ClCompile Include="src\component\Component.cpp" />
     <ClCompile Include="src\component\Light.cpp" />
@@ -96,7 +96,7 @@
     <ClInclude Include="include\physics\Physics.h" />
     <ClInclude Include="include\physics\RayIntersection.h" />
     <ClInclude Include="include\render\ComputeShader.h" />
-    <ClInclude Include="include\render\RayTracer.h" />
+    <ClInclude Include="include\render\Raytracer.h" />
     <ClInclude Include="include\system\editor\EditorCamera.h" />
     <ClInclude Include="include\component\Component.h" />
     <ClInclude Include="include\component\Light.h" />

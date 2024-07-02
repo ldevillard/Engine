@@ -1,4 +1,4 @@
-#include "render/RayTracer.h"
+#include "render/Raytracer.h"
 
 #include "component/Transform.h"
 #include "data/Triangle.h"
@@ -6,20 +6,20 @@
 #include "system/editor/Editor.h"
 #include "system/entity/EntityManager.h"
 
-ScreenQuad RayTracer::screenQuad = {};
-Shader* RayTracer::raytracingShader = nullptr;
-ComputeShader* RayTracer::accumulateShader = nullptr;
-GLuint RayTracer::sphereSSBO = 0;
-GLuint RayTracer::cubeSSBO = 0;
-GLuint RayTracer::triangleSSBO = 0;
-GLuint RayTracer::meshSSBO = 0;
-GLuint RayTracer::bvhSSBO = 0;
-unsigned int RayTracer::frameCount = 0;
-bool RayTracer::accumulate = false;
+ScreenQuad Raytracer::screenQuad = {};
+Shader* Raytracer::raytracingShader = nullptr;
+ComputeShader* Raytracer::accumulateShader = nullptr;
+GLuint Raytracer::sphereSSBO = 0;
+GLuint Raytracer::cubeSSBO = 0;
+GLuint Raytracer::triangleSSBO = 0;
+GLuint Raytracer::meshSSBO = 0;
+GLuint Raytracer::bvhSSBO = 0;
+unsigned int Raytracer::frameCount = 0;
+bool Raytracer::accumulate = false;
 
 #pragma region Static Methods
 
-void RayTracer::Initialize(Shader* shader, ComputeShader* accumulate)
+void Raytracer::Initialize(Shader* shader, ComputeShader* accumulate)
 {
 	raytracingShader = shader;
 	accumulateShader = accumulate;
@@ -48,7 +48,7 @@ void RayTracer::Initialize(Shader* shader, ComputeShader* accumulate)
 	setupScreenQuad();
 }
 
-void RayTracer::Draw()
+void Raytracer::Draw()
 {
 	Editor::Get().GetRaytracingBuffer()->Bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -70,10 +70,10 @@ void RayTracer::Draw()
 	// convert scene data to raytracing data (sphere at this moment)
 	const std::vector<Model*> models = EntityManager::Get().GetModels();
 	std::vector<RaytracingSphere> spheres = {};
-	std::vector<RayTracingTriangle> triangles = {};
+	std::vector<RaytracingTriangle> triangles = {};
 	std::vector<RaytracingCube> cubes = {};
-	std::vector<RayTracingMesh> meshes = {};
-	std::vector<RayTracingBVHNode> nodes = {};
+	std::vector<RaytracingMesh> meshes = {};
+	std::vector<RaytracingBVHNode> nodes = {};
 	getSceneData(models, spheres, cubes, triangles, meshes, nodes);
 
 	const EditorSettings& settings = Editor::Get().GetSettings();
@@ -93,13 +93,13 @@ void RayTracer::Draw()
 	glBufferData(GL_SHADER_STORAGE_BUFFER, cubes.size() * sizeof(RaytracingCube), cubes.data(), GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, triangleSSBO);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, triangles.size() * sizeof(RayTracingTriangle), triangles.data(), GL_DYNAMIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, triangles.size() * sizeof(RaytracingTriangle), triangles.data(), GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, meshSSBO);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, meshes.size() * sizeof(RayTracingMesh), meshes.data(), GL_DYNAMIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, meshes.size() * sizeof(RaytracingMesh), meshes.data(), GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, bvhSSBO);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, nodes.size() * sizeof(RayTracingBVHNode), nodes.data(), GL_DYNAMIC_DRAW);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, nodes.size() * sizeof(RaytracingBVHNode), nodes.data(), GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -132,12 +132,12 @@ void RayTracer::Draw()
 	}
 }
 
-void RayTracer::ResetFrameCount()
+void Raytracer::ResetFrameCount()
 {
 	frameCount = 0;
 }
 
-unsigned int RayTracer::GetFrameCount()
+unsigned int Raytracer::GetFrameCount()
 {
 	return frameCount;
 }
@@ -146,7 +146,7 @@ unsigned int RayTracer::GetFrameCount()
 
 #pragma region Private Methods
 
-void RayTracer::setupScreenQuad()
+void Raytracer::setupScreenQuad()
 {
 	screenQuad = ScreenQuad();
 
@@ -165,9 +165,9 @@ void RayTracer::setupScreenQuad()
 	glBindVertexArray(0);
 }
 
-void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes,
-							 std::vector<RayTracingTriangle>& inout_triangles, std::vector<RayTracingMesh>& inout_meshes,
-							 std::vector<RayTracingBVHNode>& inout_nodes)
+void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes,
+							 std::vector<RaytracingTriangle>& inout_triangles, std::vector<RaytracingMesh>& inout_meshes,
+							 std::vector<RaytracingBVHNode>& inout_nodes)
 {
 	for (Model* model : models)
 	{
@@ -210,7 +210,7 @@ void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 		{
 			// Triangles part
 			const std::vector<Triangle>& allTriangles = model->GetBVH().GetTriangles();
-			std::vector<RayTracingTriangle> triangles = {};
+			std::vector<RaytracingTriangle> triangles = {};
 
 			for (size_t i = 0; i < allTriangles.size(); i++)
 			{
@@ -218,21 +218,21 @@ void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 				glm::vec3 B = allTriangles[i].B.Position;
 				glm::vec3 C = allTriangles[i].C.Position;
 			
-				glm::vec3 normalA = allTriangles[i].NormalA;
-				glm::vec3 normalB = allTriangles[i].NormalB;
-				glm::vec3 normalC = allTriangles[i].NormalC;
+				glm::vec3 normalA = allTriangles[i].A.Normal;
+				glm::vec3 normalB = allTriangles[i].B.Normal;
+				glm::vec3 normalC = allTriangles[i].C.Normal;
 			
-				RayTracingTriangle triangle = { A, B, C, normalA, normalB, normalC };
+				RaytracingTriangle triangle = { A, B, C, normalA, normalB, normalC };
 				triangles.push_back(triangle);
 			}
 
 			// BVH part
 			const std::vector<std::shared_ptr<BVHNode>>& allNodes = model->GetBVH().GetNodes();
-			std::vector<RayTracingBVHNode> nodes = {};
+			std::vector<RaytracingBVHNode> nodes = {};
 
 			for (size_t i = 0; i < allNodes.size(); i++)
 			{
-				RayTracingBVHNode node = {};
+				RaytracingBVHNode node = {};
 			
 				node.BoundsMin = allNodes[i]->Bounds.Min;
 				node.BoundsMax = allNodes[i]->Bounds.Max;
@@ -244,7 +244,7 @@ void RayTracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 		
 			const glm::mat4& transformMatrix = model->transform->GetTransformMatrix();
 			// Mesh part 
-			RayTracingMesh raytracingMesh = {};
+			RaytracingMesh raytracingMesh = {};
 			raytracingMesh.FirstTriangleIndex = static_cast<int>(inout_triangles.size());
 			raytracingMesh.FirstNodeIndex = static_cast<int>(inout_nodes.size());
 			raytracingMesh.TransformMatrix = transformMatrix;

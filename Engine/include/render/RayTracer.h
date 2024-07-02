@@ -36,7 +36,7 @@ struct RaytracingCube
 	RaytracingMaterial Material = {};
 };
 
-struct RayTracingTriangle
+struct RaytracingTriangle
 {
 	alignas(16) glm::vec3 A = {};
 	alignas(16) glm::vec3 B = {};
@@ -47,7 +47,7 @@ struct RayTracingTriangle
 	alignas(16) glm::vec3 NormalC = {};
 };
 
-struct RayTracingMesh
+struct RaytracingMesh
 {
 	int FirstTriangleIndex = 0;
 	int FirstNodeIndex = 0;
@@ -58,7 +58,7 @@ struct RayTracingMesh
 	RaytracingMaterial Material = {};
 };
 
-struct RayTracingBVHNode
+struct RaytracingBVHNode
 {
 	alignas(16) glm::vec3 BoundsMin = {};
 	alignas(16) glm::vec3 BoundsMax = {};
@@ -67,7 +67,7 @@ struct RayTracingBVHNode
 	int ChildIndex = 0;
 };
 
-class RayTracer
+class Raytracer
 {
 public:
 	static void Initialize(Shader* shader, ComputeShader* accumulate);
@@ -79,8 +79,8 @@ public:
 private:
 	static void setupScreenQuad();
 	static void getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes,
-							 std::vector<RayTracingTriangle>& inout_triangles, std::vector<RayTracingMesh>& inout_meshes,
-							 std::vector<RayTracingBVHNode>& inout_nodes);
+							 std::vector<RaytracingTriangle>& inout_triangles, std::vector<RaytracingMesh>& inout_meshes,
+							 std::vector<RaytracingBVHNode>& inout_nodes);
 	
 	static unsigned int frameCount;
 	static bool accumulate;

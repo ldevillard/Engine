@@ -89,7 +89,7 @@ std::vector<Triangle> Mesh::GetTriangles() const
         glm::vec3 max = glm::max(glm::max(v1.Position, v2.Position), v3.Position);
         glm::vec3 center = (v1.Position + v2.Position + v3.Position) / 3.0f;
 
-        triangles.push_back({ v1, v2, v3, v1.Normal, v2.Normal, v3.Normal, min, max, center});
+        triangles.push_back({ v1, v2, v3, min, max, center});
     }
 
     return triangles;

@@ -210,7 +210,7 @@
     <ClCompile Include="src\render\ComputeShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\render\RayTracer.cpp">
+    <ClCompile Include="src\render\Raytracer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\utils\ImFileDialog.cpp">
@@ -1235,7 +1235,7 @@
     <ClInclude Include="include\render\ComputeShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\RayTracer.h">
+    <ClInclude Include="include\render\Raytracer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\data\template\Singleton.h">

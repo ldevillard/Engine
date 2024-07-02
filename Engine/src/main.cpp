@@ -22,7 +22,7 @@
 #include "data/Texture.h"
 #include "debug/DebugMenu.h"
 #include "render/ComputeShader.h"
-#include "render/RayTracer.h"
+#include "render/Raytracer.h"
 #include "render/Shader.h"
 #include "system/editor/Editor.h"
 #include "system/entity/EntityManager.h"
@@ -114,7 +114,7 @@ int main()
 
 	// initialize systems
 	Outliner::Initialize(&outlineShader, &outlineDilateShader, &outlineBlitShader);
-	RayTracer::Initialize(&raytracingShader, &accumulateShader);
+	Raytracer::Initialize(&raytracingShader, &accumulateShader);
 	Gizmo::InitGizmos(&gizmoShader);
 	EntityManager::Initialize(&shader);
 	Model::LoadPrimitives();
@@ -143,7 +143,7 @@ int main()
 
 		// raytracing
 		if (settings.Raytracing)
-			RayTracer::Draw();
+			Raytracer::Draw();
 
 		// editor
 		Editor::Get().RenderEditor();

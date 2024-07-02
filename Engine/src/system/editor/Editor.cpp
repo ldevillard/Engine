@@ -6,7 +6,7 @@
 #include "data/CubeMap.h"
 #include "maths/Math.h"
 #include "physics/Physics.h"
-#include "render/RayTracer.h"
+#include "render/Raytracer.h"
 #include "system/entity/EntityManager.h"
 #include "system/Input.h"
 #include "system/Time.h"
@@ -541,9 +541,9 @@ void Editor::renderSettings()
 			{
 				// progress bar purpose is to show the velocity of the accumulation (based on 10 frames computations)
 				ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(0.6f, 0.3f, 0.6f, 1.0f));
-				ImGui::ProgressBar(float(RayTracer::GetFrameCount() % 10) / 10.f, ImVec2(-1, 0), "");
+				ImGui::ProgressBar(float(Raytracer::GetFrameCount() % 10) / 10.f, ImVec2(-1, 0), "");
 				ImGui::PopStyleColor();
-				ImGui::Text("Samples: %d", RayTracer::GetFrameCount());
+				ImGui::Text("Samples: %d", Raytracer::GetFrameCount());
 				ImGui::NewLine();
 			}
 			ImGui_Utils::DrawIntControl("Max Bounces", parameters.MaxBounces, 1, 100.f);
