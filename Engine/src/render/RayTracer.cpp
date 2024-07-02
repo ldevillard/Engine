@@ -212,6 +212,7 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 			const std::vector<Triangle>& allTriangles = model->GetBVH().GetTriangles();
 			std::vector<RaytracingTriangle> triangles = {};
 
+			triangles.reserve(allTriangles.size());
 			for (size_t i = 0; i < allTriangles.size(); i++)
 			{
 				glm::vec3 A = allTriangles[i].A.Position;
