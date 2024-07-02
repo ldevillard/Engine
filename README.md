@@ -35,5 +35,5 @@ My 3D Engine built with OpenGL, providing graphics rendering with raytracing and
 
 ## Showcase
 
-![Raytraced Screen](https://github.com/ldevillard/Engine/blob/main/Thumbnails/Screenshot%202024-05-08%20172952.png)
+![Raytraced Screen](https://github.com/ldevillard/Engine/blob/main/Thumbnails/Screenshot%202024-07-01%20205025.png)
 ![Editor Screen](https://github.com/ldevillard/Engine/blob/main/Thumbnails/Screenshot%202024-03-29%20185441.png)
