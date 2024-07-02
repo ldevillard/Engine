@@ -244,9 +244,8 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 
 			// Triangles part
 			const std::vector<Triangle>& allTriangles = model->GetBVH().GetTriangles();
-			std::vector<RaytracingTriangle> triangles = {};
 
-			triangles.reserve(allTriangles.size());
+			meshTriangles.reserve(allTriangles.size());
 			for (size_t i = 0; i < allTriangles.size(); i++)
 			{
 				glm::vec3 A = allTriangles[i].A.Position;
@@ -258,14 +257,13 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 				glm::vec3 normalC = allTriangles[i].C.Normal;
 			
 				RaytracingTriangle triangle = { A, B, C, normalA, normalB, normalC };
-				triangles.push_back(triangle);
+				meshTriangles.push_back(triangle);
 			}
 
 			// BVH part
 			const std::vector<std::shared_ptr<BVHNode>>& allNodes = model->GetBVH().GetNodes();
-			std::vector<RaytracingBVHNode> nodes = {};
 
-			nodes.reserve(allNodes.size());
+			meshNodes.reserve(allNodes.size());
 			for (size_t i = 0; i < allNodes.size(); i++)
 			{
 				RaytracingBVHNode node = {};
@@ -275,15 +273,12 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 				node.TriangleIndex = allNodes[i]->TriangleIndex;
 				node.TriangleCount = allNodes[i]->TriangleCount;
 				node.ChildIndex = allNodes[i]->ChildIndex;
-				nodes.push_back(node);
+				meshNodes.push_back(node);
 			}
 		
-			inout_triangles.insert(inout_triangles.end(), triangles.begin(), triangles.end());
-			inout_nodes.insert(inout_nodes.end(), nodes.begin(), nodes.end());
+			inout_triangles.insert(inout_triangles.end(), meshTriangles.begin(), meshTriangles.end());
+			inout_nodes.insert(inout_nodes.end(), meshNodes.begin(), meshNodes.end());
 			inout_meshes.push_back(raytracingMesh);
-		
-			meshTriangles = triangles;
-			meshNodes = nodes;
 		}
 	}
 	meshCount = static_cast<int>(models.size());

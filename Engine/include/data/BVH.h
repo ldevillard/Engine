@@ -45,7 +45,7 @@ public:
 	static int VISUAL_MAX_DEPTH;
 
 private:
-	static constexpr int maxDepth = 15;
+	static constexpr int maxDepth = 20;
 
 	std::vector<Triangle>  allTriangles;
 	std::vector<std::shared_ptr<BVHNode>> allNodes;

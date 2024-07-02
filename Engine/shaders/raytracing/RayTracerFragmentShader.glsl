@@ -18,7 +18,7 @@ uniform float divergeStrength;
 
 uniform uint bvhEnabled;
 
-#define BVH_DEPTH 15
+#define BVH_DEPTH 20
 
 const int checkerPattern = 1;
 const int hideEmissive = 2;
@@ -38,6 +38,9 @@ struct Ray
 {
 	vec3 origin;
 	vec3 direction;
+
+	// only used in localSpace
+	vec3 inverseDirection;
 };
 
 struct Sphere
@@ -289,23 +292,24 @@ HitInfo RayTriangle(Ray ray, Ray localRay, Triangle triangle, mat4 tx)
 	return hitInfo;
 }
 
-bool RayBoundingBox(Ray ray, vec3 boxMin, vec3 boxMax)
+float RayBoundingBoxDst(Ray ray, vec3 boxMin, vec3 boxMax)
 {
-	vec3 invDir = 1 / ray.direction;
-	vec3 tMin = (boxMin - ray.origin) * invDir;
-	vec3 tMax = (boxMax - ray.origin) * invDir;
+	vec3 tMin = (boxMin - ray.origin) * ray.inverseDirection;
+	vec3 tMax = (boxMax - ray.origin) * ray.inverseDirection;
 	vec3 t1 = min(tMin, tMax);
 	vec3 t2 = max(tMin, tMax);
 	float tNear = max(max(t1.x, t1.y), t1.z);
 	float tFar = min(min(t2.x, t2.y), t2.z);
-	return tNear <= tFar;
+
+	bool hit = tNear <= tFar && tFar > 0;
+	return hit ? tNear : (1.0 / 0.0); // infinity
 };
 
 HitInfo RayTriangleBVH(Ray ray, int triangleIndex, int nodeIndex, mat4 tx, mat4 txi)
 {
-	BVHNode nodeStack[BVH_DEPTH];
+	int nodeStack[BVH_DEPTH];
 	int stackIndex = 0;
-	nodeStack[stackIndex++] = bvhNodes[nodeIndex];
+	nodeStack[stackIndex++] = nodeIndex;
 
 	HitInfo hitInfo;
 	hitInfo.hit = false;
@@ -314,27 +318,39 @@ HitInfo RayTriangleBVH(Ray ray, int triangleIndex, int nodeIndex, mat4 tx, mat4 
 	Ray localRay = ray;
 	localRay.origin = vec3((txi * vec4(ray.origin, 1.0)).xyz);
 	localRay.direction = vec3((txi * vec4(ray.direction, 0.0)).xyz);
+	localRay.inverseDirection = 1 / localRay.direction;
 
 	while (stackIndex > 0)
 	{
-		BVHNode node = nodeStack[--stackIndex];
+		int nodeIdx = nodeStack[--stackIndex];
+		BVHNode node = bvhNodes[nodeIdx];
 
-		if (RayBoundingBox(localRay, node.boundsMin, node.boundsMax))
+		if ((node.childIndex == 0 && bvhEnabled == 1) || bvhEnabled == 0) // leaf node
 		{
-			if ((node.childIndex == 0 && bvhEnabled == 1) || bvhEnabled == 0) // leaf node
+			for (int i = triangleIndex + node.triangleIndex; i < triangleIndex + node.triangleIndex + node.triangleCount; i++)
 			{
-				for (int i = triangleIndex + node.triangleIndex; i < triangleIndex + node.triangleIndex + node.triangleCount; i++)
-				{
-					HitInfo triangleHitInfo = RayTriangle(ray, localRay, triangles[i], tx);
-					if (triangleHitInfo.hit && triangleHitInfo.distance < hitInfo.distance)
-						hitInfo = triangleHitInfo;
-				}
+				HitInfo triangleHitInfo = RayTriangle(ray, localRay, triangles[i], tx);
+				if (triangleHitInfo.hit && triangleHitInfo.distance < hitInfo.distance)
+					hitInfo = triangleHitInfo;
 			}
-			else if (bvhEnabled == 1)
-			{
-				nodeStack[stackIndex++] = bvhNodes[nodeIndex + node.childIndex + 1];
-				nodeStack[stackIndex++] = bvhNodes[nodeIndex + node.childIndex + 0];
-			}
+		}
+		else if (bvhEnabled == 1)
+		{
+			BVHNode leftChild = bvhNodes[nodeIndex + node.childIndex + 0];
+			BVHNode rightChild = bvhNodes[nodeIndex + node.childIndex + 1];
+
+			float distanceLeftChild = RayBoundingBoxDst(localRay, leftChild.boundsMin, leftChild.boundsMax);
+			float distanceRightChild = RayBoundingBoxDst(localRay, rightChild.boundsMin, rightChild.boundsMax);
+
+			bool isNearest = distanceLeftChild < distanceRightChild;
+			float distanceNear = isNearest ? distanceLeftChild : distanceRightChild;
+			float distanceFar = isNearest ? distanceRightChild : distanceLeftChild;
+
+			int childIndexNear = isNearest ? (nodeIndex + node.childIndex + 0) : (nodeIndex + node.childIndex + 1);
+			int childIndexFar = isNearest ? (nodeIndex + node.childIndex + 1) : (nodeIndex + node.childIndex + 0);
+
+			if (distanceFar < hitInfo.distance) nodeStack[stackIndex++] = childIndexFar;
+			if (distanceNear < hitInfo.distance) nodeStack[stackIndex++] = childIndexNear;
 		}
 	}
 
