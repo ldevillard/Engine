@@ -59,9 +59,18 @@ void Inspector::inspectTransform() const
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::TreeNode("Transform"))
 	{
-		ImGui_Utils::DrawVec3Control("Position", entity->transform->Position);
-		ImGui_Utils::DrawVec3Control("Rotation", entity->transform->Rotation);
-		ImGui_Utils::DrawVec3Control("Scale", entity->transform->Scale, 1.0f);
+		glm::vec3& position = entity->transform->Position;
+		glm::vec3& rotation = entity->transform->Rotation;
+		glm::vec3& scale = entity->transform->Scale;
+
+		ImGui_Utils::DrawVec3Control("Position", position);
+		ImGui_Utils::DrawVec3Control("Rotation", rotation);
+		ImGui_Utils::DrawVec3Control("Scale", scale, 1.0f);
+
+		entity->transform->SetPosition(position);
+		entity->transform->SetRotation(rotation);
+		entity->transform->SetScale(scale);
+
 		ImGui::TreePop();
 	}
 }

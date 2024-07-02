@@ -598,9 +598,9 @@ void Editor::transformGizmo(float width, float height)
 		{
 			glm::vec3 deltaRotation = glm::eulerAngles(rotation) - glm::radians(selectedEntity->transform->Rotation);
 
-			selectedEntity->transform->Position = translation;
-			selectedEntity->transform->Rotation += glm::degrees(deltaRotation);
-			selectedEntity->transform->Scale = scale;
+			selectedEntity->transform->SetPosition(translation);
+			selectedEntity->transform->SetRotation(selectedEntity->transform->Rotation + glm::degrees(deltaRotation));
+			selectedEntity->transform->SetScale(scale);
 		}
 	}
 }

@@ -8,7 +8,10 @@
 Transform::Transform() :
 	Position(glm::vec3(0.0f)),
 	Rotation(glm::vec3(0.0f)),
-	Scale(glm::vec3(1.0f))
+	Scale(glm::vec3(1.0f)),
+	previousPosition(glm::vec3(0.0f)),
+	previousRotation(glm::vec3(0.0f)),
+	previousScale(glm::vec3(1.0f))
 {
 
 }
@@ -16,7 +19,10 @@ Transform::Transform() :
 Transform::Transform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale) :
 	Position(position),
 	Rotation(rotation),
-	Scale(scale)
+	Scale(scale),
+	previousPosition(position),
+	previousRotation(rotation),
+	previousScale(scale)
 {
 
 }
@@ -24,7 +30,10 @@ Transform::Transform(const glm::vec3& position, const glm::vec3& rotation, const
 Transform::Transform(const Transform& other) :
 	Position(other.Position),
 	Rotation(other.Rotation),
-	Scale(other.Scale)
+	Scale(other.Scale),
+	previousPosition(other.Position),
+	previousRotation(other.Rotation),
+	previousScale(other.Scale)
 {
 
 }
@@ -91,17 +100,25 @@ const Sphere Transform::AsSphere() const
 
 void Transform::SetPosition(const glm::vec3& position)
 {
+	previousPosition = Position;
 	Position = position;
 }
 
 void Transform::SetRotation(const glm::vec3& rotation)
 {
+	previousRotation = rotation;
 	Rotation = rotation;
 }
 
 void Transform::SetScale(const glm::vec3& scale)
 {
+	previousScale = scale;
 	Scale = scale;
+}
+
+bool Transform::HasChanged() const
+{
+	return Position != previousPosition || Rotation != previousRotation || Scale != previousScale;
 }
 
 nlohmann::ordered_json Transform::Serialize() const
@@ -120,6 +137,10 @@ void Transform::Deserialize(const nlohmann::ordered_json& json)
 	Position = Serializer::Deserialize(json["position"]);
 	Rotation = Serializer::Deserialize(json["rotation"]);
 	Scale = Serializer::Deserialize(json["scale"]);
+
+	previousPosition = Position;
+	previousRotation = Rotation;
+	previousScale = Scale;
 }
 
 #pragma endregion

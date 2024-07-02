@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "component/Model.h"
@@ -84,6 +85,10 @@ private:
 	
 	static unsigned int frameCount;
 	static bool accumulate;
+
+	static std::map<std::string, std::vector<RaytracingTriangle>> meshesTriangles;
+	static std::map<std::string, std::vector<RaytracingBVHNode>> meshesNodes;
+	static int meshCount;
 
 	static ScreenQuad screenQuad;
 	static Shader* raytracingShader;

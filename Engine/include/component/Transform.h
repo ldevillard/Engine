@@ -30,6 +30,8 @@ public:
 	void SetRotation(const glm::vec3& rotation);
 	void SetScale(const glm::vec3& scale);
 
+	bool HasChanged() const;
+
 	// serialization
 	nlohmann::ordered_json Serialize() const;
 	void Deserialize(const nlohmann::ordered_json& json);
@@ -37,4 +39,9 @@ public:
 	glm::vec3 Position;
 	glm::vec3 Rotation;
 	glm::vec3 Scale;
+
+private:
+	glm::vec3 previousPosition;
+	glm::vec3 previousRotation;
+	glm::vec3 previousScale;
 };

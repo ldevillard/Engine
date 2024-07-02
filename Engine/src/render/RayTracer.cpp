@@ -17,6 +17,10 @@ GLuint Raytracer::bvhSSBO = 0;
 unsigned int Raytracer::frameCount = 0;
 bool Raytracer::accumulate = false;
 
+std::map<std::string, std::vector<RaytracingTriangle>> Raytracer::meshesTriangles = {};
+std::map<std::string, std::vector<RaytracingBVHNode>> Raytracer::meshesNodes = {};
+int Raytracer::meshCount = 0;
+
 #pragma region Static Methods
 
 void Raytracer::Initialize(Shader* shader, ComputeShader* accumulate)
@@ -169,6 +173,14 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 							 std::vector<RaytracingTriangle>& inout_triangles, std::vector<RaytracingMesh>& inout_meshes,
 							 std::vector<RaytracingBVHNode>& inout_nodes)
 {
+	// this is to safely rebuild gpu data if there is models changements
+	// like if scene is changed we don't want to keep to data of the previous scene
+	if (meshCount > 0 && meshCount != models.size())
+	{
+		meshesTriangles.clear();
+		meshesNodes.clear();
+	}
+
 	for (Model* model : models)
 	{
 		// material setup
@@ -208,6 +220,28 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 		}
 		else
 		{
+			// Mesh part 
+			const glm::mat4& transformMatrix = model->transform->GetTransformMatrix();
+			RaytracingMesh raytracingMesh = {};
+			raytracingMesh.FirstTriangleIndex = static_cast<int>(inout_triangles.size());
+			raytracingMesh.FirstNodeIndex = static_cast<int>(inout_nodes.size());
+			raytracingMesh.TransformMatrix = transformMatrix;
+			raytracingMesh.InverseTransformMatrix = glm::inverse(transformMatrix);
+			raytracingMesh.Material = material;
+
+			// Movement detection part, rebuild the raytracing data if there is modification
+			const std::string& modelName = model->entity->Name;
+			std::vector<RaytracingTriangle>& meshTriangles = meshesTriangles[modelName];
+			std::vector<RaytracingBVHNode>& meshNodes = meshesNodes[modelName];
+
+			if (meshTriangles.size() > 0 && meshesNodes.size() > 0)
+			{
+				inout_triangles.insert(inout_triangles.end(), meshTriangles.begin(), meshTriangles.end());
+				inout_nodes.insert(inout_nodes.end(), meshNodes.begin(), meshNodes.end());
+				inout_meshes.push_back(raytracingMesh);
+				continue;
+			}
+
 			// Triangles part
 			const std::vector<Triangle>& allTriangles = model->GetBVH().GetTriangles();
 			std::vector<RaytracingTriangle> triangles = {};
@@ -231,6 +265,7 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 			const std::vector<std::shared_ptr<BVHNode>>& allNodes = model->GetBVH().GetNodes();
 			std::vector<RaytracingBVHNode> nodes = {};
 
+			nodes.reserve(allNodes.size());
 			for (size_t i = 0; i < allNodes.size(); i++)
 			{
 				RaytracingBVHNode node = {};
@@ -243,20 +278,15 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 				nodes.push_back(node);
 			}
 		
-			const glm::mat4& transformMatrix = model->transform->GetTransformMatrix();
-			// Mesh part 
-			RaytracingMesh raytracingMesh = {};
-			raytracingMesh.FirstTriangleIndex = static_cast<int>(inout_triangles.size());
-			raytracingMesh.FirstNodeIndex = static_cast<int>(inout_nodes.size());
-			raytracingMesh.TransformMatrix = transformMatrix;
-			raytracingMesh.InverseTransformMatrix = glm::inverse(transformMatrix);
-			raytracingMesh.Material = material;
-
 			inout_triangles.insert(inout_triangles.end(), triangles.begin(), triangles.end());
 			inout_nodes.insert(inout_nodes.end(), nodes.begin(), nodes.end());
 			inout_meshes.push_back(raytracingMesh);
+		
+			meshTriangles = triangles;
+			meshNodes = nodes;
 		}
 	}
+	meshCount = static_cast<int>(models.size());
 }
 
 #pragma endregion
