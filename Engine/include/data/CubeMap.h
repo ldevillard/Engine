@@ -10,7 +10,7 @@ class Shader;
 class CubeMap
 {
 public:
-	CubeMap(const std::vector<std::string>& faces, Shader * sh);
+	CubeMap(const std::vector<std::string>& faces, Shader* sh);
 
 	void Draw() const;
 
