@@ -32,16 +32,7 @@ void CubeMap::Draw() const
     shader->SetMat4("view", view);
     shader->SetMat4("projection", camera->GetProjectionMatrix(static_cast<float>(SCR_WIDTH), static_cast<float>(SCR_WIDTH)));
 
-    if (light != nullptr)
-    {
-        shader->SetVec3("lightDirection", light->GetDirection());
-        shader->SetFloat("lightIntensity", light->Intensity);
-    }
-    else
-    {
-        shader->SetVec3("lightDirection", glm::vec3(0, 0, -1));
-        shader->SetFloat("lightIntensity", 1);
-    }
+    shader->SetVec3("lightColor", GetSkyboxLightColor()); 
     
     // skybox cube
     glBindVertexArray(screenCube.VAO);
@@ -50,6 +41,18 @@ void CubeMap::Draw() const
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS); // set depth function back to default
+}
+
+glm::vec3 CubeMap::GetSkyboxLightColor() const
+{
+    const Light* light = EntityManager::Get().GetMainLight();
+
+    if (light == nullptr)
+        return nightColor;
+
+    glm::vec3 lightDirection = light->GetDirection();
+    float lightAngle = std::clamp((lightDirection.y + 1.0f) * 0.5f, 0.0f, 1.0f);
+    return glm::mix(dayColor, nightColor, lightAngle) * (1 + log(light->Intensity));
 }
 
 #pragma endregion

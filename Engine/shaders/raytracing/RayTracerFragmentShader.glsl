@@ -2,6 +2,9 @@
 
 out vec4 FragColor;
 
+uniform samplerCube skybox;
+uniform vec3 skyboxColor;
+
 uniform vec2 screenSize;
 uniform uint frameCount;
 
@@ -443,7 +446,8 @@ vec3 Trace(Ray ray, inout uint rngState)
 		}
 		else
 		{
-			incomingLight += vec3(0.1) * rayColor;
+			incomingLight += texture(skybox, ray.direction).rgb * skyboxColor * rayColor;
+			//incomingLight += vec3(0.1) * rayColor;
 			break ;
 		}
 	}

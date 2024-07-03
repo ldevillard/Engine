@@ -10,16 +10,22 @@ class Shader;
 class CubeMap
 {
 public:
-	CubeMap(const std::vector<std::string>& faces, Shader* sh);
+	CubeMap(const std::vector<std::string>& faces, Shader * sh);
 
 	void Draw() const;
+
+	glm::vec3 GetSkyboxLightColor() const;
+
+	unsigned int ID;
 
 private:
 	void loadTextures(const std::vector<std::string>& faces);
 	void setupScreenCube();
 
 private:
-	unsigned int ID;
 	ScreenCube screenCube;
 	Shader* shader;
+
+	static constexpr glm::vec3 dayColor = glm::vec3(1.0, 1.0, 1.0);
+	static constexpr glm::vec3 nightColor = glm::vec3(0.1, 0.1, 0.15);
 };

@@ -1,8 +1,9 @@
 #include "render/Raytracer.h"
 
 #include "component/Transform.h"
-#include "data/Triangle.h"
 #include "data/BVH.h"
+#include "data/CubeMap.h"
+#include "data/Triangle.h"
 #include "system/editor/Editor.h"
 #include "system/entity/EntityManager.h"
 
@@ -52,7 +53,7 @@ void Raytracer::Initialize(Shader* shader, ComputeShader* accumulate)
 	setupScreenQuad();
 }
 
-void Raytracer::Draw()
+void Raytracer::Draw(const CubeMap& cubeMap)
 {
 	Editor::Get().GetRaytracingBuffer()->Bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -82,6 +83,9 @@ void Raytracer::Draw()
 
 	const EditorSettings& settings = Editor::Get().GetSettings();
 
+	raytracingShader->SetInt("skybox", 0);
+	raytracingShader->SetVec3("skyboxColor", cubeMap.GetSkyboxLightColor());
+
 	raytracingShader->SetInt("sphereCount", static_cast<int>(spheres.size()));
 	raytracingShader->SetInt("cubeCount", static_cast<int>(cubes.size()));
 	raytracingShader->SetInt("meshCount", static_cast<int>(meshes.size()));
@@ -89,6 +93,9 @@ void Raytracer::Draw()
 	raytracingShader->SetInt("numberRaysPerPixel", settings.RaysPerPixel);
 	raytracingShader->SetFloat("divergeStrength", settings.DivergeStrength);
 	raytracingShader->SetUInt("bvhEnabled", settings.BVH == true ? 1u : 0u);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMap.ID);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, sphereSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, spheres.size() * sizeof(RaytracingSphere), spheres.data(), GL_DYNAMIC_DRAW);

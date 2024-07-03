@@ -8,6 +8,8 @@
 #include "render/Shader.h"
 #include "render/ComputeShader.h"
 
+class CubeMap;
+
 struct RaytracingMaterial
 {
 	alignas(16) glm::vec3 Color = {};
@@ -72,7 +74,7 @@ class Raytracer
 {
 public:
 	static void Initialize(Shader* shader, ComputeShader* accumulate);
-	static void Draw();
+	static void Draw(const CubeMap& cubeMap);
 
 	static void ResetFrameCount();
 	static unsigned int GetFrameCount();
