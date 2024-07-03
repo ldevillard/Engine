@@ -94,9 +94,9 @@ const glm::mat4 EditorCamera::GetViewMatrix() const
 	return glm::lookAt(Position, Position + Front, Up);
 }
 
-const glm::mat4 EditorCamera::GetProjectionMatrix(float width, float height) const
+const glm::mat4 EditorCamera::GetProjectionMatrix(unsigned int width, unsigned int height) const
 {
-	return glm::perspective(glm::radians(Zoom), width / height, Near, Far);
+	return glm::perspective(glm::radians(Zoom), static_cast<float>(width) / static_cast<float>(height), Near, Far);
 }
 
 void EditorCamera::SetSpeedFactor(float factor)

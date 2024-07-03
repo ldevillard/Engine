@@ -45,7 +45,7 @@ public:
 
    // getters
    const glm::mat4 GetViewMatrix() const;
-   const glm::mat4 GetProjectionMatrix(float width, float height) const;
+   const glm::mat4 GetProjectionMatrix(unsigned int width, unsigned int height) const;
    void SetSpeedFactor(float factor);
 
    // inputs processing

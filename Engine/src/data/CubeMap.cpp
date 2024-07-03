@@ -19,19 +19,22 @@ CubeMap::CubeMap(const std::vector<std::string>& faces, Shader* sh)
     shader->SetInt("skybox", 0);
 }
 
-void CubeMap::Draw() const
+CubeMap::~CubeMap()
+{
+    glDeleteVertexArrays(1, &screenCube.VAO);
+    glDeleteBuffers(1, &screenCube.VBO);
+}
+
+void CubeMap::Draw(const glm::mat4& view, const glm::mat4& projection) const
 {
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
     
     shader->Use();
 
-    const EditorCamera* camera = Editor::Get().GetCamera();
     const Light* light = EntityManager::Get().GetMainLight();
     
-    glm::mat4 view = glm::mat4(glm::mat3(camera->GetViewMatrix())); // remove translation from the view matrix
-    shader->SetMat4("view", view);
-    shader->SetMat4("projection", camera->GetProjectionMatrix(static_cast<float>(SCR_WIDTH), static_cast<float>(SCR_WIDTH)));
-
+    shader->SetMat4("view", glm::mat4(glm::mat3(view))); // need to remove translation from the view matrix
+    shader->SetMat4("projection", projection);
     shader->SetVec3("lightColor", GetSkyboxLightColor()); 
     
     // skybox cube

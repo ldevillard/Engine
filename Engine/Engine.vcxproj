@@ -33,6 +33,7 @@
     <ClCompile Include="include\maths\glm\detail\glm.cpp" />
     <ClCompile Include="include\maths\glm\glm.cppm" />
     <ClCompile Include="src\component\physics\EditorCollider.cpp" />
+    <ClCompile Include="src\data\AxisGrid.cpp" />
     <ClCompile Include="src\data\BVH.cpp" />
     <ClCompile Include="src\data\CubeMap.cpp" />
     <ClCompile Include="src\maths\Maths.cpp" />
@@ -84,6 +85,7 @@
     <ClInclude Include="..\imgui\imstb_textedit.h" />
     <ClInclude Include="..\imgui\imstb_truetype.h" />
     <ClInclude Include="include\component\physics\EditorCollider.h" />
+    <ClInclude Include="include\data\AxisGrid.h" />
     <ClInclude Include="include\data\BVH.h" />
     <ClInclude Include="include\data\CubeMap.h" />
     <ClInclude Include="include\data\physics\HitInfo.h" />
@@ -566,12 +568,14 @@
     <None Include="shaders\gizmo\GizmoFragmentShader.glsl" />
     <None Include="shaders\gizmo\GizmoVertexShader.glsl" />
     <None Include="shaders\compute\BlitTexturesComputeShader.glsl" />
+    <None Include="shaders\grid\AxisGridFragmentShader.glsl" />
+    <None Include="shaders\grid\AxisGridVertexShader.glsl" />
     <None Include="shaders\outline\OutlineDilatingFragmentShader.glsl" />
     <None Include="shaders\outline\OutlineFragmentShader.glsl" />
     <None Include="shaders\outline\OutlineQuadVertexShader.glsl" />
     <None Include="shaders\outline\OutlineVertexShader.glsl" />
-    <None Include="shaders\raytracing\RayTracerFragmentShader.glsl" />
-    <None Include="shaders\raytracing\RayTracerVertexShader.glsl" />
+    <None Include="shaders\raytracing\RaytracerFragmentShader.glsl" />
+    <None Include="shaders\raytracing\RaytracerVertexShader.glsl" />
     <None Include="shaders\skybox\SkyboxFragmentShader.glsl" />
     <None Include="shaders\skybox\SkyboxVertexShader.glsl" />
     <None Include="shaders\VertexShader.glsl" />

@@ -3,6 +3,7 @@
 #include <glfw3.h>
 
 #include "component/Transform.h"
+#include "data/AxisGrid.h"
 #include "data/CubeMap.h"
 #include "maths/Math.h"
 #include "physics/Physics.h"
@@ -122,13 +123,13 @@ const Entity* Editor::GetSelectedEntity() const
 
 #pragma region Rendering
 
-void Editor::RenderCamera(Shader* shader)
+void Editor::RenderCamera(Shader* shader) // TODO make view and projection matrices as members 
 {
 	shader->Use();
 	shader->SetVec3("viewPos", editorCamera->Position);
 	shader->SetBool("wireframe", parameters.Wireframe);
 
-	glm::mat4 projection = editorCamera->GetProjectionMatrix(static_cast<float>(SCENE_WIDTH), static_cast<float>(SCENE_HEIGHT));
+	glm::mat4 projection = editorCamera->GetProjectionMatrix(SCENE_WIDTH, SCENE_HEIGHT);
 	glm::mat4 view = editorCamera->GetViewMatrix();
 	shader->SetMat4("projection", projection);
 	shader->SetMat4("view", view);
@@ -136,14 +137,14 @@ void Editor::RenderCamera(Shader* shader)
 
 void Editor::RenderEditor()
 {
-	float w = static_cast<float>(SCENE_WIDTH);
-	float h = static_cast<float>(SCENE_HEIGHT);
+	unsigned int w = SCENE_WIDTH;
+	unsigned int h = SCENE_HEIGHT;
 
 	// Rendering ImGui
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-	ImGui::SetNextWindowSize(ImVec2(w, h));
+	ImGui::SetNextWindowSize(ImVec2(static_cast<float>(w), static_cast<float>(h)));
 
 	// Setup docking space
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -175,15 +176,19 @@ void Editor::RenderEditor()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Editor::RenderFrame(Shader* shader, CubeMap* cubemap)
+void Editor::RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid)
 {
+	const glm::mat4 cameraView = editorCamera->GetViewMatrix();
+	const glm::mat4 cameraProjection = editorCamera->GetProjectionMatrix(SCR_WIDTH, SCR_HEIGHT);
+
 	GetSceneBuffer()->Bind(); // bind to framebuffer
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	Editor::Get().RenderCamera(shader);
 	EntityManager::Get().ComputeEntities();
-	cubemap->Draw();
+	//grid->Draw(cameraView, cameraProjection);
+	cubemap->Draw(cameraView, cameraProjection);
 	bool success = EntityManager::Get().ComputeSelectedEntity();
 
 	// unbind framebuffer
@@ -315,8 +320,8 @@ void Editor::ProcessInputs()
 
 		glm::vec3 worldPos = Math::ScreenToWorldPoint(glm::vec2(mousePosScene.x, mousePosScene.y)
 				, editorCamera->GetViewMatrix()
-				, editorCamera->GetProjectionMatrix(static_cast<float>(SCENE_WIDTH), static_cast<float>(SCENE_HEIGHT))
-				, glm::vec4(0, 0, SCENE_WIDTH, SCENE_HEIGHT));
+				, editorCamera->GetProjectionMatrix(SCENE_WIDTH, SCENE_HEIGHT)
+				, glm::vec4(0, 0, static_cast<float>(SCENE_WIDTH), static_cast<float>(SCENE_HEIGHT)));
 		
 		// Raycast
 		glm::vec3 direction = glm::normalize(worldPos - editorCamera->Position);
@@ -398,7 +403,7 @@ void Editor::renderTopBar()
 	}
 }
 
-void Editor::renderScene(float width, float height)
+void Editor::renderScene(unsigned int width, unsigned int height)
 {
 	ImGui::Begin("Scene", nullptr);
 	{
@@ -558,12 +563,12 @@ void Editor::renderSettings()
 	ImGui::End();
 }
 
-void Editor::transformGizmo(float width, float height)
+void Editor::transformGizmo(unsigned int width, unsigned int height)
 {
 	ImGuizmo::BeginFrame();
 	ImGuizmo::SetOrthographic(false);
 	ImGuizmo::SetDrawlist();
-	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, width, height);
+	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, static_cast<float>(width), static_cast<float>(height));
 
 	glm::mat4 projection = editorCamera->GetProjectionMatrix(width, height);
 	glm::mat4 view = editorCamera->GetViewMatrix();

@@ -18,6 +18,7 @@
 #include "render/FrameBuffer.h"
 #include "data/template/Singleton.h"
 
+class AxisGrid;
 class CubeMap;
 
 inline unsigned int SCENE_WIDTH = 1280;
@@ -67,7 +68,7 @@ public:
 	FrameBuffer* GetOutlineBuffer(int idx) const;
 	const Entity* GetSelectedEntity() const;
 
-	void RenderFrame(Shader* shader, CubeMap* cubemap);
+	void RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid);
 	void RenderCamera(Shader* shader);
 	void RenderEditor();
 	void ProcessInputs();
@@ -83,12 +84,12 @@ protected:
 private:
 	// render functions
 	void renderTopBar();
-	void renderScene(float width, float height);
+	void renderScene(unsigned int width, unsigned int height);
 	void renderRayTracer();
 	void renderInspector();
 	void renderHierarchy();
 	void renderSettings();
-	void transformGizmo(float width, float height);
+	void transformGizmo(unsigned int width, unsigned int height);
 
 	// context menu
 	void showHierarchyContextMenu();

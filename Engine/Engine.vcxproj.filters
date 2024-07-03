@@ -231,6 +231,9 @@
     <ClCompile Include="src\physics\RayIntersection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\data\AxisGrid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\imgui\imconfig.h">
@@ -1272,6 +1275,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\data\physics\HitInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data\AxisGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

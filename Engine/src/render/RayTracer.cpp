@@ -64,7 +64,7 @@ void Raytracer::Draw(const CubeMap& cubeMap)
 
 	const EditorCamera* camera = Editor::Get().GetCamera();
 
-	glm::mat4 projection = Editor::Get().GetCamera()->GetProjectionMatrix(static_cast<float>(RAYTRACED_SCENE_WIDTH), static_cast<float>(RAYTRACED_SCENE_HEIGHT));
+	glm::mat4 projection = Editor::Get().GetCamera()->GetProjectionMatrix(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT);
 	glm::mat4 view = Editor::Get().GetCamera()->GetViewMatrix();
 	raytracingShader->SetMat4("invProjection", glm::inverse(projection));
 	raytracingShader->SetMat4("invView", glm::inverse(view));
@@ -114,6 +114,7 @@ void Raytracer::Draw(const CubeMap& cubeMap)
 
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
 
 	Editor::Get().GetRaytracingBuffer()->Unbind();
 	Editor::Get().GetRaytracingBuffer()->Blit();

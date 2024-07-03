@@ -11,8 +11,9 @@ class CubeMap
 {
 public:
 	CubeMap(const std::vector<std::string>& faces, Shader* sh);
+	~CubeMap();
 
-	void Draw() const;
+	void Draw(const glm::mat4& view, const glm::mat4& projection) const;
 
 	glm::vec3 GetSkyboxLightColor() const;
 

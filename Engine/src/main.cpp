@@ -16,6 +16,7 @@
 // engine
 #include "component/Light.h"
 #include "component/Model.h"
+#include "data/AxisGrid.h"
 #include "data/Color.h"
 #include "data/CubeMap.h"
 #include "data/Material.h"
@@ -96,10 +97,11 @@ int main()
 	Shader outlineShader("shaders/outline/OutlineVertexShader.glsl", "shaders/outline/OutlineFragmentShader.glsl");
 	Shader outlineDilateShader("shaders/outline/OutlineQuadVertexShader.glsl", "shaders/outline/OutlineDilatingFragmentShader.glsl");
 	Shader cubeMapShader("shaders/skybox/SkyboxVertexShader.glsl", "shaders/skybox/SkyboxFragmentShader.glsl");
-	ComputeShader outlineBlitShader("shaders/compute/BlitTexturesComputeShader.glsl", glm::uvec2(SCENE_WIDTH, SCENE_HEIGHT));
+	Shader axisGridShader("shaders/grid/AxisGridVertexShader.glsl", "shaders/grid/AxisGridFragmentShader.glsl");
+	Shader raytracingShader("shaders/raytracing/RaytracerVertexShader.glsl", "shaders/raytracing/RaytracerFragmentShader.glsl");
 	
-	Shader raytracingShader("shaders/raytracing/RayTracerVertexShader.glsl", "shaders/raytracing/RayTracerFragmentShader.glsl");
 	ComputeShader accumulateShader("shaders/compute/AccumulateComputeShader.glsl", glm::uvec2(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT));
+	ComputeShader outlineBlitShader("shaders/compute/BlitTexturesComputeShader.glsl", glm::uvec2(SCENE_WIDTH, SCENE_HEIGHT));
 	
 	const std::vector<std::string> faces = 
 	{
@@ -111,6 +113,7 @@ int main()
 		"resources/skybox/back.png",
 	};
 	CubeMap cubemap(faces, &cubeMapShader);
+	AxisGrid grid(&axisGridShader);
 
 	// initialize systems
 	Outliner::Initialize(&outlineShader, &outlineDilateShader, &outlineBlitShader);
@@ -139,7 +142,7 @@ int main()
 		}
 
 		// 3D rendering
-		Editor::Get().RenderFrame(&shader, &cubemap);
+		Editor::Get().RenderFrame(&shader, &cubemap, &grid);
 
 		// raytracing
 		if (settings.Raytracing)
