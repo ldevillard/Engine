@@ -447,7 +447,6 @@ vec3 Trace(Ray ray, inout uint rngState)
 		else
 		{
 			incomingLight += texture(skybox, ray.direction).rgb * skyboxColor * rayColor;
-			//incomingLight += vec3(0.1) * rayColor;
 			break ;
 		}
 	}
