@@ -179,7 +179,7 @@ void Editor::RenderEditor()
 void Editor::RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid)
 {
 	const glm::mat4 cameraView = editorCamera->GetViewMatrix();
-	const glm::mat4 cameraProjection = editorCamera->GetProjectionMatrix(SCR_WIDTH, SCR_HEIGHT);
+	const glm::mat4 cameraProjection = editorCamera->GetProjectionMatrix(SCENE_WIDTH, SCENE_HEIGHT);
 
 	GetSceneBuffer()->Bind(); // bind to framebuffer
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -187,8 +187,9 @@ void Editor::RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid)
 
 	Editor::Get().RenderCamera(shader);
 	EntityManager::Get().ComputeEntities();
-	//grid->Draw(cameraView, cameraProjection);
 	cubemap->Draw(cameraView, cameraProjection);
+	grid->Draw(editorCamera->Position, cameraView, cameraProjection);
+
 	bool success = EntityManager::Get().ComputeSelectedEntity();
 
 	// unbind framebuffer

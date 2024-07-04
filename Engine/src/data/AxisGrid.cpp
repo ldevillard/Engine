@@ -6,6 +6,7 @@
 
 AxisGrid::AxisGrid(Shader* sh) : shader(sh)
 {
+	setupScreenQuad();
 }
 
 AxisGrid::~AxisGrid()
@@ -14,10 +15,11 @@ AxisGrid::~AxisGrid()
 	glDeleteBuffers(1, &screenQuad.VBO);
 }
 
-void AxisGrid::Draw(const glm::mat4& view, const glm::mat4& projection) const
+void AxisGrid::Draw(const glm::vec3& position, const glm::mat4& view, const glm::mat4& projection) const
 {
 	shader->Use();
 
+	shader->SetVec3("cameraPos", position);
 	shader->SetMat4("view", view);
 	shader->SetMat4("projection", projection);
 

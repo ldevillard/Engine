@@ -34,7 +34,7 @@ public:
 
    // camera settings
    float MovementSpeed = 5.f;
-   float RotateSpeed = 15.f;
+   float RotateSpeed = 25.f;
    float Zoom = 45.0;
    float Near = 0.1f;
    float Far = 1000.f;

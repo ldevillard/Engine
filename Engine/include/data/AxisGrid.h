@@ -11,7 +11,7 @@ public:
 	AxisGrid(Shader* sh);
 	~AxisGrid();
 
-	void Draw(const glm::mat4& view, const glm::mat4& projection) const;
+	void Draw(const glm::vec3& position, const glm::mat4& view, const glm::mat4& projection) const;
 
 private:
 	void setupScreenQuad();

@@ -1,15 +1,26 @@
 #version 430 core
 
-layout(location = 0) in vec2 aPos;
-layout(location = 1) in vec2 aTexCoords;
+layout (location = 0) in vec3 aPos;
 
+uniform vec3 cameraPos;
+uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-out vec2 TexCoords;
+out vec4 FragPos;
+out mat4 FragView;
+out mat4 FragProj;
+
+const float far = 2000;
 
 void main()
 {
-	TexCoords = aTexCoords;
-	gl_Position = /*projection * view **/ vec4(aPos, 0.0, 1.0);
+    FragView = view;
+    FragProj = projection;
+
+    vec3 cameraCenteredVertexPos = vec3(aPos.x * far + cameraPos.x, 0, -aPos.y * far + cameraPos.z);
+
+    FragPos = vec4(cameraCenteredVertexPos, 1.0f);
+   
+    gl_Position = projection * view * FragPos;
 }

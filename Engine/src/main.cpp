@@ -90,6 +90,8 @@ int main()
 	glEnable(GL_DEPTH_TEST); // enable depth testing
 	glEnable(GL_STENCIL_TEST); // enable stencil testing
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // configure the stencil buffer to replace the value of the stencil buffer if the depth test fails
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// build and compile shader programs
 	Shader shader("shaders/VertexShader.glsl", "shaders/FragmentShader.glsl");
