@@ -123,6 +123,11 @@ const Entity* Editor::GetSelectedEntity() const
 
 #pragma region Rendering
 
+void Editor::PreRender()
+{
+	editorCamera->ProcessMatrices();
+}
+
 void Editor::RenderCamera(Shader* shader) // TODO set is function in the camera class
 {
 	shader->Use();
@@ -174,11 +179,6 @@ void Editor::RenderEditor()
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void Editor::PreRender() 
-{
-	editorCamera->ProcessMatrices();
 }
 
 void Editor::RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid)
@@ -271,8 +271,17 @@ void Editor::ScrollCallback(double xoffset, double yoffset)
 
 #pragma endregion
 
+void Editor::SelectEntity(Entity* entity)
+{
+	selectedEntity = entity;
+}
+
+#pragma endregion
+
+#pragma region Private Methods
+
 // maybe make an input manager with KeyPressed, KeyReleased
-void Editor::ProcessInputs()
+void Editor::processInputs()
 {
 	// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 	float deltaTime = Time::DeltaTime;
@@ -326,16 +335,16 @@ void Editor::ProcessInputs()
 			return;
 
 		glm::vec3 worldPos = Math::ScreenToWorldPoint(glm::vec2(mousePosScene.x, mousePosScene.y)
-				, editorCamera->GetViewMatrix()
-				, editorCamera->GetProjectionMatrix(CameraProjectionType::SCENE)
-				, glm::vec4(0, 0, static_cast<float>(SCENE_WIDTH), static_cast<float>(SCENE_HEIGHT)));
-		
+			, editorCamera->GetViewMatrix()
+			, editorCamera->GetProjectionMatrix(CameraProjectionType::SCENE)
+			, glm::vec4(0, 0, static_cast<float>(SCENE_WIDTH), static_cast<float>(SCENE_HEIGHT)));
+
 		// Raycast
 		glm::vec3 direction = glm::normalize(worldPos - editorCamera->Position);
 		Ray ray = Ray(editorCamera->Position, direction);
 		RaycastHit hit;
 		Physics::EditorRaycast(ray, hit);
-	
+
 		if (hit.editorCollider != nullptr)
 		{
 			SelectEntity(hit.editorCollider->entity);
@@ -346,15 +355,6 @@ void Editor::ProcessInputs()
 		}
 	}
 }
-
-void Editor::SelectEntity(Entity* entity)
-{
-	selectedEntity = entity;
-}
-
-#pragma endregion
-
-#pragma region Private Methods
 
 void Editor::renderTopBar()
 {
@@ -427,7 +427,7 @@ void Editor::renderScene(unsigned int width, unsigned int height)
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
-		ProcessInputs();
+		processInputs();
 	}
 	if (selectedEntity != nullptr)
 		transformGizmo(width, height);
@@ -455,7 +455,6 @@ void Editor::renderRayTracer()
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
-		ProcessInputs();
 	}
 	ImGui::EndChild();
 	ImGui::End();

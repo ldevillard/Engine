@@ -64,7 +64,6 @@ public:
 	void RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid);
 	void RenderCamera(Shader* shader);
 	void RenderEditor();
-	void ProcessInputs();
 	void ScrollCallback(double xoffset, double yoffset);
 	void MouseCallback(double xposIn, double yposIn);
 	void FramebufferSizeCallback(int width, int height);
@@ -75,6 +74,8 @@ protected:
 	void initialize() override;
 
 private:
+	void processInputs();
+
 	// render functions
 	void renderTopBar();
 	void renderScene(unsigned int width, unsigned int height);
