@@ -28,7 +28,9 @@ struct EditorSettings
 	bool Wireframe = false;
 	int TrianglesNumber = 0;
 	
+	// gizmos
 	bool Gizmo = true;
+	bool Grid = true;
 	bool BoundingBoxGizmo = false;
 	bool BVHGizmo = false;
 

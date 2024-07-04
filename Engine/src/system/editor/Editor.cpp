@@ -193,7 +193,8 @@ void Editor::RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid)
 	Editor::Get().RenderCamera(shader);
 	EntityManager::Get().ComputeEntities();
 	cubemap->Draw(cameraView, cameraProjection);
-	grid->Draw(editorCamera->Position, cameraView, cameraProjection);
+	if (parameters.Gizmo && parameters.Grid)
+		grid->Draw(editorCamera->Position, cameraView, cameraProjection);
 
 	bool success = EntityManager::Get().ComputeSelectedEntity();
 
@@ -507,9 +508,10 @@ void Editor::renderSettings()
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::TreeNode("Gizmos"))
 	{
-		ImGui_Utils::DrawBoolControl("Gizmos", parameters.Gizmo, 100.f);
+		ImGui_Utils::DrawBoolControl("All", parameters.Gizmo, 100.f);
 		if (parameters.Gizmo)
 		{
+			ImGui_Utils::DrawBoolControl("Grid", parameters.Grid, 100.f);
 			ImGui_Utils::DrawBoolControl("Bounding Box", parameters.BoundingBoxGizmo, 100.f);
 			ImGui_Utils::DrawBoolControl("BVH", parameters.BVHGizmo, 100.f);
 			if (parameters.BVHGizmo)
