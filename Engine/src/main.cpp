@@ -128,8 +128,9 @@ int main()
 	// render loop
 	while (!glfwWindowShouldClose(window))
 	{
-		// per-frame time logic
+		Editor::Get().PreRender();
 		Time::Update();
+
 		EditorSettings settings = Editor::Get().GetSettings();
 
 		if (settings.Wireframe)
@@ -150,7 +151,7 @@ int main()
 		if (settings.Raytracing)
 			Raytracer::Draw(cubemap);
 
-		// editor
+		// editor interface rendering
 		Editor::Get().RenderEditor();
 
 		// swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

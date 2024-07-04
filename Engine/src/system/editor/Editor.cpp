@@ -123,14 +123,14 @@ const Entity* Editor::GetSelectedEntity() const
 
 #pragma region Rendering
 
-void Editor::RenderCamera(Shader* shader) // TODO make view and projection matrices as members 
+void Editor::RenderCamera(Shader* shader) // TODO set is function in the camera class
 {
 	shader->Use();
 	shader->SetVec3("viewPos", editorCamera->Position);
 	shader->SetBool("wireframe", parameters.Wireframe);
 
-	glm::mat4 projection = editorCamera->GetProjectionMatrix(SCENE_WIDTH, SCENE_HEIGHT);
-	glm::mat4 view = editorCamera->GetViewMatrix();
+	const glm::mat4& projection = editorCamera->GetProjectionMatrix(CameraProjectionType::SCENE);
+	const glm::mat4& view = editorCamera->GetViewMatrix();
 	shader->SetMat4("projection", projection);
 	shader->SetMat4("view", view);
 }
@@ -176,10 +176,15 @@ void Editor::RenderEditor()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+void Editor::PreRender() 
+{
+	editorCamera->ProcessMatrices();
+}
+
 void Editor::RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid)
 {
-	const glm::mat4 cameraView = editorCamera->GetViewMatrix();
-	const glm::mat4 cameraProjection = editorCamera->GetProjectionMatrix(SCENE_WIDTH, SCENE_HEIGHT);
+	const glm::mat4& cameraView = editorCamera->GetViewMatrix();
+	const glm::mat4& cameraProjection = editorCamera->GetProjectionMatrix(CameraProjectionType::SCENE);
 
 	GetSceneBuffer()->Bind(); // bind to framebuffer
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -321,7 +326,7 @@ void Editor::ProcessInputs()
 
 		glm::vec3 worldPos = Math::ScreenToWorldPoint(glm::vec2(mousePosScene.x, mousePosScene.y)
 				, editorCamera->GetViewMatrix()
-				, editorCamera->GetProjectionMatrix(SCENE_WIDTH, SCENE_HEIGHT)
+				, editorCamera->GetProjectionMatrix(CameraProjectionType::SCENE)
 				, glm::vec4(0, 0, static_cast<float>(SCENE_WIDTH), static_cast<float>(SCENE_HEIGHT)));
 		
 		// Raycast
@@ -571,13 +576,13 @@ void Editor::transformGizmo(unsigned int width, unsigned int height)
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, static_cast<float>(width), static_cast<float>(height));
 
-	glm::mat4 projection = editorCamera->GetProjectionMatrix(width, height);
-	glm::mat4 view = editorCamera->GetViewMatrix();
+	const glm::mat4& projection = editorCamera->GetProjectionMatrix(CameraProjectionType::SCENE);
+	const glm::mat4& view = editorCamera->GetViewMatrix();
 	glm::mat4 model = selectedEntity->transform->GetTransformMatrix();
 
 	// snapping
 	bool snap = Input::GetKey(GLFW_KEY_LEFT_CONTROL);
-	float snapValue = 0.5f; // Snap to 0.5m for translation and scale
+	float snapValue = 1.f; // Snap to 1m for translation and scale
 
 	if (gizmoOperation == ImGuizmo::OPERATION::ROTATE)
 		snapValue = 22.5f; // Snap to 22.5 degrees for rotation

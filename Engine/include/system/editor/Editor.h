@@ -15,22 +15,12 @@
 #include "system/editor/Inspector.h"
 #include "system/entity/Entity.h"
 #include "system/editor/EditorCamera.h"
+#include "system/editor/ScreenSettings.h"
 #include "render/FrameBuffer.h"
 #include "data/template/Singleton.h"
 
 class AxisGrid;
 class CubeMap;
-
-inline unsigned int SCENE_WIDTH = 1280;
-inline unsigned int SCENE_HEIGHT = 720;
-
-inline unsigned int RAYTRACED_SCENE_WIDTH = 1280;
-inline unsigned int RAYTRACED_SCENE_HEIGHT = 720;
-
-inline unsigned int SCR_WIDTH = 1280;
-inline unsigned int SCR_HEIGHT = 720;
-
-inline unsigned int MULTISAMPLES = 4;
 
 struct EditorSettings
 {
@@ -68,6 +58,7 @@ public:
 	FrameBuffer* GetOutlineBuffer(int idx) const;
 	const Entity* GetSelectedEntity() const;
 
+	void PreRender();
 	void RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid);
 	void RenderCamera(Shader* shader);
 	void RenderEditor();

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <utils/glad/glad.h>
-#include <maths/glm/glm.hpp>
-#include <maths/glm/gtc/matrix_transform.hpp>
+
+#include "maths/Math.h"
 
 enum CameraDirection
 {
@@ -12,6 +12,13 @@ enum CameraDirection
    RIGHT,
    UP,
    DOWN
+};
+
+enum CameraProjectionType
+{
+	SCREEN,
+	SCENE,
+	RAYTRACED_SCENE
 };
 
 const float YAW = -90.0f;
@@ -44,18 +51,21 @@ public:
    EditorCamera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
    // getters
-   const glm::mat4 GetViewMatrix() const;
-   const glm::mat4 GetProjectionMatrix(unsigned int width, unsigned int height) const;
+   const glm::mat4& GetViewMatrix() const;
+   const glm::mat4& GetProjectionMatrix(CameraProjectionType projectionType) const;
    void SetSpeedFactor(float factor);
 
-   // inputs processing
+   // processing
+   void ProcessMatrices();
    void ProcessKeyboard(CameraDirection direction, float deltaTime);
    void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
    void ProcessMouseScroll(float yoffset);
 
 private:
-   float speedFactor = 1;
-
    // calculates the front vector from the Camera's (updated) Euler Angles
    void updateCameraVectors();
+
+   float speedFactor = 1;
+   glm::mat4 viewMatrix;
+   glm::mat4 projectionMatrices[3];
 };

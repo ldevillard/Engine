@@ -109,6 +109,7 @@
     <ClInclude Include="include\data\mesh\WireCube.h" />
     <ClInclude Include="include\data\mesh\WireSphere.h" />
     <ClInclude Include="include\system\editor\Outliner.h" />
+    <ClInclude Include="include\system\editor\ScreenSettings.h" />
     <ClInclude Include="include\system\entity\Entity.h" />
     <ClInclude Include="include\data\Material.h" />
     <ClInclude Include="include\data\mesh\Mesh.h" />

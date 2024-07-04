@@ -1,5 +1,6 @@
 #include "system/editor/EditorCamera.h"
 
+#include "system/editor/ScreenSettings.h"
 #include "system/Time.h"
 
 #pragma region Public Methods
@@ -26,6 +27,14 @@ EditorCamera::EditorCamera(float posX, float posY, float posZ, float upX, float 
 	Yaw = yaw;
 	Pitch = pitch;
 	updateCameraVectors();
+}
+
+void EditorCamera::ProcessMatrices()
+{
+	viewMatrix = glm::lookAt(Position, Position + Front, Up);
+	projectionMatrices[0] = glm::perspective(glm::radians(Zoom), static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT), Near, Far);
+	projectionMatrices[1] = glm::perspective(glm::radians(Zoom), static_cast<float>(SCENE_WIDTH) / static_cast<float>(SCENE_HEIGHT), Near, Far);
+	projectionMatrices[2] = glm::perspective(glm::radians(Zoom), static_cast<float>(RAYTRACED_SCENE_WIDTH) / static_cast<float>(RAYTRACED_SCENE_HEIGHT), Near, Far);
 }
 
 void EditorCamera::ProcessKeyboard(CameraDirection direction, float deltaTime)
@@ -89,14 +98,14 @@ void EditorCamera::ProcessMouseScroll(float yoffset)
 
 #pragma region Utility
 
-const glm::mat4 EditorCamera::GetViewMatrix() const
+const glm::mat4& EditorCamera::GetViewMatrix() const
 {
-	return glm::lookAt(Position, Position + Front, Up);
+	return viewMatrix;
 }
 
-const glm::mat4 EditorCamera::GetProjectionMatrix(unsigned int width, unsigned int height) const
+const glm::mat4& EditorCamera::GetProjectionMatrix(CameraProjectionType projectionType) const
 {
-	return glm::perspective(glm::radians(Zoom), static_cast<float>(width) / static_cast<float>(height), Near, Far);
+	return projectionMatrices[projectionType];
 }
 
 void EditorCamera::SetSpeedFactor(float factor)

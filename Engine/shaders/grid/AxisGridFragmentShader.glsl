@@ -24,14 +24,14 @@ vec4 Grid(vec3 fragPos3D, float scale, bool drawAxis)
     {
         // z axis
         float minimumX = min(derivative.x, 1.0f);
-        if (fragPos3D.x > -0.5f * scale * minimumX && fragPos3D.x < 0.5f * scale * minimumX)
+        if (fragPos3D.x > -1.5f * scale * minimumX && fragPos3D.x < 0.5f * scale * minimumX)
         {
             color = vec4(0.0f, 0.0f, 1.0f, 1.0f);
         }
 
         // x axis
         float minimumZ = min(derivative.y, 1.0f);
-        if (fragPos3D.z > -0.5f * scale * minimumZ && fragPos3D.z < 0.5f * scale * minimumZ)
+        if (fragPos3D.z > -1.5f * scale * minimumZ && fragPos3D.z < 0.5f * scale * minimumZ)
         {
             color = vec4(1.0f, 0.0f, 0.0f, 1.0f);
         }

@@ -1280,6 +1280,9 @@
     <ClInclude Include="include\data\AxisGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\system\editor\ScreenSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\VertexShader.glsl" />
@@ -1710,6 +1713,8 @@
     <None Include="shaders\compute\AccumulateComputeShader.glsl" />
     <None Include="shaders\skybox\SkyboxVertexShader.glsl" />
     <None Include="shaders\skybox\SkyboxFragmentShader.glsl" />
+    <None Include="shaders\grid\AxisGridFragmentShader.glsl" />
+    <None Include="shaders\grid\AxisGridVertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\awesomeface.png">

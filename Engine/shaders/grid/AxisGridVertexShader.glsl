@@ -18,7 +18,7 @@ void main()
     FragView = view;
     FragProj = projection;
 
-    vec3 cameraCenteredVertexPos = vec3(aPos.x * far + cameraPos.x, 0, -aPos.y * far + cameraPos.z);
+    vec3 cameraCenteredVertexPos = vec3(aPos.x * far + cameraPos.x, -0.05f, -aPos.y * far + cameraPos.z); // -0.05 to avoid clipping
 
     FragPos = vec4(cameraCenteredVertexPos, 1.0f);
    
