@@ -95,6 +95,7 @@ private:
 	static ScreenQuad screenQuad;
 	static Shader* raytracingShader;
 	static ComputeShader* accumulateShader;
+
 	static GLuint sphereSSBO;
 	static GLuint cubeSSBO;
 	static GLuint triangleSSBO;

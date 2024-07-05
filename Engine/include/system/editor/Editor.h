@@ -60,10 +60,13 @@ public:
 	FrameBuffer* GetOutlineBuffer(int idx) const;
 	const Entity* GetSelectedEntity() const;
 
+	// rendering
 	void PreRender();
 	void RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid);
 	void RenderCamera(Shader* shader);
 	void RenderEditor();
+
+	// callbacks
 	void ScrollCallback(double xoffset, double yoffset);
 	void MouseCallback(double xposIn, double yposIn);
 	void FramebufferSizeCallback(int width, int height);
