@@ -61,7 +61,7 @@ target_link_libraries(DevilEngine ${PROJECT_SOURCE_DIR}/ThirdPartyLibs/Libs/assi
 # copy DLL to output directory
 add_custom_command(TARGET DevilEngine POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${PROJECT_SOURCE_DIR}/ThirdPartyLibs/bin/assimp-vc143-mt.dll"
+    "${PROJECT_SOURCE_DIR}/ThirdPartyLibs/Libs/assimp-vc143-mt.dll"
     $<TARGET_FILE_DIR:DevilEngine>
     COMMAND ${CMAKE_COMMAND} -E remove_directory
     $<TARGET_FILE_DIR:DevilEngine>/shaders
