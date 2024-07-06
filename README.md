@@ -12,11 +12,11 @@ My 3D Engine built with OpenGL, providing graphics rendering with raytracing and
 - **ImGui Integration**: Integrate ImGui for a customizable user interface.
 - **Mouse Picker**: Implement raycast mouse picking with object outlining.
 - **Raytracing**: Implement non-realtime raytracing for advanced rendering.
+- **Serialization**: Provide scene serialization to load and save scenes dynamically.
 
 ## Planned Next Features
 
 - **Physics**: Integrate physics simulation for realistic interactions.
-- **Serialization**: Provide scene serialization to load and save scenes dynamically.
 - **Setup Script**: Develop a setup script to automate the creation of solutions and Visual Studio projects.
 
 ## Tech Stack
@@ -28,10 +28,9 @@ My 3D Engine built with OpenGL, providing graphics rendering with raytracing and
 
 ## How to Use
 
-⚠️ NEED TO ADD A SETUP SCRIPT
 1. Clone the repository: `git clone https://github.com/ldevillard/Engine.git`
-2. Follow the setup instructions in the project's README. ⚠️ Currently need to setup manually 
-3. Explore the codebase and enjoy!
+2. Make sure cmake is installed on your computer, then launch setup.bat
+4. Explore the codebase and enjoy!
 
 ## Showcase
 
