@@ -6,18 +6,16 @@ My 3D Engine built with OpenGL, providing graphics rendering with raytracing and
 
 ## Features
 
-- **Graphics Rendering**: Render 3D scenes with various meshes and textures.
-- **Blinn Phong Lighting**: Utilize directional, point, and spot lights for realistic lighting effects.
-- **Transform Gizmos**: Easily edit object transformations within the scene.
-- **ImGui Integration**: Integrate ImGui for a customizable user interface.
-- **Mouse Picker**: Implement raycast mouse picking with object outlining.
-- **Raytracing**: Implement non-realtime raytracing for advanced rendering.
-- **Serialization**: Provide scene serialization to load and save scenes dynamically.
+- **Graphics Rendering**: Render 3D scenes with various meshes and textures.👾
+- **Blinn Phong Lighting**: Utilize directional, point, and spot lights for realistic lighting effects.💡
+- **Editor**: Gizmos, OX plane, ImGui integration and much more...⌨️
+- **Raytracing**: Implement non-realtime bvh raytracing for advanced rendering.🌟
+- **Serialization**: Provide scene serialization to load and save scenes dynamically.✏️
 
 ## Planned Next Features
-
+- **Raytracing**: Integrate texture rendering
 - **Physics**: Integrate physics simulation for realistic interactions.
-- **Setup Script**: Develop a setup script to automate the creation of solutions and Visual Studio projects.
+- **Editor**: Improve editor with new features like arc-ball camera
 
 ## Tech Stack
 
