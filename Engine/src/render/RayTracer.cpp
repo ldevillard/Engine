@@ -7,27 +7,12 @@
 #include "system/editor/Editor.h"
 #include "system/entity/EntityManager.h"
 
-ScreenQuad Raytracer::screenQuad = {};
-Shader* Raytracer::raytracingShader = nullptr;
-ComputeShader* Raytracer::accumulateShader = nullptr;
-GLuint Raytracer::sphereSSBO = 0;
-GLuint Raytracer::cubeSSBO = 0;
-GLuint Raytracer::triangleSSBO = 0;
-GLuint Raytracer::meshSSBO = 0;
-GLuint Raytracer::bvhSSBO = 0;
-unsigned int Raytracer::frameCount = 0;
-bool Raytracer::accumulate = false;
+#pragma region Singleton Methods
 
-std::map<std::string, std::vector<RaytracingTriangle>> Raytracer::meshesTriangles = {};
-std::map<std::string, std::vector<RaytracingBVHNode>> Raytracer::meshesNodes = {};
-int Raytracer::meshCount = 0;
-
-#pragma region Static Methods
-
-void Raytracer::Initialize(Shader* shader, ComputeShader* accumulate)
+// singleton override
+void Raytracer::initialize()
 {
-	raytracingShader = shader;
-	accumulateShader = accumulate;
+	Singleton<Raytracer>::initialize();
 
 	// initialize ssbo
 	glGenBuffers(1, &sphereSSBO);
@@ -41,7 +26,7 @@ void Raytracer::Initialize(Shader* shader, ComputeShader* accumulate)
 	glGenBuffers(1, &triangleSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, triangleSSBO);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, triangleSSBO);
-	
+
 	glGenBuffers(1, &meshSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, meshSSBO);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, meshSSBO);
@@ -51,6 +36,20 @@ void Raytracer::Initialize(Shader* shader, ComputeShader* accumulate)
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, bvhSSBO);
 
 	setupScreenQuad();
+}
+
+#pragma endregion
+
+#pragma region Public Methods
+
+void Raytracer::Initialize(Shader* shader, ComputeShader* accumulate)
+{
+	Get();
+
+	instance->raytracingShader = shader;
+	instance->accumulateShader = accumulate;
+
+	instance->initialize();
 }
 
 void Raytracer::Draw(const CubeMap& cubeMap)

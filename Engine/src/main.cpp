@@ -119,7 +119,7 @@ int main()
 
 	// initialize systems
 	Outliner::Initialize(&outlineShader, &outlineDilateShader, &outlineBlitShader);
-	Raytracer::Initialize(&raytracingShader, &accumulateShader);
+	Raytracer::Get().Initialize(&raytracingShader, &accumulateShader);
 	Gizmo::InitGizmos(&gizmoShader);
 	EntityManager::Initialize(&shader);
 	Model::LoadPrimitives();
@@ -149,7 +149,7 @@ int main()
 
 		// raytracing
 		if (settings.Raytracing)
-			Raytracer::Draw(cubemap);
+			Raytracer::Get().Draw(cubemap);
 
 		// editor interface rendering
 		Editor::Get().RenderEditor();

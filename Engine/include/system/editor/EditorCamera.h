@@ -23,7 +23,7 @@ enum CameraProjectionType
 
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 5.f;
+const float SPEED = 10.0f;
 const float ZOOM = 45.0f;
 
 class EditorCamera

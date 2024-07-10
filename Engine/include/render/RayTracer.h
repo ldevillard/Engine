@@ -5,6 +5,7 @@
 
 #include "component/Model.h"
 #include "data/mesh/MeshData.h"
+#include "data/template/Singleton.h"
 #include "render/Shader.h"
 #include "render/ComputeShader.h"
 
@@ -70,35 +71,38 @@ struct RaytracingBVHNode
 	int ChildIndex = 0;
 };
 
-class Raytracer
+class Raytracer : public Singleton<Raytracer>
 {
 public:
-	static void Initialize(Shader* shader, ComputeShader* accumulate);
-	static void Draw(const CubeMap& cubeMap);
+	void Initialize(Shader* shader, ComputeShader* accumulate);
+	void Draw(const CubeMap& cubeMap);
 
-	static void ResetFrameCount();
-	static unsigned int GetFrameCount();
+	void ResetFrameCount();
+	unsigned int GetFrameCount();
+
+protected:
+	void initialize() override;
 
 private:
-	static void setupScreenQuad();
-	static void getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes,
-							 std::vector<RaytracingTriangle>& inout_triangles, std::vector<RaytracingMesh>& inout_meshes,
-							 std::vector<RaytracingBVHNode>& inout_nodes);
+	void setupScreenQuad();
+	void getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes,
+					  std::vector<RaytracingTriangle>& inout_triangles, std::vector<RaytracingMesh>& inout_meshes,
+					  std::vector<RaytracingBVHNode>& inout_nodes);
 	
-	static unsigned int frameCount;
-	static bool accumulate;
+	unsigned int frameCount = 0;
+	bool accumulate = false;
 
-	static std::map<std::string, std::vector<RaytracingTriangle>> meshesTriangles;
-	static std::map<std::string, std::vector<RaytracingBVHNode>> meshesNodes;
-	static int meshCount;
+	std::map<std::string, std::vector<RaytracingTriangle>> meshesTriangles = {};
+	std::map<std::string, std::vector<RaytracingBVHNode>> meshesNodes = {};
+	int meshCount = 0;
 
-	static ScreenQuad screenQuad;
-	static Shader* raytracingShader;
-	static ComputeShader* accumulateShader;
+	ScreenQuad screenQuad = {};
+	Shader* raytracingShader = 0;
+	ComputeShader* accumulateShader = nullptr;
 
-	static GLuint sphereSSBO;
-	static GLuint cubeSSBO;
-	static GLuint triangleSSBO;
-	static GLuint meshSSBO;
-	static GLuint bvhSSBO;
+	GLuint sphereSSBO = 0;
+	GLuint cubeSSBO = 0;
+	GLuint triangleSSBO = 0;
+	GLuint meshSSBO = 0;
+	GLuint bvhSSBO = 0;
 };
