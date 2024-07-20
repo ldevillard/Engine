@@ -13,7 +13,7 @@ My 3D Engine built with OpenGL, providing graphics rendering with raytracing and
 - **Serialization**: Provide scene serialization to load and save scenes dynamically.✏️
 
 ## Planned Next Features
-- **DirectX 12**: I want to bring the project to DirectX 12 🚀
+- **DirectX 12**: I want to bring the project to DirectX 12 🚀 See [DX12-Proto](https://github.com/ldevillard/DX12-Prototype)
 - **Raytracing**: Integrate texture rendering
 - **Physics**: Integrate physics simulation for realistic interactions.
 - **Editor**: Improve editor with new features like arc-ball camera
