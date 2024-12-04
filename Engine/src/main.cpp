@@ -151,7 +151,7 @@ int main()
 
 		// 3D rendering
 		if (settings.ShadowMap)
-			Editor::Get().RenderShadowMap(&shadowMapShader, &depthQuadShader, &shader);
+			Editor::Get().RenderShadowMap(&shadowMapShader, &depthQuadShader);
 		Editor::Get().RenderFrame(&shader, &cubemap, &grid);
 
 		// raytracing

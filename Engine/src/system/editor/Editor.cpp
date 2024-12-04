@@ -186,33 +186,22 @@ void Editor::RenderEditor()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void Editor::RenderShadowMap(Shader* shader, Shader* debugShader, Shader* classicShader)
+void Editor::RenderShadowMap(Shader* shader, Shader* quadShader)
 {
 	const Light* mainLight = EntityManager::Get().GetMainLight();
 
 	if (mainLight == nullptr) return;
 
-	glm::vec3 lightPos(mainLight->transform->Position);
-	glm::mat4 lightProjection, lightView;
-	glm::mat4 lightSpaceMatrix;
-
+	glm::vec3 lightPos = mainLight->transform->Position;
 	glm::vec3 lightDir = glm::normalize(mainLight->GetDirection());
 	glm::vec3 right = glm::normalize(glm::cross(lightDir, glm::vec3(0, 1, 0)));
 	glm::vec3 up = glm::cross(right, lightDir);
 
-	float near_plane = 1.0f, far_plane = 50.f;
-	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-	lightView = glm::lookAt(lightPos, lightPos + lightDir, up);
+	float nearPlane = 1.0f, farPlane = 50.f;
 
-	lightSpaceMatrix = lightProjection * lightView;
-
-	//glm::vec3 lightPos(editorCamera->Position);
-	//glm::mat4 lightProjection, lightView;
-	//glm::mat4 lightSpaceMatrix;
-	//float near_plane = 1.0f, far_plane = 20.f;
-	//lightProjection = editorCamera->GetProjectionMatrix(CameraProjectionType::SCENE);
-	//lightView = editorCamera->GetViewMatrix();
-	//lightSpaceMatrix = lightProjection * lightView;
+	glm::mat4 lightProjection = glm::ortho(-15.0f, 15.0f, -15.0f, 15.0f, nearPlane, farPlane);
+	glm::mat4 lightView = glm::lookAt(lightPos, lightPos + lightDir, up);
+	glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 	
 	// render scene from light's point of view
 	shader->Use();
@@ -220,20 +209,19 @@ void Editor::RenderShadowMap(Shader* shader, Shader* debugShader, Shader* classi
 	
 	depthMap->Bind();
 	
-	//Editor::Get().RenderCamera(classicShader);
 	EntityManager::Get().DrawAllMeshes(shader);
 	
 	depthMap->Unbind();
 	
 	depthMapBuffer->Bind();
 
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	
-	debugShader->Use();
-	debugShader->SetFloat("near_plane", near_plane);
-	debugShader->SetFloat("far_plane", far_plane);
+	quadShader->Use();
+	quadShader->SetFloat("nearPlane", nearPlane);
+	quadShader->SetFloat("farPlane", farPlane);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, depthMap->GetDepthTexture());
 
@@ -251,6 +239,7 @@ void Editor::RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid)
 	const glm::mat4& cameraProjection = editorCamera->GetProjectionMatrix(CameraProjectionType::SCENE);
 
 	GetSceneBuffer()->Bind(); // bind to framebuffer
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -326,6 +315,7 @@ void Editor::FramebufferSizeCallback(int width, int height)
 	accumulationBuffer->RescaleFrameBuffer(width, height, MULTISAMPLES);
 	outlineBuffer[0]->RescaleFrameBuffer(width, height, MULTISAMPLES);
 	outlineBuffer[1]->RescaleFrameBuffer(width, height, MULTISAMPLES);
+	depthMapBuffer->RescaleFrameBuffer(width, height, MULTISAMPLES);
 }
 
 void Editor::ScrollCallback(double xoffset, double yoffset)

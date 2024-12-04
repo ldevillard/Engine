@@ -28,7 +28,7 @@ struct EditorSettings
 	// scene
 	bool Wireframe = false;
 	int TrianglesNumber = 0;
-	bool ShadowMap = false;
+	bool ShadowMap = true;
 	
 	// gizmos
 	bool Gizmo = true;
@@ -64,7 +64,7 @@ public:
 
 	// rendering
 	void PreRender();
-	void RenderShadowMap(Shader* shader, Shader* debugShader, Shader* classicShader);
+	void RenderShadowMap(Shader* shader, Shader* quadShader);
 	void RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid);
 	void RenderCamera(Shader* shader);
 	void RenderEditor();

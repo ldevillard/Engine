@@ -8,7 +8,7 @@ DepthBuffer::DepthBuffer() : fbo(0)
     glGenTextures(1, &depthMap);
     glBindTexture(GL_TEXTURE_2D, depthMap);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-        WIDTH, HEIGTH, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        WIDTH, HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -34,7 +34,7 @@ unsigned int DepthBuffer::GetDepthTexture()
 
 void DepthBuffer::Bind() const 
 {
-    glViewport(0, 0, WIDTH, HEIGTH);
+    glViewport(0, 0, WIDTH, HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glClear(GL_DEPTH_BUFFER_BIT);
 }

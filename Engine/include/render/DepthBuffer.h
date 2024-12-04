@@ -20,5 +20,5 @@ private:
     unsigned int depthMap;
 
     static constexpr unsigned int WIDTH = 1024;
-    static constexpr unsigned int HEIGTH = 1024;
+    static constexpr unsigned int HEIGHT = 1024;
 };
