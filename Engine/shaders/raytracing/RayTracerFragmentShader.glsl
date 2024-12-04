@@ -4,6 +4,7 @@ out vec4 FragColor;
 
 uniform samplerCube skybox;
 uniform vec3 skyboxColor;
+uniform uint skyboxEnabled;
 
 uniform vec2 screenSize;
 uniform uint frameCount;
@@ -444,10 +445,15 @@ vec3 Trace(Ray ray, inout uint rngState)
 			incomingLight += emittedLight * rayColor;
 			rayColor *= isSpecular ? material.specularColor : material.color;
 		}
-		else
+		else if (skyboxEnabled == 1)
 		{
 			incomingLight += texture(skybox, ray.direction).rgb * skyboxColor * rayColor;
-			break ;
+			break;
+		}
+		else
+		{
+			incomingLight += rayColor * vec3(0.1f, 0.1f, 0.1f);
+			break;
 		}
 	}
 	return incomingLight;

@@ -84,6 +84,7 @@ void Raytracer::Draw(const CubeMap& cubeMap)
 
 	raytracingShader->SetInt("skybox", 0);
 	raytracingShader->SetVec3("skyboxColor", cubeMap.GetSkyboxLightColor());
+	raytracingShader->SetUInt("skyboxEnabled", settings.Skybox);
 
 	raytracingShader->SetInt("sphereCount", static_cast<int>(spheres.size()));
 	raytracingShader->SetInt("cubeCount", static_cast<int>(cubes.size()));

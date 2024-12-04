@@ -212,7 +212,6 @@ void Editor::RenderShadowMap(Shader* shader, Shader* quadShader)
 	EntityManager::Get().DrawAllMeshes(shader);
 	
 	depthMap->Unbind();
-	
 	depthMapBuffer->Bind();
 
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);

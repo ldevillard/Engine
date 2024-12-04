@@ -127,11 +127,11 @@ int main()
 	Model::LoadPrimitives();
 	Editor::Initialize(window);
 
-	Entity* e = EntityManager::Get().CreateEntity("Backpack");
-	e->AddComponent<Model>("resources/models/backpack/backpack.obj");
-
-	Entity* e2 = EntityManager::Get().CreateEntity("House");
-	e2->AddComponent<Model>("resources/models/primitive/cube.obj");
+	//Entity* e = EntityManager::Get().CreateEntity("Backpack");
+	//e->AddComponent<Model>("resources/models/backpack/backpack.obj");
+	//
+	//Entity* e2 = EntityManager::Get().CreateEntity("House");
+	//e2->AddComponent<Model>("resources/models/primitive/cube.obj");
 
 	// render loop
 	while (!glfwWindowShouldClose(window))
@@ -153,8 +153,7 @@ int main()
 		}
 
 		// 3D rendering
-		if (settings.ShadowMap)
-			Editor::Get().RenderShadowMap(&shadowMapShader, &depthQuadShader);
+		Editor::Get().RenderShadowMap(&shadowMapShader, &depthQuadShader);
 		Editor::Get().RenderFrame(&shader, &cubemap, &grid);
 
 		// raytracing
