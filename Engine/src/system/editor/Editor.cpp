@@ -201,7 +201,7 @@ void Editor::RenderShadowMap(Shader* shader, Shader* quadShader)
 
 	glm::mat4 lightProjection = glm::ortho(-15.0f, 15.0f, -15.0f, 15.0f, nearPlane, farPlane);
 	glm::mat4 lightView = glm::lookAt(lightPos, lightPos + lightDir, up);
-	glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+	lightSpaceMatrix = lightProjection * lightView;
 	
 	// render scene from light's point of view
 	shader->Use();
@@ -244,8 +244,18 @@ void Editor::RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	Editor::Get().RenderCamera(shader);
+
+	// shadow
+	shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+	glActiveTexture(GL_TEXTURE1);
+	glUniform1i(glGetUniformLocation(shader->ID, "shadowMap"), 0);
+	glBindTexture(GL_TEXTURE_2D, depthMap->GetDepthTexture());
+
 	EntityManager::Get().ComputeEntities();
-	cubemap->Draw(cameraView, cameraProjection);
+
+	if (parameters.Skybox) 
+		cubemap->Draw(cameraView, cameraProjection);
+	
 	if (parameters.Gizmo && parameters.Grid)
 		grid->Draw(editorCamera->Position, cameraView, cameraProjection);
 
@@ -257,6 +267,8 @@ void Editor::RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid)
 	// set the multisampled texture to the rendered texture only if there's no selected entity because outliner modifying de raw texutre directly
 	if (!success)
 		Editor::Get().GetSceneBuffer()->Blit();
+
+	glActiveTexture(GL_TEXTURE0);
 }
 
 #pragma endregion
@@ -593,6 +605,7 @@ void Editor::renderSettings()
 		if (parameters.Gizmo)
 		{
 			ImGui_Utils::DrawBoolControl("Grid", parameters.Grid, 100.f);
+			ImGui_Utils::DrawBoolControl("Skybox", parameters.Skybox, 100.f);
 			ImGui_Utils::DrawBoolControl("Bounding Box", parameters.BoundingBoxGizmo, 100.f);
 			ImGui_Utils::DrawBoolControl("BVH", parameters.BVHGizmo, 100.f);
 			if (parameters.BVHGizmo)

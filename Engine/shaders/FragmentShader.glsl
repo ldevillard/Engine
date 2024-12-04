@@ -5,6 +5,7 @@ out vec4 FragColor;
 in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoords;
+in vec4 FragPosLightSpace;
 
 #define MAX_LIGHTS_COUNT 8
 
@@ -37,12 +38,46 @@ struct Light
 uniform Light     lights[MAX_LIGHTS_COUNT];
 uniform int       lightsCount;
 uniform Material  material;
+
+uniform sampler2D shadowMap;
 uniform sampler2D texture_diffuse1;
 
 uniform vec3 viewPos;
 
 uniform bool wireframe;
 uniform bool textured;
+
+float GetShadowFactor(vec4 fragPosLightSpace, vec3 lightDir, vec3 normal)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowMap, projCoords.xy).r;
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // check whether current frag pos is in shadow
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+
+    float shadow = 0.0;
+
+    if (projCoords.z > 1.0)
+        return shadow;
+
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for (int x = -1; x <= 1; ++x)
+    {
+        for (int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+
+    return shadow;
+}
 
 vec3 ComputeDirectionalLighting(Light light)
 {
@@ -64,7 +99,9 @@ vec3 ComputeDirectionalLighting(Light light)
     vec3 specular = spec * light.color * material.specular;
 
     float lightAngleT = clamp((light.direction.y + 1.0) * 0.5, 0.0, 1.0);
-    return mix((ambient + diffuse + specular) * light.intensity, vec3(0), lightAngleT);
+    float shadow = GetShadowFactor(FragPosLightSpace, lightDir, norm);
+
+    return mix((ambient + (1.0 - shadow) * (diffuse + specular)) * light.intensity, vec3(0), lightAngleT);
 }
 
 vec3 ComputePointLighting(Light light)

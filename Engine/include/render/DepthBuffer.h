@@ -19,6 +19,6 @@ private:
     unsigned int fbo;
     unsigned int depthMap;
 
-    static constexpr unsigned int WIDTH = 1024;
-    static constexpr unsigned int HEIGHT = 1024;
+    static constexpr unsigned int WIDTH = 4096;
+    static constexpr unsigned int HEIGHT = 4096;
 };

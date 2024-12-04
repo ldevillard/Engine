@@ -28,7 +28,8 @@ struct EditorSettings
 	// scene
 	bool Wireframe = false;
 	int TrianglesNumber = 0;
-	bool ShadowMap = true;
+	bool ShadowMap = false;
+	bool Skybox = true;
 	
 	// gizmos
 	bool Gizmo = true;
@@ -121,6 +122,9 @@ private:
 
 	EditorSettings parameters;
 	Inspector inspector;
+
+	// shadow data
+	glm::mat4 lightSpaceMatrix;
 
 	// counter for frame rate
 	float frameCounter = 1.0f;
