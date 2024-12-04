@@ -82,6 +82,11 @@ const BVH& Model::GetBVH() const
     return editorCollider->GetBVH();
 }
 
+const std::vector<Mesh>& Model::GetMeshes() const
+{
+    return meshes;
+}
+
 void Model::Compute()
 {
     shader->Use();

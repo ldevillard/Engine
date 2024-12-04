@@ -11,7 +11,7 @@ WireCone::WireCone() : Mesh()
 	setupMesh();
 }
 
-void WireCone::Draw(Shader* shader)
+void WireCone::Draw(Shader* shader) const
 {
 	glBindVertexArray(VAO);
 	glLineWidth(Gizmo::GIZMO_WIDTH); // maybe set up in a constant file

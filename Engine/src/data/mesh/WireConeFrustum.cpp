@@ -10,7 +10,7 @@ WireConeFrustum::WireConeFrustum() : Mesh()
     setupMesh();
 }
 
-void WireConeFrustum::Draw(Shader* shader)
+void WireConeFrustum::Draw(Shader* shader) const
 {
     glBindVertexArray(VAO);
     glLineWidth(Gizmo::GIZMO_WIDTH); // maybe set up in a constant file

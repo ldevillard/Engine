@@ -7,6 +7,7 @@
 #include "system/editor/Editor.h"
 #include "component/Model.h"
 #include "component/Light.h"
+#include "component/Transform.h"
 #include "utils/serializer/json/json.hpp"
 
 #pragma region Singleton Methods
@@ -82,6 +83,21 @@ bool EntityManager::ComputeSelectedEntity() const
 		}
 	}
 	return false;
+}
+
+void EntityManager::DrawAllMeshes(Shader* shader) const
+{
+	std::vector<Model*> models = GetModels();
+
+	for (const Model* model : models)
+	{
+		model->transform->Compute(shader);
+		const std::vector<Mesh>& meshes = model->GetMeshes();
+		for (const Mesh& mesh : meshes)
+		{
+			mesh.Draw(shader);
+		}
+	}
 }
 
 const unsigned int EntityManager::GetNumberOfTriangles() const

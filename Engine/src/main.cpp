@@ -101,7 +101,9 @@ int main()
 	Shader cubeMapShader("shaders/skybox/SkyboxVertexShader.glsl", "shaders/skybox/SkyboxFragmentShader.glsl");
 	Shader axisGridShader("shaders/grid/AxisGridVertexShader.glsl", "shaders/grid/AxisGridFragmentShader.glsl");
 	Shader raytracingShader("shaders/raytracing/RaytracerVertexShader.glsl", "shaders/raytracing/RaytracerFragmentShader.glsl");
-	
+	Shader shadowMapShader("shaders/depth/ShadowMapVertexShader.glsl", "shaders/depth/ShadowMapFragmentShader.glsl");
+	Shader depthQuadShader("shaders/depth/DepthQuadVertexShader.glsl", "shaders/depth/DepthQuadFragmentShader.glsl");
+
 	ComputeShader accumulateShader("shaders/compute/AccumulateComputeShader.glsl", glm::uvec2(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT));
 	ComputeShader outlineBlitShader("shaders/compute/BlitTexturesComputeShader.glsl", glm::uvec2(SCENE_WIDTH, SCENE_HEIGHT));
 	
@@ -125,6 +127,9 @@ int main()
 	Model::LoadPrimitives();
 	Editor::Initialize(window);
 
+	//Entity* e = EntityManager::Get().CreateEntity("Tree");
+	//e->AddComponent<Model>("resources/models/Tree.fbx");
+
 	// render loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -145,6 +150,8 @@ int main()
 		}
 
 		// 3D rendering
+		if (settings.ShadowMap)
+			Editor::Get().RenderShadowMap(&shadowMapShader, &depthQuadShader, &shader);
 		Editor::Get().RenderFrame(&shader, &cubemap, &grid);
 
 		// raytracing

@@ -32,7 +32,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &EBO);
 }
 
-void Mesh::Draw(Shader* shader)
+void Mesh::Draw(Shader* shader) const
 {
     // bind appropriate textures
     unsigned int diffuseNr = 1;

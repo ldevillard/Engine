@@ -61,6 +61,9 @@ public:
    void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
    void ProcessMouseScroll(float yoffset);
 
+   // utility
+   void SetPositionAndDirection(glm::vec3 position, glm::vec3 direction);
+
 private:
    // calculates the front vector from the Camera's (updated) Euler Angles
    void updateCameraVectors();

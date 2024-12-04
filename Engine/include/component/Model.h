@@ -33,6 +33,7 @@ public:
     Material& GetMaterial();
     const BoundingBox& GetBoundingBox() const;
     const BVH& GetBVH() const;
+    const std::vector<Mesh>& GetMeshes() const;
 
     void Compute() override;
     Component* Clone() override;

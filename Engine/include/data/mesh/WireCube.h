@@ -7,5 +7,5 @@ class WireCube : public Mesh
 public:
 	WireCube();
 
-	void Draw(Shader* shader) override;
+	void Draw(Shader* shader) const override;
 };

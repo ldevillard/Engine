@@ -23,7 +23,7 @@ public:
     Mesh(const Mesh& copy);
     ~Mesh();
     
-    virtual void Draw(Shader* shader);
+    virtual void Draw(Shader* shader) const;
     int GetNumberOfTriangles() const;
     std::vector<Triangle> GetTriangles() const;
 

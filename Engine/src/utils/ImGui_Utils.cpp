@@ -305,6 +305,37 @@ namespace ImGui_Utils
 		ImGui::PopID();
 	}
 
+	bool DrawButtonControl(const std::string& label, const std::string& buttonLabel, float columnWidth)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldFont = io.Fonts->Fonts[0];
+		bool clicked = false;
+
+		ImGui::PushID(label.c_str());
+
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
+
+		ImGui::PushItemWidth(-1);
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
+
+		if (ImGui::Button(buttonLabel.c_str()))
+			clicked = true;
+
+		ImGui::PopItemWidth();
+
+		ImGui::PopStyleVar();
+
+		ImGui::Columns(1);
+
+		ImGui::PopID();
+
+		return clicked;
+	}
+
 	void SliderFloat(const std::string& label, float& value, float min, float max, const std::string& format, float columnWidth)
 	{
 		ImGui::PushID(label.c_str());

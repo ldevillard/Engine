@@ -16,6 +16,7 @@
 #include "system/entity/Entity.h"
 #include "system/editor/EditorCamera.h"
 #include "system/editor/ScreenSettings.h"
+#include "render/DepthBuffer.h"
 #include "render/FrameBuffer.h"
 #include "data/template/Singleton.h"
 
@@ -27,6 +28,7 @@ struct EditorSettings
 	// scene
 	bool Wireframe = false;
 	int TrianglesNumber = 0;
+	bool ShadowMap = false;
 	
 	// gizmos
 	bool Gizmo = true;
@@ -62,6 +64,7 @@ public:
 
 	// rendering
 	void PreRender();
+	void RenderShadowMap(Shader* shader, Shader* debugShader, Shader* classicShader);
 	void RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid);
 	void RenderCamera(Shader* shader);
 	void RenderEditor();
@@ -82,6 +85,7 @@ private:
 	// render functions
 	void renderTopBar();
 	void renderScene(unsigned int width, unsigned int height);
+	void renderShadowMap();
 	void renderRayTracer();
 	void renderInspector();
 	void renderHierarchy();
@@ -92,7 +96,12 @@ private:
 	void showHierarchyContextMenu();
 	void showEntityContextMenu();
 
+	// utility
 	void resetEntitySelection();
+	void setCameraToLightView();
+
+	// debug
+	void setupDebugScreenQuad();
 
 	static constexpr float TOP_BAR_HEIGHT = 12.0f;
 
@@ -107,6 +116,8 @@ private:
 	FrameBuffer* outlineBuffer[2] = { nullptr };
 	FrameBuffer* raytracingBuffer = nullptr;
 	FrameBuffer* accumulationBuffer = nullptr;
+	FrameBuffer* depthMapBuffer = nullptr;
+	DepthBuffer* depthMap = nullptr;
 
 	EditorSettings parameters;
 	Inspector inspector;
@@ -125,4 +136,7 @@ private:
 	float lastX = SCENE_WIDTH / 2.0f;
 	float lastY = SCENE_HEIGHT / 2.0f;
 	bool firstMouse = true;
+
+	// debug
+	ScreenQuad debugScreenQuad;
 };

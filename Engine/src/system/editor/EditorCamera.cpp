@@ -96,6 +96,25 @@ void EditorCamera::ProcessMouseScroll(float yoffset)
 		Zoom = 45.0f;
 }
 
+void EditorCamera::SetPositionAndDirection(glm::vec3 position, glm::vec3 direction)
+{
+	Position = position;
+
+	glm::vec3 normalizedDirection = glm::normalize(direction);
+
+	// Yaw : angle around Y axis
+	// Pitch : angle around X axis
+	Yaw = glm::degrees(atan2(normalizedDirection.z, normalizedDirection.x));
+	// arc sin for elevation
+	Pitch = glm::degrees(asin(normalizedDirection.y)); 
+	
+	Front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+	Front.y = sin(glm::radians(Pitch));
+	Front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+	Right = glm::normalize(glm::cross(Front, WorldUp));
+	Up = glm::normalize(glm::cross(Right, Front));
+}
+
 #pragma region Utility
 
 const glm::mat4& EditorCamera::GetViewMatrix() const

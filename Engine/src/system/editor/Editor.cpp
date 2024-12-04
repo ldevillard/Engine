@@ -42,6 +42,8 @@ void Editor::initialize()
 
 	// load default scene, need to handle this properly (maybe a scene manager)
 	Serializer::LoadSceneFromFile("resources/scenes/DefaultScene.devil", "DefaultScene");
+
+	setupDebugScreenQuad();
 }
 
 #pragma endregion
@@ -60,6 +62,8 @@ void Editor::Initialize(GLFWwindow* win)
 	instance->accumulationBuffer = new FrameBuffer(RAYTRACED_SCENE_WIDTH, RAYTRACED_SCENE_HEIGHT, MULTISAMPLES);
 	instance->outlineBuffer[0] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT, MULTISAMPLES);
 	instance->outlineBuffer[1] = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT, MULTISAMPLES);
+	instance->depthMapBuffer = new FrameBuffer(SCENE_WIDTH, SCENE_HEIGHT, MULTISAMPLES);
+	instance->depthMap = new DepthBuffer();
 	instance->inspector = Inspector();
 
 	instance->initialize();
@@ -176,9 +180,69 @@ void Editor::RenderEditor()
 	renderInspector();
 	renderRayTracer();
 	renderScene(w, h);
+	renderShadowMap();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Editor::RenderShadowMap(Shader* shader, Shader* debugShader, Shader* classicShader)
+{
+	const Light* mainLight = EntityManager::Get().GetMainLight();
+
+	if (mainLight == nullptr) return;
+
+	glm::vec3 lightPos(mainLight->transform->Position);
+	glm::mat4 lightProjection, lightView;
+	glm::mat4 lightSpaceMatrix;
+
+	glm::vec3 lightDir = glm::normalize(mainLight->GetDirection());
+	glm::vec3 right = glm::normalize(glm::cross(lightDir, glm::vec3(0, 1, 0)));
+	glm::vec3 up = glm::cross(right, lightDir);
+
+	float near_plane = 1.0f, far_plane = 50.f;
+	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+	lightView = glm::lookAt(lightPos, lightPos + lightDir, up);
+
+	lightSpaceMatrix = lightProjection * lightView;
+
+	//glm::vec3 lightPos(editorCamera->Position);
+	//glm::mat4 lightProjection, lightView;
+	//glm::mat4 lightSpaceMatrix;
+	//float near_plane = 1.0f, far_plane = 20.f;
+	//lightProjection = editorCamera->GetProjectionMatrix(CameraProjectionType::SCENE);
+	//lightView = editorCamera->GetViewMatrix();
+	//lightSpaceMatrix = lightProjection * lightView;
+	
+	// render scene from light's point of view
+	shader->Use();
+	shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+	
+	depthMap->Bind();
+	
+	//Editor::Get().RenderCamera(classicShader);
+	EntityManager::Get().DrawAllMeshes(shader);
+	
+	depthMap->Unbind();
+	
+	depthMapBuffer->Bind();
+
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+	
+	debugShader->Use();
+	debugShader->SetFloat("near_plane", near_plane);
+	debugShader->SetFloat("far_plane", far_plane);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depthMap->GetDepthTexture());
+
+	glBindVertexArray(debugScreenQuad.VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
+
+	depthMapBuffer->Unbind();
+	depthMapBuffer->Blit();
 }
 
 void Editor::RenderFrame(Shader* shader, CubeMap* cubemap, AxisGrid* grid)
@@ -422,7 +486,7 @@ void Editor::renderScene(unsigned int width, unsigned int height)
 		SCENE_WIDTH = static_cast<unsigned int>(width);
 		SCENE_HEIGHT = static_cast<unsigned int>(height);
 		ImGui::Image(
-			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(sceneBuffer->GetFrameTexture())),
+			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(GetSceneBuffer()->GetFrameTexture())),
 			ImGui::GetContentRegionAvail(),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -431,6 +495,34 @@ void Editor::renderScene(unsigned int width, unsigned int height)
 	}
 	if (selectedEntity != nullptr)
 		transformGizmo(width, height);
+	ImGui::EndChild();
+	ImGui::End();
+}
+
+void Editor::renderShadowMap()
+{
+	if (!parameters.ShadowMap) return;
+
+	ImGui::SetNextWindowSizeConstraints(ImVec2(100, 100), ImVec2(FLT_MAX, FLT_MAX), [](ImGuiSizeCallbackData* data) {
+		// force square dimensions
+		float newSize = std::min(data->DesiredSize.x, data->DesiredSize.y);
+		data->DesiredSize = ImVec2(newSize, newSize);
+		});
+
+	ImGui::Begin("ShadowMap", nullptr);
+	{
+		ImGui::BeginChild("Render");
+
+		ImVec2 availableSize = ImGui::GetContentRegionAvail();
+		float squareSize = std::min(availableSize.x, availableSize.y);
+
+		ImGui::Image(
+			reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(depthMapBuffer->GetFrameTexture())),
+			ImVec2(squareSize, squareSize),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+	}
 	ImGui::EndChild();
 	ImGui::End();
 }
@@ -538,7 +630,10 @@ void Editor::renderSettings()
 	ImGui::NewLine();
 	ImGui::Separator();
 	ImGui_Utils::DrawBoolControl("Wireframe", parameters.Wireframe, 100.f);
+	ImGui_Utils::DrawBoolControl("ShadowMap", parameters.ShadowMap, 100.f);
 	ImGui_Utils::DrawFloatControl("Camera Speed", editorCamera->MovementSpeed, 5.f, 100.f);
+	if (ImGui_Utils::DrawButtonControl("Light View", "APPLY", 100.0f))
+		setCameraToLightView();
 
 	ImGui::Separator();
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
@@ -711,6 +806,34 @@ void Editor::resetEntitySelection()
 {
 	selectedEntity = nullptr;
 	hoveredEntity = nullptr;
+}
+
+void Editor::setCameraToLightView()
+{
+	const Light* mainLight = EntityManager::Get().GetMainLight();
+
+	if (mainLight == nullptr) return;
+
+	editorCamera->SetPositionAndDirection(mainLight->transform->Position, mainLight->GetDirection());
+}
+
+void Editor::setupDebugScreenQuad()
+{
+	debugScreenQuad = ScreenQuad();
+
+	glGenVertexArrays(1, &debugScreenQuad.VAO);
+	glGenBuffers(1, &debugScreenQuad.VBO);
+	glBindVertexArray(debugScreenQuad.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, debugScreenQuad.VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(debugScreenQuad.vertices), &debugScreenQuad.vertices, GL_STATIC_DRAW);
+	// position attribute
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+	// texture coord attribute
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	glBindVertexArray(0);
 }
 
 #pragma endregion

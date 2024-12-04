@@ -30,7 +30,7 @@ WireSphere::WireSphere() : Mesh()
     setupMesh();
 }
 
-void WireSphere::Draw(Shader* shader)
+void WireSphere::Draw(Shader* shader) const
 {
     glBindVertexArray(VAO);
     glLineWidth(Gizmo::GIZMO_WIDTH); // maybe set up in a constant file

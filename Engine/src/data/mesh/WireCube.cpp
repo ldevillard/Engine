@@ -30,7 +30,7 @@ WireCube::WireCube() : Mesh()
     setupMesh();
 }
 
-void WireCube::Draw(Shader* shader)
+void WireCube::Draw(Shader* shader) const
 {
 	glBindVertexArray(VAO);
     glLineWidth(Gizmo::GIZMO_WIDTH); // maybe set up in a constant file

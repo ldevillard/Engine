@@ -25,6 +25,7 @@ public:
 
 	void ComputeEntities() const;
 	bool ComputeSelectedEntity() const;
+	void DrawAllMeshes(Shader* shader) const;
 	const unsigned int GetNumberOfTriangles() const;
 
 	unsigned int GetLightIndex(Transform* transform) const;

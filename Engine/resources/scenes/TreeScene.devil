@@ -1,0 +1,511 @@
+{
+    "TreeScene": {
+        "Scene": {
+            "Entities": [
+                {
+                    "Name": "DirectionalLight",
+                    "Transform": {
+                        "position": {
+                            "x": -16.779949188232422,
+                            "y": 11.40742015838623,
+                            "z": 0.0
+                        },
+                        "rotation": {
+                            "x": -89.99996948242188,
+                            "y": 8.537736562175269e-07,
+                            "z": 29.17328643798828
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 0.9999997615814209,
+                            "z": 0.9999997615814209
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Light",
+                            "lightType": 0,
+                            "color": {
+                                "r": 1.0,
+                                "g": 1.0,
+                                "b": 1.0
+                            },
+                            "intensity": 1.0,
+                            "radius": 1.0,
+                            "cutOff": 12.5,
+                            "outCutOff": 17.5
+                        }
+                    ]
+                },
+                {
+                    "Name": "Ground",
+                    "Transform": {
+                        "position": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 7.0,
+                            "y": 0.10000000149011612,
+                            "z": 10.0
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": false,
+                                "flag": 1,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 0.0,
+                                "specularProbability": 1.0,
+                                "name": "Default"
+                            },
+                            "directory": "",
+                            "modelType": 1,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "Back",
+                    "Transform": {
+                        "position": {
+                            "x": 7.0,
+                            "y": 5.0,
+                            "z": 0.0
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": -90.0
+                        },
+                        "scale": {
+                            "x": 4.999998569488525,
+                            "y": 0.09999904781579971,
+                            "z": 10.0
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.4392159879207611,
+                                    "g": 0.17254899442195892,
+                                    "b": 0.521569013595581
+                                },
+                                "diffuse": {
+                                    "r": 0.3494453728199005,
+                                    "g": 0.19671551883220673,
+                                    "b": 0.4021739363670349
+                                },
+                                "specular": {
+                                    "r": 0.4946822226047516,
+                                    "g": 0.0,
+                                    "b": 0.5760869979858398
+                                },
+                                "shininess": 0.4000000059604645,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 0.0,
+                                "specularProbability": 1.0,
+                                "name": "Prune"
+                            },
+                            "directory": "",
+                            "modelType": 1,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "Top",
+                    "Transform": {
+                        "position": {
+                            "x": 0.0,
+                            "y": 10.0,
+                            "z": 0.0
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 7.0,
+                            "y": 0.10000000149011612,
+                            "z": 10.0
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 0.0,
+                                "specularProbability": 1.0,
+                                "name": "Default"
+                            },
+                            "directory": "",
+                            "modelType": 1,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "Left",
+                    "Transform": {
+                        "position": {
+                            "x": -1.1920928955078125e-07,
+                            "y": 5.000003814697266,
+                            "z": -10.0
+                        },
+                        "rotation": {
+                            "x": -89.99998474121094,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 7.0,
+                            "y": 0.09999868273735046,
+                            "z": 4.999915599822998
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.2472500056028366,
+                                    "g": 0.19949999451637268,
+                                    "b": 0.07450000196695328
+                                },
+                                "diffuse": {
+                                    "r": 0.7516400218009949,
+                                    "g": 0.6064800024032593,
+                                    "b": 0.22648000717163086
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 0.7235904335975647,
+                                    "b": 0.0
+                                },
+                                "shininess": 0.4000000059604645,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 0.0,
+                                "specularProbability": 1.0,
+                                "name": "Gold"
+                            },
+                            "directory": "",
+                            "modelType": 1,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "Right",
+                    "Transform": {
+                        "position": {
+                            "x": -1.1920928955078125e-07,
+                            "y": 4.999996662139893,
+                            "z": 10.0
+                        },
+                        "rotation": {
+                            "x": -89.99998474121094,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 7.0,
+                            "y": 0.0999976322054863,
+                            "z": 4.999848365783691
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.0,
+                                    "g": 1.0,
+                                    "b": 0.8538682460784912
+                                },
+                                "diffuse": {
+                                    "r": 0.0,
+                                    "g": 1.0,
+                                    "b": 0.8538682460784912
+                                },
+                                "specular": {
+                                    "r": 0.0,
+                                    "g": 0.58152174949646,
+                                    "b": 0.49657997488975525
+                                },
+                                "shininess": 0.10000000149011612,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 0.0,
+                                "specularProbability": 1.0,
+                                "name": "Turquoise"
+                            },
+                            "directory": "",
+                            "modelType": 1,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "CeilLight",
+                    "Transform": {
+                        "position": {
+                            "x": 0.0,
+                            "y": 9.899999618530273,
+                            "z": 0.0
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 3.2900002002716064,
+                            "y": 0.04700000211596489,
+                            "z": 4.700000286102295
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": true,
+                                "flag": 0,
+                                "emissiveStrength": 1.7000000476837158,
+                                "smoothness": 0.0,
+                                "specularProbability": 1.0,
+                                "name": "Default"
+                            },
+                            "directory": "",
+                            "modelType": 1,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "Sphere(3)",
+                    "Transform": {
+                        "position": {
+                            "x": 0.0,
+                            "y": 5.0,
+                            "z": -6.0
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 1.0,
+                                "specularProbability": 1.0,
+                                "name": "Default"
+                            },
+                            "directory": "",
+                            "modelType": 2,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "Sphere(4)",
+                    "Transform": {
+                        "position": {
+                            "x": 0.0,
+                            "y": 5.0,
+                            "z": 6.0
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 1.0,
+                                "specularProbability": 0.019999999552965164,
+                                "name": "Default"
+                            },
+                            "directory": "",
+                            "modelType": 2,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "Tree",
+                    "Transform": {
+                        "position": {
+                            "x": 0.0,
+                            "y": 0.08328359574079514,
+                            "z": -0.06201542168855667
+                        },
+                        "rotation": {
+                            "x": -89.18964385986328,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 0.46170005202293396,
+                            "y": 0.46170008182525635,
+                            "z": 0.46170008182525635
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.0215000007301569,
+                                    "g": 0.1745000034570694,
+                                    "b": 0.0215000007301569
+                                },
+                                "diffuse": {
+                                    "r": 0.07568000257015228,
+                                    "g": 0.6142399907112122,
+                                    "b": 0.07568000257015228
+                                },
+                                "specular": {
+                                    "r": 0.6330000162124634,
+                                    "g": 0.7278109788894653,
+                                    "b": 0.6330000162124634
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 1.0,
+                                "specularProbability": 0.2800000011920929,
+                                "name": "Emerald"
+                            },
+                            "directory": "resources/models",
+                            "modelType": 0,
+                            "modelPath": "resources/models/Tree.fbx"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

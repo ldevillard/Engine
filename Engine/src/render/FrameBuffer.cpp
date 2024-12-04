@@ -15,7 +15,7 @@ FrameBuffer::FrameBuffer() :
 {
 }
 
-FrameBuffer::FrameBuffer(GLsizei width, GLsizei height, GLsizei samples) : 
+FrameBuffer::FrameBuffer(GLsizei width, GLsizei height, GLsizei samples) :
     width(width),
     height(height),
     samples(samples)
