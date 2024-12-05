@@ -5,6 +5,8 @@
 #include <sstream>
 #include <iostream>
 
+#include <utils/glad/glad.h>
+
 enum TextureFormat
 {
 	RGB,
@@ -26,4 +28,5 @@ public:
 	unsigned int ID;
 	std::string Name;
 	std::string Path;
+	GLuint64 TextureHandle;
 };

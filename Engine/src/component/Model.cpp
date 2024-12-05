@@ -72,6 +72,11 @@ Material& Model::GetMaterial()
 	return material;
 }
 
+const std::vector<Texture>& Model::GetTextures() const
+{
+    return texturesLoaded;
+}
+
 const BoundingBox& Model::GetBoundingBox() const
 {
    return editorCollider->GetBoundingBox();

@@ -32,6 +32,7 @@ public:
 	void UpdateLightsIndex();
 
 	const std::vector<Entity*>& GetEntities() const;
+	const Entity* GetEntityFromName(const std::string& name) const;
 	const std::vector<Model*> GetModels() const;
 	const Light* GetMainLight() const;
 	const std::string GenerateNewEntityName(const std::string& prefix) const;

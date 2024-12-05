@@ -30,7 +30,9 @@ public:
     int GetNumberOfTriangles() const;
     std::vector<Triangle> GetTriangles() const;
 
+    // not const because we modify the material directly in the inspector class, maybe use a setter instead
     Material& GetMaterial();
+    const std::vector<Texture>& GetTextures() const;
     const BoundingBox& GetBoundingBox() const;
     const BVH& GetBVH() const;
     const std::vector<Mesh>& GetMeshes() const;

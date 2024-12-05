@@ -166,6 +166,16 @@ const std::vector<Entity*>& EntityManager::GetEntities() const
 	return entities;
 }
 
+const Entity* EntityManager::GetEntityFromName(const std::string& name) const
+{
+	for (const Entity* entity : entities)
+	{
+		if (entity->Name == name)
+			return entity;
+	}
+	return nullptr;
+}
+
 const std::vector<Model*> EntityManager::GetModels() const
 {
 	std::vector<Model*> models = {};

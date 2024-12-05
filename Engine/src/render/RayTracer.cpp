@@ -35,6 +35,10 @@ void Raytracer::initialize()
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, bvhSSBO);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, bvhSSBO);
 
+	glGenBuffers(1, &textureSSBO);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, textureSSBO);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, textureSSBO);
+
 	setupScreenQuad();
 }
 
@@ -94,6 +98,23 @@ void Raytracer::Draw(const CubeMap& cubeMap)
 	raytracingShader->SetFloat("divergeStrength", settings.DivergeStrength);
 	raytracingShader->SetUInt("bvhEnabled", settings.BVH == true ? 1u : 0u);
 
+
+	std::vector<GLuint64> handles;
+
+	Model* model = nullptr;
+	const Entity* e = EntityManager::Get().GetEntityFromName("Ivysaur");
+	if (e != nullptr)
+	{
+		e->TryGetComponent<Model>(model);
+		if (model != nullptr)
+		{
+			GLuint64 handle = model->GetTextures()[0].TextureHandle;
+			glMakeTextureHandleResidentARB(handle);
+			//raytracingShader->SetTextureHandle("myTexture", handle);
+			handles.push_back(handle);
+		}
+	}
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMap.ID);
 
@@ -111,6 +132,9 @@ void Raytracer::Draw(const CubeMap& cubeMap)
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, bvhSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, nodes.size() * sizeof(RaytracingBVHNode), nodes.data(), GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, textureSSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, handles.size() * sizeof(GLuint64), handles.data(), GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(screenQuad.VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

@@ -40,6 +40,7 @@ public:
     void SetMat2(const std::string& name, const glm::mat2& mat) const;
     void SetMat3(const std::string& name, const glm::mat3& mat) const;
     void SetMat4(const std::string& name, glm::mat4 mat) const;
+    void SetTextureHandle(const std::string& name, GLuint64 handle) const;
 
     // the program ID
     unsigned int ID = 0;

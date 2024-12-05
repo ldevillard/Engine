@@ -1,4 +1,5 @@
-#version 430 core
+#version 460 core
+#extension GL_ARB_bindless_texture : require
 
 layout(location = 0) in vec2 aPos;
 layout(location = 1) in vec2 aTexCoords;

@@ -142,6 +142,11 @@ void Shader::SetMat4(const std::string& name, glm::mat4 mat) const
    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
+void Shader::SetTextureHandle(const std::string& name, GLuint64 handle) const
+{
+    glUniformHandleui64ARB(glGetUniformLocation(ID, name.c_str()), handle);
+}
+
 #pragma endregion
 
 #pragma endregion

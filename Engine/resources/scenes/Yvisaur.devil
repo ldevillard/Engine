@@ -1,0 +1,147 @@
+{
+    "Yvisaur": {
+        "Scene": {
+            "Entities": [
+                {
+                    "Name": "DirectionalLight",
+                    "Transform": {
+                        "position": {
+                            "x": -1.6764717102050781,
+                            "y": 22.302927017211914,
+                            "z": 2.2746076583862305
+                        },
+                        "rotation": {
+                            "x": -82.68623352050781,
+                            "y": 0.612881600856781,
+                            "z": 7.23775577545166
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 0.9999911785125732,
+                            "z": 1.0
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Light",
+                            "lightType": 0,
+                            "color": {
+                                "r": 1.0,
+                                "g": 1.0,
+                                "b": 1.0
+                            },
+                            "intensity": 1.0,
+                            "radius": 1.0,
+                            "cutOff": 12.5,
+                            "outCutOff": 17.5
+                        }
+                    ]
+                },
+                {
+                    "Name": "Ivysaur",
+                    "Transform": {
+                        "position": {
+                            "x": 5.0780134201049805,
+                            "y": 0.1634541004896164,
+                            "z": -0.2079603224992752
+                        },
+                        "rotation": {
+                            "x": 180.0,
+                            "y": 2.477996826171875,
+                            "z": 180.0
+                        },
+                        "scale": {
+                            "x": 7.359825134277344,
+                            "y": 7.359999656677246,
+                            "z": 7.359825134277344
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 0.0,
+                                "specularProbability": 1.0,
+                                "name": "Default"
+                            },
+                            "directory": "resources/models/pokemon/ivysaur",
+                            "modelType": 0,
+                            "modelPath": "resources/models/pokemon/ivysaur/Pokemon.obj"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Plane",
+                    "Transform": {
+                        "position": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 55.359336853027344,
+                            "y": 55.359336853027344,
+                            "z": 55.359336853027344
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 0.39673912525177,
+                                    "g": 0.39673912525177,
+                                    "b": 0.39673912525177
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 0.0,
+                                "specularProbability": 1.0,
+                                "name": "Default"
+                            },
+                            "directory": "resources/models/primitive",
+                            "modelType": 0,
+                            "modelPath": "resources/models/primitive/plane.obj"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

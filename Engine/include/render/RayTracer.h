@@ -105,4 +105,5 @@ private:
 	GLuint triangleSSBO = 0;
 	GLuint meshSSBO = 0;
 	GLuint bvhSSBO = 0;
+	GLuint textureSSBO = 0;
 };
