@@ -38,7 +38,7 @@ Texture::Texture(const char* texturePath, std::string name, TextureParam params)
        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
        TextureHandle = glGetTextureHandleARB(ID);
-
+       
        // make the texture resident, allow the texture to be accessible from the GPU
        glMakeTextureHandleResidentARB(TextureHandle);
    }
@@ -48,7 +48,7 @@ Texture::Texture(const char* texturePath, std::string name, TextureParam params)
    }
 }
 
-Texture::Texture(const Texture& other) : Name(other.Name), ID(other.ID), Path(other.Path)
+Texture::Texture(const Texture& other) : Name(other.Name), ID(other.ID), Path(other.Path), TextureHandle(other.TextureHandle)
 {
 }
 

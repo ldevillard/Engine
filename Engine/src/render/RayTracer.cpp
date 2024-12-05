@@ -109,8 +109,8 @@ void Raytracer::Draw(const CubeMap& cubeMap)
 		if (model != nullptr)
 		{
 			GLuint64 handle = model->GetTextures()[0].TextureHandle;
-			glMakeTextureHandleResidentARB(handle);
-			//raytracingShader->SetTextureHandle("myTexture", handle);
+
+			raytracingShader->SetTextureHandle("myTexture", handle);
 			handles.push_back(handle);
 		}
 	}

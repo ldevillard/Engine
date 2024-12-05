@@ -35,7 +35,7 @@ void Editor::initialize()
 	ImGui_Utils::SetPurpleTheme();
 
 	ImGui_ImplGlfw_InitForOpenGL(instance->window, true);
-	ImGui_ImplOpenGL3_Init("#version 430");
+	ImGui_ImplOpenGL3_Init("#version 450");
 
 	// init file browser
 	ifd::FileDialog::Instance().Initialize();

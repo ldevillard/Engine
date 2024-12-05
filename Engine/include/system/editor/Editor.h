@@ -38,7 +38,7 @@ struct EditorSettings
 	bool BVHGizmo = false;
 
 	// ray tracing
-	bool Raytracing = false;
+	bool Raytracing = true;
 	bool BVH = true;
 	int RaysPerPixel = 1;
 	float DivergeStrength = 0.25f;

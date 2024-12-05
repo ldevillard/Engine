@@ -1,4 +1,4 @@
-#version 460 core
+#version 450 core
 #extension GL_ARB_bindless_texture : require
 
 in vec2 TexCoords;
@@ -450,7 +450,7 @@ vec3 Trace(Ray ray, inout uint rngState)
 			ray.direction = mix(diffuseDirection, specularDirection, material.smoothness * int(isSpecular));
 
 			vec3 emittedLight = material.emissiveColor * material.emissiveStrength;
-			incomingLight += emittedLight * rayColor;
+			incomingLight += emittedLight * rayColor  + texture(textures[0], TexCoords).rgb;
 			rayColor *= isSpecular ? material.specularColor : material.color;
 		}
 		else if (skyboxEnabled == 1)
@@ -469,34 +469,31 @@ vec3 Trace(Ray ray, inout uint rngState)
 
 void main()
 {
-	//FragColor = vec4(TexCoords.x, TexCoords.x, TexCoords.x, 1);
-	FragColor = vec4(texture(textures[0], TexCoords).rgb, 1);
-
-	//vec2 fragCoordNorm = (gl_FragCoord.xy / screenSize) * 2.0 - 1.0;
-	//
-	//vec4 clipCoord = vec4(fragCoordNorm, 0.0, 1.0);
-	//vec4 viewCoord = invProjection * clipCoord;
-	//viewCoord.z = -1.0;
-	//
-	//vec4 worldCoord = invView * viewCoord;
-	//
-	//vec3 worldPosition = worldCoord.xyz / worldCoord.w;
-	//
-	//uint pixelIndex = uint(gl_FragCoord.y * screenSize.x + gl_FragCoord.x);
-	//uint rngState = pixelIndex + frameCount * 719393;
-	//
-	//vec3 totalIncomingLight = vec3(0);
-	//for (int i = 0; i < numberRaysPerPixel; i++)
-	//{
-	//	Ray ray;
-	//	ray.origin = cameraPosition;
-	//	vec2 randomPoint = RandomPointInCircle(rngState) * divergeStrength / screenSize.x;
-	//	vec3 randomPos = worldPosition + cameraRight * randomPoint.x + cameraUp * randomPoint.y;
-	//
-	//	ray.direction = normalize(randomPos - ray.origin);
-	//
-	//	totalIncomingLight += Trace(ray, rngState);
-	//}
-	//
-	//FragColor = vec4(totalIncomingLight / numberRaysPerPixel, 1);
+	vec2 fragCoordNorm = (gl_FragCoord.xy / screenSize) * 2.0 - 1.0;
+	
+	vec4 clipCoord = vec4(fragCoordNorm, 0.0, 1.0);
+	vec4 viewCoord = invProjection * clipCoord;
+	viewCoord.z = -1.0;
+	
+	vec4 worldCoord = invView * viewCoord;
+	
+	vec3 worldPosition = worldCoord.xyz / worldCoord.w;
+	
+	uint pixelIndex = uint(gl_FragCoord.y * screenSize.x + gl_FragCoord.x);
+	uint rngState = pixelIndex + frameCount * 719393;
+	
+	vec3 totalIncomingLight = vec3(0);
+	for (int i = 0; i < numberRaysPerPixel; i++)
+	{
+		Ray ray;
+		ray.origin = cameraPosition;
+		vec2 randomPoint = RandomPointInCircle(rngState) * divergeStrength / screenSize.x;
+		vec3 randomPos = worldPosition + cameraRight * randomPoint.x + cameraUp * randomPoint.y;
+	
+		ray.direction = normalize(randomPos - ray.origin);
+	
+		totalIncomingLight += Trace(ray, rngState);
+	}
+	
+	FragColor = vec4(totalIncomingLight / numberRaysPerPixel, 1);
 }
