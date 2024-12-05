@@ -287,8 +287,12 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 				glm::vec3 normalA = allTriangles[i].A.Normal;
 				glm::vec3 normalB = allTriangles[i].B.Normal;
 				glm::vec3 normalC = allTriangles[i].C.Normal;
+
+				glm::vec2 uvA = allTriangles[i].A.UV;
+				glm::vec2 uvB = allTriangles[i].B.UV;
+				glm::vec2 uvC = allTriangles[i].C.UV;
 			
-				RaytracingTriangle triangle = { A, B, C, normalA, normalB, normalC };
+				RaytracingTriangle triangle = { A, B, C, normalA, normalB, normalC, uvA, uvB, uvC };
 				meshTriangles.push_back(triangle);
 			}
 

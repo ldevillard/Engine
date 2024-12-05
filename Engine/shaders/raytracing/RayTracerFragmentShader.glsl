@@ -69,12 +69,22 @@ struct Cube
 struct Triangle
 {
 	vec3 pA;
-	vec3 pB;
-	vec3 pC;
+    float pad1;
+    vec3 pB;
+    float pad2;
+    vec3 pC;
+    float pad3;
 
-	vec3 nA;
-	vec3 nB;
-	vec3 nC;
+    vec3 nA;
+    float pad4;
+    vec3 nB;
+    float pad5;
+    vec3 nC;
+    float pad6;
+    
+    vec2 uvA;
+    vec2 uvB;
+    vec2 uvC;
 };
 
 struct HitInfo
@@ -83,6 +93,7 @@ struct HitInfo
 	float distance;
 	vec3 hitPoint;
 	vec3 normal;
+	vec2 uv;
 	Material material;
 };
 
@@ -294,7 +305,8 @@ HitInfo RayTriangle(Ray ray, Ray localRay, Triangle triangle, mat4 tx)
 				hitInfo.hit = true;
 				hitInfo.distance = distance;
 				hitInfo.hitPoint = ray.origin + ray.direction * distance;
-				
+				hitInfo.uv = triangle.uvA * w + triangle.uvB * u + triangle.uvC * v;
+
 				vec3 localNormal = normalize(triangle.nA * w + triangle.nB * u + triangle.nC * v);
 				hitInfo.normal = normalize((tx * vec4(localNormal, 0.0)).xyz);
 			}
@@ -375,6 +387,7 @@ HitInfo CalculateRayCollision(Ray ray)
 	hitInfo.hit = false;
 	hitInfo.distance = 1.0 / 0.0; // infinity
 	hitInfo.material.color = vec3(0.1, 0.1, 0.1);
+	hitInfo.uv = vec2(0, 0);
 
 	for (int i = 0; i < sphereCount; i++)
 	{
@@ -450,8 +463,14 @@ vec3 Trace(Ray ray, inout uint rngState)
 			ray.direction = mix(diffuseDirection, specularDirection, material.smoothness * int(isSpecular));
 
 			vec3 emittedLight = material.emissiveColor * material.emissiveStrength;
-			incomingLight += emittedLight * rayColor  + texture(textures[0], TexCoords).rgb;
+			incomingLight += emittedLight * rayColor;
 			rayColor *= isSpecular ? material.specularColor : material.color;
+
+			vec3 textureColor = texture(textures[0], hitInfo.uv).rgb;
+			if (hitInfo.uv.x == 0 && hitInfo.uv.y == 0)
+				textureColor = vec3(1, 1, 1);
+
+			rayColor *= textureColor;
 		}
 		else if (skyboxEnabled == 1)
 		{

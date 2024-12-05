@@ -49,6 +49,10 @@ struct RaytracingTriangle
 	alignas(16) glm::vec3 NormalA = {};
 	alignas(16) glm::vec3 NormalB = {};
 	alignas(16) glm::vec3 NormalC = {};
+
+	alignas(8) glm::vec2 UVA = {};
+	alignas(8) glm::vec2 UVB = {};
+	alignas(8) glm::vec2 UVC = {};
 };
 
 struct RaytracingMesh
