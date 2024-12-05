@@ -199,7 +199,7 @@ void Editor::RenderShadowMap(Shader* shader, Shader* quadShader)
 
 	float nearPlane = 1.0f, farPlane = 50.f;
 
-	glm::mat4 lightProjection = glm::ortho(-15.0f, 15.0f, -15.0f, 15.0f, nearPlane, farPlane);
+	glm::mat4 lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, nearPlane, farPlane);
 	glm::mat4 lightView = glm::lookAt(lightPos, lightPos + lightDir, up);
 	lightSpaceMatrix = lightProjection * lightView;
 	

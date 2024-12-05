@@ -82,7 +82,8 @@ void Raytracer::Draw(const CubeMap& cubeMap)
 	std::vector<RaytracingCube> cubes = {};
 	std::vector<RaytracingMesh> meshes = {};
 	std::vector<RaytracingBVHNode> nodes = {};
-	getSceneData(models, spheres, cubes, triangles, meshes, nodes);
+	std::vector<GLuint64> handles = {};
+	getSceneData(models, spheres, cubes, triangles, meshes, nodes, handles);
 
 	const EditorSettings& settings = Editor::Get().GetSettings();
 
@@ -97,23 +98,6 @@ void Raytracer::Draw(const CubeMap& cubeMap)
 	raytracingShader->SetInt("numberRaysPerPixel", settings.RaysPerPixel);
 	raytracingShader->SetFloat("divergeStrength", settings.DivergeStrength);
 	raytracingShader->SetUInt("bvhEnabled", settings.BVH == true ? 1u : 0u);
-
-
-	std::vector<GLuint64> handles;
-
-	Model* model = nullptr;
-	const Entity* e = EntityManager::Get().GetEntityFromName("Ivysaur");
-	if (e != nullptr)
-	{
-		e->TryGetComponent<Model>(model);
-		if (model != nullptr)
-		{
-			GLuint64 handle = model->GetTextures()[0].TextureHandle;
-
-			raytracingShader->SetTextureHandle("myTexture", handle);
-			handles.push_back(handle);
-		}
-	}
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMap.ID);
@@ -203,7 +187,7 @@ void Raytracer::setupScreenQuad()
 
 void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes,
 							 std::vector<RaytracingTriangle>& inout_triangles, std::vector<RaytracingMesh>& inout_meshes,
-							 std::vector<RaytracingBVHNode>& inout_nodes)
+							 std::vector<RaytracingBVHNode>& inout_nodes, std::vector<GLuint64>& inout_handles)
 {
 	// this is to safely rebuild gpu data if there is models changements
 	// like if scene is changed we don't want to keep to data of the previous scene
@@ -252,7 +236,7 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 		}
 		else
 		{
-			// Mesh part 
+			// mesh part 
 			const glm::mat4& transformMatrix = model->transform->GetTransformMatrix();
 			RaytracingMesh raytracingMesh = {};
 			raytracingMesh.FirstTriangleIndex = static_cast<int>(inout_triangles.size());
@@ -261,7 +245,16 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 			raytracingMesh.InverseTransformMatrix = glm::inverse(transformMatrix);
 			raytracingMesh.Material = material;
 
-			// Movement detection part, rebuild the raytracing data if there is modification
+			// texture part
+			// TODO: need to handle meshes that don't have textures
+			const Mesh& mesh = model->GetMeshes()[0];
+			if (mesh.Textures.size() > 0) 
+				inout_handles.push_back(mesh.Textures[0].TextureHandle);
+			else
+				inout_handles.push_back(0);
+
+
+			// movement detection part, rebuild the raytracing data if there is modification
 			const std::string& modelName = model->entity->Name;
 			std::vector<RaytracingTriangle>& meshTriangles = meshesTriangles[modelName];
 			std::vector<RaytracingBVHNode>& meshNodes = meshesNodes[modelName];
@@ -274,7 +267,7 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 				continue;
 			}
 
-			// Triangles part
+			// triangles part
 			const std::vector<Triangle>& allTriangles = model->GetBVH().GetTriangles();
 
 			meshTriangles.reserve(allTriangles.size());
@@ -296,7 +289,7 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 				meshTriangles.push_back(triangle);
 			}
 
-			// BVH part
+			// bvh part
 			const std::vector<std::shared_ptr<BVHNode>>& allNodes = model->GetBVH().GetNodes();
 
 			meshNodes.reserve(allNodes.size());

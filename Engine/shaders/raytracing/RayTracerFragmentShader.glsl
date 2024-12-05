@@ -94,6 +94,7 @@ struct HitInfo
 	vec3 hitPoint;
 	vec3 normal;
 	vec2 uv;
+	int textureIndex;
 	Material material;
 };
 
@@ -292,11 +293,11 @@ HitInfo RayTriangle(Ray ray, Ray localRay, Triangle triangle, mat4 tx)
 		float inverseDet = 1.0 / det;
 		vec3 AO = localRay.origin - triangle.pA;
 		vec3 DAO = cross(AO, localRay.direction);
-		
+
 		float u = dot(AC, DAO) * inverseDet;
 		float v = -dot(AB, DAO) * inverseDet;
 		float w = 1 - u - v;
-		
+
 		if (u >= 0 && v >= 0 && w >= 0)
 		{
 			float distance = dot(AO, n) * inverseDet;
@@ -305,6 +306,7 @@ HitInfo RayTriangle(Ray ray, Ray localRay, Triangle triangle, mat4 tx)
 				hitInfo.hit = true;
 				hitInfo.distance = distance;
 				hitInfo.hitPoint = ray.origin + ray.direction * distance;
+
 				hitInfo.uv = triangle.uvA * w + triangle.uvB * u + triangle.uvC * v;
 
 				vec3 localNormal = normalize(triangle.nA * w + triangle.nB * u + triangle.nC * v);
@@ -388,6 +390,7 @@ HitInfo CalculateRayCollision(Ray ray)
 	hitInfo.distance = 1.0 / 0.0; // infinity
 	hitInfo.material.color = vec3(0.1, 0.1, 0.1);
 	hitInfo.uv = vec2(0, 0);
+	hitInfo.textureIndex = -1;
 
 	for (int i = 0; i < sphereCount; i++)
 	{
@@ -425,6 +428,7 @@ HitInfo CalculateRayCollision(Ray ray)
 		{
 			hitInfo = hit;
 			hitInfo.material = meshInfo.material;
+			hitInfo.textureIndex = i;
 		}
 	}
 
@@ -462,14 +466,14 @@ vec3 Trace(Ray ray, inout uint rngState)
 			bool isSpecular = RandomValue(rngState) < material.specularProbability;
 			ray.direction = mix(diffuseDirection, specularDirection, material.smoothness * int(isSpecular));
 
-			vec3 emittedLight = material.emissiveColor * material.emissiveStrength;
+			vec3 textureColor = vec3(1, 1, 1);
+			if (hitInfo.textureIndex > -1 && hitInfo.uv.x != 0 && hitInfo.uv.y != 0)
+				textureColor = texture(textures[hitInfo.textureIndex], hitInfo.uv).rgb;
+
+			vec3 emittedLight = material.emissiveColor * material.emissiveStrength * textureColor;
 			incomingLight += emittedLight * rayColor;
-			rayColor *= isSpecular ? material.specularColor : material.color;
-
-			vec3 textureColor = texture(textures[0], hitInfo.uv).rgb;
-			if (hitInfo.uv.x == 0 && hitInfo.uv.y == 0)
-				textureColor = vec3(1, 1, 1);
-
+			rayColor *= isSpecular ? material.specularColor : material.color;			
+			
 			rayColor *= textureColor;
 		}
 		else if (skyboxEnabled == 1)

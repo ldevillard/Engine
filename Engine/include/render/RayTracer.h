@@ -90,8 +90,8 @@ protected:
 private:
 	void setupScreenQuad();
 	void getSceneData(const std::vector<Model*>& models, std::vector<RaytracingSphere>& inout_spheres, std::vector<RaytracingCube>& inout_cubes,
-					  std::vector<RaytracingTriangle>& inout_triangles, std::vector<RaytracingMesh>& inout_meshes,
-					  std::vector<RaytracingBVHNode>& inout_nodes);
+							 std::vector<RaytracingTriangle>& inout_triangles, std::vector<RaytracingMesh>& inout_meshes,
+							 std::vector<RaytracingBVHNode>& inout_nodes, std::vector<GLuint64>& inout_handles);
 	
 	unsigned int frameCount = 0;
 	bool accumulate = false;
