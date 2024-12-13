@@ -209,6 +209,7 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 		material.SpecularProbability = mat.SpecularProbability;
 		material.EmissiveColor = mat.Emissive ? mat.Diffuse : glm::vec3(0.0f);
 		material.EmissiveStrength = mat.Emissive ? mat.EmissiveStrength : 0.0f;
+		material.Textured = 0;
 
 		if (model->ModelType == PrimitiveType::SpherePrimitive)
 		{
@@ -249,9 +250,15 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 			// TODO: need to handle meshes that don't have textures
 			const Mesh& mesh = model->GetMeshes()[0];
 			if (mesh.Textures.size() > 0) 
+			{
+				raytracingMesh.Material.Textured = 1;
 				inout_handles.push_back(mesh.Textures[0].TextureHandle);
-			else
+			}
+			else 
+			{
+				raytracingMesh.Material.Textured = 0;
 				inout_handles.push_back(0);
+			}
 
 
 			// movement detection part, rebuild the raytracing data if there is modification

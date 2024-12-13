@@ -39,6 +39,7 @@ struct Material
 	float emissiveStrength;
 	float smoothness;
 	float specularProbability;
+	int textured;
 };
 
 struct Ray
@@ -467,7 +468,7 @@ vec3 Trace(Ray ray, inout uint rngState)
 			ray.direction = mix(diffuseDirection, specularDirection, material.smoothness * int(isSpecular));
 
 			vec3 textureColor = vec3(1, 1, 1);
-			if (hitInfo.textureIndex > -1 && hitInfo.uv.x != 0 && hitInfo.uv.y != 0)
+			if (hitInfo.material.textured > 0 && hitInfo.uv.x != 0 && hitInfo.uv.y != 0)
 				textureColor = texture(textures[hitInfo.textureIndex], hitInfo.uv).rgb;
 
 			vec3 emittedLight = material.emissiveColor * material.emissiveStrength * textureColor;
