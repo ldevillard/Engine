@@ -1,0 +1,511 @@
+{
+    "Textured": {
+        "Scene": {
+            "Entities": [
+                {
+                    "Name": "DirectionalLight",
+                    "Transform": {
+                        "position": {
+                            "x": -1.6764717102050781,
+                            "y": 22.302927017211914,
+                            "z": 2.2746076583862305
+                        },
+                        "rotation": {
+                            "x": -446.489990234375,
+                            "y": 0.612881600856781,
+                            "z": 7.23775577545166
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 0.9999911785125732,
+                            "z": 1.0
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Light",
+                            "lightType": 0,
+                            "color": {
+                                "r": 1.0,
+                                "g": 1.0,
+                                "b": 1.0
+                            },
+                            "intensity": 1.0,
+                            "radius": 1.0,
+                            "cutOff": 12.5,
+                            "outCutOff": 17.5
+                        }
+                    ]
+                },
+                {
+                    "Name": "Ivysaur",
+                    "Transform": {
+                        "position": {
+                            "x": 5.69833517074585,
+                            "y": 9.5367431640625e-07,
+                            "z": -1.8250243663787842
+                        },
+                        "rotation": {
+                            "x": 180.0,
+                            "y": 22.656583786010742,
+                            "z": 180.0
+                        },
+                        "scale": {
+                            "x": 3.974351644515991,
+                            "y": 3.974400043487549,
+                            "z": 3.974351644515991
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 0.0,
+                                "specularProbability": 1.0,
+                                "name": "Default"
+                            },
+                            "directory": "resources/models/pokemon/ivysaur",
+                            "modelType": 0,
+                            "modelPath": "resources/models/pokemon/ivysaur/Pokemon.obj"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Plane",
+                    "Transform": {
+                        "position": {
+                            "x": -5.334794521331787,
+                            "y": 8.053876143776506e-08,
+                            "z": -4.149114608764648
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 38.83061599731445,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 1.55549955368042,
+                            "y": 1.5554999113082886,
+                            "z": 1.55549955368042
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 0.0,
+                                "specularProbability": 0.0,
+                                "name": "Default"
+                            },
+                            "directory": "resources/models/plane",
+                            "modelType": 0,
+                            "modelPath": "resources/models/plane/piper_pa18.obj"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Grid",
+                    "Transform": {
+                        "position": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 50.0,
+                            "y": 1.0,
+                            "z": 50.0
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.25,
+                                    "g": 0.25,
+                                    "b": 0.25
+                                },
+                                "diffuse": {
+                                    "r": 0.4000000059604645,
+                                    "g": 0.4000000059604645,
+                                    "b": 0.4000000059604645
+                                },
+                                "specular": {
+                                    "r": 0.7745969891548157,
+                                    "g": 0.7745969891548157,
+                                    "b": 0.7745969891548157
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 0.0,
+                                "specularProbability": 0.0,
+                                "name": "Chrome"
+                            },
+                            "directory": "resources/models/primitive",
+                            "modelType": 0,
+                            "modelPath": "resources/models/primitive/plane.obj"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Cube",
+                    "Transform": {
+                        "position": {
+                            "x": -1.7936240936933245e-08,
+                            "y": 9.517903327941895,
+                            "z": -5.670383274036794e-08
+                        },
+                        "rotation": {
+                            "x": -47.09000015258789,
+                            "y": 44.124324798583984,
+                            "z": -107.86592102050781
+                        },
+                        "scale": {
+                            "x": 1.4748976230621338,
+                            "y": 1.4748973846435547,
+                            "z": 1.4748972654342651
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": true,
+                                "flag": 2,
+                                "emissiveStrength": 2.700000047683716,
+                                "smoothness": 0.0,
+                                "specularProbability": 0.0,
+                                "name": "Default"
+                            },
+                            "directory": "resources/models/primitive",
+                            "modelType": 0,
+                            "modelPath": "resources/models/primitive/cube.obj"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Torus",
+                    "Transform": {
+                        "position": {
+                            "x": 0.21080386638641357,
+                            "y": 0.3057469129562378,
+                            "z": 1.2706680297851563
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 1.2799999713897705,
+                            "y": 1.2799999713897705,
+                            "z": 1.2799999713897705
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.4392159879207611,
+                                    "g": 0.17254899442195892,
+                                    "b": 0.521569013595581
+                                },
+                                "diffuse": {
+                                    "r": 0.6156859993934631,
+                                    "g": 0.2862749993801117,
+                                    "b": 0.7294120192527771
+                                },
+                                "specular": {
+                                    "r": 0.8118039965629578,
+                                    "g": 0.8118039965629578,
+                                    "b": 0.8118039965629578
+                                },
+                                "shininess": 0.4000000059604645,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 3.799999952316284,
+                                "smoothness": 0.0,
+                                "specularProbability": 0.0,
+                                "name": "Prune"
+                            },
+                            "directory": "",
+                            "modelType": 5,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "Sphere",
+                    "Transform": {
+                        "position": {
+                            "x": 1.0700000524520874,
+                            "y": 5.53000020980835,
+                            "z": -0.07000000029802322
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.10000000149011612,
+                                    "g": 0.18725000321865082,
+                                    "b": 0.1745000034570694
+                                },
+                                "diffuse": {
+                                    "r": 0.3959999978542328,
+                                    "g": 0.7415099740028381,
+                                    "b": 0.6910200119018555
+                                },
+                                "specular": {
+                                    "r": 0.2972539961338043,
+                                    "g": 0.3082900047302246,
+                                    "b": 0.30667799711227417
+                                },
+                                "shininess": 0.10000000149011612,
+                                "emissive": true,
+                                "flag": 2,
+                                "emissiveStrength": 3.5999999046325684,
+                                "smoothness": 0.0,
+                                "specularProbability": 0.0,
+                                "name": "Turquoise"
+                            },
+                            "directory": "",
+                            "modelType": 2,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "Cube(1)",
+                    "Transform": {
+                        "position": {
+                            "x": -5.535820484161377,
+                            "y": 7.523291110992432,
+                            "z": -1.7762715816497803
+                        },
+                        "rotation": {
+                            "x": -27.31047248840332,
+                            "y": 40.24176025390625,
+                            "z": 1.1184926052010269e-06
+                        },
+                        "scale": {
+                            "x": 2.232654333114624,
+                            "y": 0.17325171828269958,
+                            "z": 0.9999994039535522
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": true,
+                                "flag": 2,
+                                "emissiveStrength": 20.899999618530273,
+                                "smoothness": 0.0,
+                                "specularProbability": 0.0,
+                                "name": "Default"
+                            },
+                            "directory": "",
+                            "modelType": 1,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "Cube(2)",
+                    "Transform": {
+                        "position": {
+                            "x": 1.8673300743103027,
+                            "y": 0.8314422965049744,
+                            "z": -7.461184501647949
+                        },
+                        "rotation": {
+                            "x": -2.536935806274414,
+                            "y": -12.50003433227539,
+                            "z": 3.279386078247626e-07
+                        },
+                        "scale": {
+                            "x": 4.33670711517334,
+                            "y": 1.0,
+                            "z": 0.20000000298023224
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.20000000298023224,
+                                    "g": 0.20000000298023224,
+                                    "b": 0.20000000298023224
+                                },
+                                "diffuse": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "specular": {
+                                    "r": 1.0,
+                                    "g": 1.0,
+                                    "b": 1.0
+                                },
+                                "shininess": 0.6000000238418579,
+                                "emissive": false,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 1.0,
+                                "specularProbability": 1.0,
+                                "name": "Default"
+                            },
+                            "directory": "",
+                            "modelType": 1,
+                            "modelPath": ""
+                        }
+                    ]
+                },
+                {
+                    "Name": "Cube(3)",
+                    "Transform": {
+                        "position": {
+                            "x": 1.877523422241211,
+                            "y": 1.894382357597351,
+                            "z": -7.5071635246276855
+                        },
+                        "rotation": {
+                            "x": -2.5369389057159424,
+                            "y": -12.50003433227539,
+                            "z": 1.4483955510513624e-06
+                        },
+                        "scale": {
+                            "x": 4.33670711517334,
+                            "y": 0.09109886735677719,
+                            "z": 0.20000000298023224
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Model",
+                            "material": {
+                                "ambient": {
+                                    "r": 0.10000000149011612,
+                                    "g": 0.18725000321865082,
+                                    "b": 0.1745000034570694
+                                },
+                                "diffuse": {
+                                    "r": 0.3959999978542328,
+                                    "g": 0.7415099740028381,
+                                    "b": 0.6910200119018555
+                                },
+                                "specular": {
+                                    "r": 0.2972539961338043,
+                                    "g": 0.3082900047302246,
+                                    "b": 0.30667799711227417
+                                },
+                                "shininess": 0.10000000149011612,
+                                "emissive": true,
+                                "flag": 0,
+                                "emissiveStrength": 1.0,
+                                "smoothness": 1.0,
+                                "specularProbability": 1.0,
+                                "name": "Turquoise"
+                            },
+                            "directory": "",
+                            "modelType": 1,
+                            "modelPath": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
