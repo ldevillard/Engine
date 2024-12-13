@@ -21,6 +21,13 @@ enum CameraProjectionType
 	RAYTRACED_SCENE
 };
 
+enum CameraAxis
+{
+	X,
+	Y,
+	Z
+};
+
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 10.0f;
@@ -63,6 +70,8 @@ public:
 
    // utility
    void SetPositionAndDirection(glm::vec3 position, glm::vec3 direction);
+   void LookDirection(glm::vec3 direction);
+   void RotateAround(glm::vec3 position, float speed, CameraAxis axis = CameraAxis::Y); // we assume that speed is multiplied by the dt
 
 private:
    // calculates the front vector from the Camera's (updated) Euler Angles

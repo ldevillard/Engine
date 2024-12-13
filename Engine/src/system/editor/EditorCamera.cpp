@@ -99,20 +99,53 @@ void EditorCamera::ProcessMouseScroll(float yoffset)
 void EditorCamera::SetPositionAndDirection(glm::vec3 position, glm::vec3 direction)
 {
 	Position = position;
+	LookDirection(direction);
+}
 
+void EditorCamera::LookDirection(glm::vec3 direction)
+{
 	glm::vec3 normalizedDirection = glm::normalize(direction);
 
 	// Yaw : angle around Y axis
 	// Pitch : angle around X axis
 	Yaw = glm::degrees(atan2(normalizedDirection.z, normalizedDirection.x));
 	// arc sin for elevation
-	Pitch = glm::degrees(asin(normalizedDirection.y)); 
-	
+	Pitch = glm::degrees(asin(normalizedDirection.y));
+
 	Front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
 	Front.y = sin(glm::radians(Pitch));
 	Front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
 	Right = glm::normalize(glm::cross(Front, WorldUp));
 	Up = glm::normalize(glm::cross(Right, Front));
+}
+
+void EditorCamera::RotateAround(glm::vec3 position, float speed, CameraAxis axis)
+{
+	// calculate the angle of rotation based on the speed and delta time
+	float angle = speed;
+
+	// calculate the rotation quaternion based on the axis and angle
+	glm::quat rotation;
+	switch (axis)
+	{
+		case CameraAxis::X:
+			rotation = glm::angleAxis(angle, glm::vec3(1, 0, 0)); // rotation around X-axis
+			break;
+		case CameraAxis::Y:
+			rotation = glm::angleAxis(angle, glm::vec3(0, 1, 0)); // rotation around Y-axis
+			break;
+		case CameraAxis::Z:
+			rotation = glm::angleAxis(angle, glm::vec3(0, 0, 1)); // rotation around Z-axis
+			break;
+	}
+
+	// calculate the new position
+	glm::vec3 newPosition = rotation * (Position - position) + position;
+
+	// update camera position and direction
+	Position = newPosition;
+	LookDirection(position - Position);
+
 }
 
 #pragma region Utility

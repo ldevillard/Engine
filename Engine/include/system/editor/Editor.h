@@ -30,6 +30,7 @@ struct EditorSettings
 	int TrianglesNumber = 0;
 	bool ShadowMap = false;
 	bool Skybox = true;
+	bool OrbitMode = false;
 	
 	// gizmos
 	bool Gizmo = true;

@@ -41,7 +41,7 @@ void Editor::initialize()
 	ifd::FileDialog::Instance().Initialize();
 
 	// load default scene, need to handle this properly (maybe a scene manager)
-	Serializer::LoadSceneFromFile("resources/scenes/Yvisaur.devil", "Yvisaur");
+	Serializer::LoadSceneFromFile("resources/scenes/NinjaScene.devil", "NinjaScene");
 
 	setupDebugScreenQuad();
 }
@@ -129,6 +129,9 @@ const Entity* Editor::GetSelectedEntity() const
 
 void Editor::PreRender()
 {
+	if (parameters.OrbitMode)
+		editorCamera->RotateAround(glm::vec3(0, 0, 0), 0.25f * Time::DeltaTime);
+
 	editorCamera->ProcessMatrices();
 }
 
@@ -633,6 +636,7 @@ void Editor::renderSettings()
 	ImGui::Separator();
 	ImGui_Utils::DrawBoolControl("Wireframe", parameters.Wireframe, 100.f);
 	ImGui_Utils::DrawBoolControl("ShadowMap", parameters.ShadowMap, 100.f);
+	ImGui_Utils::DrawBoolControl("OrbitMode", parameters.OrbitMode, 100.f);
 	ImGui_Utils::DrawFloatControl("Camera Speed", editorCamera->MovementSpeed, 5.f, 100.f);
 	if (ImGui_Utils::DrawButtonControl("Light View", "APPLY", 100.0f))
 		setCameraToLightView();
