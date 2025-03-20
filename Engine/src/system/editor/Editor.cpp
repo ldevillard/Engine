@@ -14,6 +14,7 @@
 #include "utils/ImFileDialog.h"
 #include "utils/ImGui_Utils.h"
 #include "utils/serializer/Serializer.h"
+#include "utils/Utils.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <maths/glm/gtx/matrix_decompose.hpp>
@@ -728,6 +729,11 @@ void Editor::showHierarchyContextMenu()
 		{
 			if (ImGui::BeginMenu("Create"))
 			{
+				if (ImGui::MenuItem("Load Mesh"))
+				{
+					ifd::FileDialog::Instance().Open("LoadMeshDialog", "Load Mesh", "Mesh file (*.obj){.obj},(*.fbx){.fbx}");
+				}
+
 				// TODO make a method instead of redondant code
 				if (ImGui::MenuItem("Sphere"))
 				{
@@ -773,6 +779,22 @@ void Editor::showHierarchyContextMenu()
 			}
 			ImGui::EndPopup();
 		}
+	}
+
+	if (ifd::FileDialog::Instance().IsDone("LoadMeshDialog"))
+	{
+		if (ifd::FileDialog::Instance().HasResult())
+		{
+			std::string filepath = ifd::FileDialog::Instance().GetResult().string();
+			std::string filename = ifd::FileDialog::Instance().GetResult().stem().string();
+
+			const std::string name = EntityManager::Get().GenerateNewEntityName(filename);
+			Entity* entity = EntityManager::Get().CreateEntity(name);
+			entity->transform->SetPosition(editorCamera->Position + editorCamera->Front * 15.0f);
+			entity->AddComponent<Model>(Utils::GetSingleSlashPath(filepath));
+			SelectEntity(entity);
+		}
+		ifd::FileDialog::Instance().Close();
 	}
 }
 
