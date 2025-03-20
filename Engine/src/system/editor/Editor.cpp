@@ -731,7 +731,7 @@ void Editor::showHierarchyContextMenu()
 			{
 				if (ImGui::MenuItem("Load Mesh"))
 				{
-					ifd::FileDialog::Instance().Open("LoadMeshDialog", "Load Mesh", "Mesh file (*.obj){.obj},(*.fbx){.fbx}");
+					ifd::FileDialog::Instance().Open("LoadMeshDialog", "Load Mesh", "Mesh file (*.obj;*.fbx){.obj,.fbx},.*");
 				}
 
 				// TODO make a method instead of redondant code
