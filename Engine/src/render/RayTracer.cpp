@@ -207,6 +207,7 @@ void Raytracer::getSceneData(const std::vector<Model*>& models, std::vector<Rayt
 		material.Flag = mat.Flag;
 		material.Smoothness = std::clamp(mat.Smoothness, 0.f, 1.f);
 		material.SpecularProbability = mat.SpecularProbability;
+		material.Transparancy = mat.Transparancy;
 		material.EmissiveColor = mat.Emissive ? mat.Diffuse : glm::vec3(0.0f);
 		material.EmissiveStrength = mat.Emissive ? mat.EmissiveStrength : 0.0f;
 		material.Textured = 0;

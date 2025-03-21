@@ -1,4 +1,4 @@
-#version 450 core
+﻿#version 450 core
 #extension GL_ARB_bindless_texture : require
 
 in vec2 TexCoords;
@@ -39,6 +39,7 @@ struct Material
 	float emissiveStrength;
 	float smoothness;
 	float specularProbability;
+	float transparancy;
 	int textured;
 };
 
@@ -436,6 +437,22 @@ HitInfo CalculateRayCollision(Ray ray)
 	return hitInfo;
 }
 
+vec3 RefractRay(vec3 rayDirection, vec3 normal, float etai_over_etat) 
+{
+	// Calcul du cosinus de l'angle
+	float cos_theta = min(dot(-rayDirection, normal), 1.0); // Cosinus de l'angle incident
+
+	// Calcul de la direction perpendiculaire
+	vec3 r_out_perp = etai_over_etat * (rayDirection + cos_theta * normal);
+
+	// Calcul de la direction parallèle (composante parallèle à la surface)
+	float r_out_parallel_length = sqrt(abs(1.0 - dot(r_out_perp, r_out_perp)));
+	vec3 r_out_parallel = -r_out_parallel_length * normal;
+
+	// Retourner la somme des deux composantes : perpendiculaire et parallèle
+	return r_out_perp + r_out_parallel;
+}
+
 vec3 Trace(Ray ray, inout uint rngState)
 {
 	vec3 incomingLight = vec3(0);
@@ -464,8 +481,20 @@ vec3 Trace(Ray ray, inout uint rngState)
 			vec3 diffuseDirection = normalize(hitInfo.normal + RandomDirection(rngState));
 			vec3 specularDirection = reflect(ray.direction, hitInfo.normal);
 
+			float eta = 1.0 / 1.5; // refraction index (air -> glass)
+			vec3 refractDirection = RefractRay(ray.direction, hitInfo.normal, eta);
+
 			bool isSpecular = RandomValue(rngState) < material.specularProbability;
+			// lerp the ray direction with smoothness and specular factors
 			ray.direction = mix(diffuseDirection, specularDirection, material.smoothness * int(isSpecular));
+			// lerp the ray direction with the transparancy factor
+			ray.direction = mix(ray.direction, refractDirection, material.transparancy);
+
+			if (material.transparancy > 0)
+			{
+				// avoid auto intersection if there is transparancy
+				ray.origin = hitInfo.hitPoint + ray.direction * 0.001; 
+			}
 
 			vec3 textureColor = vec3(1, 1, 1);
 			if (hitInfo.material.textured > 0 && hitInfo.uv.x != 0 && hitInfo.uv.y != 0)

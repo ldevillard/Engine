@@ -20,6 +20,7 @@ struct RaytracingMaterial
 	float EmissiveStrength = 1;
 	float Smoothness = 0;
 	float SpecularProbability = 1;
+	float Transparancy = 0;
 	int Textured = 0;
 };
 

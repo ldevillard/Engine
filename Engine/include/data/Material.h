@@ -51,6 +51,7 @@ public:
 	float EmissiveStrength = 1.0f;
 	float Smoothness = 0.0f;
 	float SpecularProbability = 0.0f;
+	float Transparancy = 0.0f;
 
 	std::string Name;
 

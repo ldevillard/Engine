@@ -117,6 +117,7 @@ void Inspector::inspectModel(Model* model) const
 			ImGui_Utils::DrawFloatControl("Emissive Strength", model->GetMaterial().EmissiveStrength, 1.f, 135.f);
 			ImGui_Utils::SliderFloat("Smoothness", model->GetMaterial().Smoothness, 0.0f, 1.0f, "%.2f", 135.f);
 			ImGui_Utils::SliderFloat("Specular Probability", model->GetMaterial().SpecularProbability, 0.0f, 1.0f, "%.2f", 135.f);
+			ImGui_Utils::SliderFloat("Transparancy", model->GetMaterial().Transparancy, 0.0f, 1.0f, "%.2f", 135.f);
 		}
 		ImGui::TreePop();
 	}	
