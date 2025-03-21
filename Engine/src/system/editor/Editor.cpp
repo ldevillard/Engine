@@ -432,6 +432,11 @@ void Editor::renderTopBar()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+			if (ImGui::MenuItem("New Scene"))
+			{
+				resetEntitySelection();
+				Serializer::LoadSceneFromFile("resources/scenes/Blank.devil", "Blank");
+			}
 			if (ImGui::MenuItem("Save Scene"))
 			{
 				ifd::FileDialog::Instance().Save("SaveSceneDialog", "Save Scene", "Scene file (*.devil){.devil},.*");
