@@ -28,7 +28,7 @@ My 3D Engine built with OpenGL, providing graphics rendering with raytracing and
 ## How to Use
 
 1. Clone the repository: `git clone https://github.com/ldevillard/Engine.git`
-2. Make sure cmake is installed on your computer, then launch setup.bat
+2. Make sure cmake is installed on your computer, then launch `setup.bat`
 4. Explore the codebase and enjoy!
 
 ## Showcase
