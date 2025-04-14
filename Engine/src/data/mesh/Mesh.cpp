@@ -24,6 +24,19 @@ Mesh::Mesh(const Mesh& copy)
 	setupMesh();
 }
 
+Mesh& Mesh::operator=(const Mesh& copy)
+{
+	if (this != &copy)
+	{
+		this->Vertices = copy.Vertices;
+		this->Indices = copy.Indices;
+		this->Textures = copy.Textures;
+		
+        setupMesh();
+	}
+	return *this;
+}
+
 Mesh::~Mesh()
 {
 	// clear all previously allocated resources

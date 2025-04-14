@@ -1,0 +1,68 @@
+{
+    "Fluid": {
+        "Scene": {
+            "Entities": [
+                {
+                    "Name": "DirectionalLight",
+                    "Transform": {
+                        "position": {
+                            "x": -16.779949188232422,
+                            "y": 11.40742015838623,
+                            "z": 0.0
+                        },
+                        "rotation": {
+                            "x": -89.99996948242188,
+                            "y": 8.537736562175269e-07,
+                            "z": 29.17328643798828
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 0.9999997615814209,
+                            "z": 0.9999997615814209
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Light",
+                            "lightType": 0,
+                            "color": {
+                                "r": 1.0,
+                                "g": 1.0,
+                                "b": 1.0
+                            },
+                            "intensity": 1.0,
+                            "radius": 1.0,
+                            "cutOff": 12.5,
+                            "outCutOff": 17.5
+                        }
+                    ]
+                },
+                {
+                    "Name": "Fluid",
+                    "Transform": {
+                        "position": {
+                            "x": 0.0,
+                            "y": 4.741857528686523,
+                            "z": 0.0
+                        },
+                        "rotation": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "scale": {
+                            "x": 9.0,
+                            "y": 4.0,
+                            "z": 5.0
+                        }
+                    },
+                    "Components": [
+                        {
+                            "type": "Fluid"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
