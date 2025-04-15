@@ -28,6 +28,11 @@ public:
     int GetNumberOfTriangles() const;
     std::vector<Triangle> GetTriangles() const;
 
+	// getters
+	unsigned int GetVAO() const { return VAO; }
+	unsigned int GetVBO() const { return VBO; }
+	unsigned int GetEBO() const { return EBO; }
+
 protected:
     //  render data
     unsigned int VAO, VBO, EBO;

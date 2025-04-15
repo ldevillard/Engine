@@ -45,6 +45,10 @@ void Inspector::Inspect(const Entity* e)
 		{
 			inspectLight(static_cast<Light*>(c));
 		}
+		if (typeid(*c) == typeid(Fluid))
+		{
+			inspectFluid(static_cast<Fluid*>(c));
+		}
 	}
 
 	ImGui::End();
@@ -146,6 +150,18 @@ void Inspector::inspectLight(Light* light) const
 				break;
 		}
 		
+		ImGui::TreePop();
+	}
+}
+
+void Inspector::inspectFluid(Fluid* fluid) const
+{
+	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	if (ImGui::TreeNode("Fluid"))
+	{
+		unsigned int particleCount = fluid->ParticleCount;
+		ImGui_Utils::DrawIntControl("Particle Count", fluid->ParticleCount, 100, 125.f);
+
 		ImGui::TreePop();
 	}
 }

@@ -6,6 +6,7 @@
 // components
 #include "component/Model.h"
 #include "component/Light.h"
+#include "component/physics/Fluid.h"
 
 class Inspector
 {
@@ -19,6 +20,7 @@ private:
 	void inspectTransform() const;
 	void inspectModel(Model* model) const;
 	void inspectLight(Light* light) const;
+	void inspectFluid(Fluid* fluid) const;
 
 	const Entity* entity = nullptr;
 };
