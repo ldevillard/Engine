@@ -6,17 +6,16 @@ My 3D Engine built with OpenGL, providing graphics rendering with raytracing and
 
 ## Features
 
-- **Graphics Rendering**: Render 3D scenes with various meshes and textures.👾
+- **Graphics Rendering**: Render 3D scenes with various meshes, textures and shadow mapping.👾
 - **Blinn Phong Lighting**: Utilize directional, point, and spot lights for realistic lighting effects.💡
 - **Editor**: Gizmos, OX plane, ImGui integration and much more...⌨️
-- **Raytracing**: Implement non-realtime bvh raytracing for advanced rendering.🌟
+- **Raytracing**: Non-realtime bvh raytracing for advanced rendering, with refraction, reflection and texture support.🌟
 - **Serialization**: Provide scene serialization to load and save scenes dynamically.✏️
 
 ## Planned Next Features
-- **Rendering**: Add shadows to simple rendering
-- **Raytracing**: Integrate texture rendering
+
+- **Rendering**: Currently implementing GPU instancing for performances improvement.
 - **Physics**: Integrate physics simulation for realistic interactions.
-- **Editor**: Improve editor with new features like arc-ball camera
 
 ## Tech Stack
 
