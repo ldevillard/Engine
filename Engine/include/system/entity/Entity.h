@@ -96,6 +96,7 @@ T* Entity::AddComponent(Args&&... args)
 		return nullptr;
 	}
 	setupComponent(component);
-	BuildBVH(); // TODO: Build bvh only if model and call directly editorCollider->BuildBVH() method
+	// build bvh only if model and call directly editorCollider->BuildBVH() method
+	BuildBVH();
 	return newComponent;
 }

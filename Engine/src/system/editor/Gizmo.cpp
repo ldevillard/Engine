@@ -13,6 +13,7 @@
 // initialize static variables
 std::map<GizmoType, std::unique_ptr<Mesh>> Gizmo::gizmos;
 Shader* Gizmo::shader = nullptr;
+unsigned int Gizmo::cubeInstanceVBO = 0;
 
 #pragma region Public Methods
 
@@ -23,6 +24,8 @@ void Gizmo::InitGizmos(Shader* s)
 	gizmos[WireSphereGizmo] = std::make_unique<WireSphere>();
 	gizmos[WireConeGizmo] = std::make_unique<WireCone>();
 	gizmos[WireConeFrustumGizmo] = std::make_unique<WireConeFrustum>();
+
+	initInstanceVBO();
 }
 
 // Need to make a function for shader binding
@@ -40,6 +43,29 @@ void Gizmo::DrawWireCube(const Color& color, const Transform& transform)
 	bindShader(color, transform);
 
 	gizmos[WireCubeGizmo]->Draw(shader);
+}
+
+void Gizmo::DrawWireCubeInstanced(const Color& color, const std::vector<Transform>& transforms)
+{
+	//TODO
+
+	//if (!shader)
+	//{
+	//	std::cerr << "Gizmo shader is not initialized" << std::endl;
+	//	return;
+	//}
+	//if (!Editor::Get().GetSettings().Gizmo)
+	//	return;
+	//
+	//shader->Use();
+	//const EditorCamera* camera = Editor::Get().GetCamera();
+	//glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCENE_WIDTH / (float)SCENE_HEIGHT, 0.1f, 1000.0f);
+	//glm::mat4 view = camera->GetViewMatrix();
+	//shader->SetMat4("projection", projection);
+	//shader->SetMat4("view", view);
+	//shader->SetMat4("model", glm::mat4(1));
+	//
+	//gizmos[WireCubeGizmo]->DrawInstanced(shader, transforms);
 }
 
 void Gizmo::DrawWireSphere(const Color& color, const Transform& transform)
@@ -144,6 +170,25 @@ void Gizmo::bindShader(const Color& color, const Transform& transform)
 	shader->SetMat4("model", model);
 
 	shader->SetVec3("color", color.Value);
+}
+
+void Gizmo::initInstanceVBO()
+{
+	// create instance VBO
+	glGenBuffers(1, &cubeInstanceVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, cubeInstanceVBO);
+	glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(gizmos[WireCubeGizmo]->GetVAO());
+	glBindBuffer(GL_ARRAY_BUFFER, cubeInstanceVBO);
+
+	// instances transforms
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+	glVertexAttribDivisor(3, 1);
+
+	glBindVertexArray(0);
 }
 
 #pragma endregion
