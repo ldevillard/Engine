@@ -17,6 +17,10 @@ My 3D Engine built with OpenGL, providing graphics rendering with raytracing and
 - **Rendering**: Currently implementing GPU instancing for performances improvement.
 - **Physics**: Integrate physics simulation for realistic interactions.
 
+## Articles made to explain concepts of the project
+
+- **Objects Mouse Picking**: https://medium.com/@logandvllrd/how-to-pick-a-3d-object-using-raycasting-in-c-39112aed1987
+
 ## Tech Stack
 
 - ![C++](https://img.shields.io/badge/C%2B%2B-00599C?style=style=flat&logo=c%2B%2B&logoColor=white)
