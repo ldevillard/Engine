@@ -47,25 +47,47 @@ void Gizmo::DrawWireCube(const Color& color, const Transform& transform)
 
 void Gizmo::DrawWireCubeInstanced(const Color& color, const std::vector<Transform>& transforms)
 {
-	//TODO
+	if (!shader)
+	{
+		std::cerr << "Gizmo shader is not initialized" << std::endl;
+		return;
+	}
+	if (!Editor::Get().GetSettings().Gizmo || transforms.size() == 0)
+		return;
+	
+	shader->Use();
+	const EditorCamera* camera = Editor::Get().GetCamera();
+	glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCENE_WIDTH / (float)SCENE_HEIGHT, 0.1f, 1000.0f);
+	glm::mat4 view = camera->GetViewMatrix();
+	shader->SetMat4("projection", projection);
+	shader->SetMat4("view", view);
+	shader->SetMat4("model", glm::mat4(1.0f));
+	shader->SetBool("instanceEnabled", true);
 
-	//if (!shader)
-	//{
-	//	std::cerr << "Gizmo shader is not initialized" << std::endl;
-	//	return;
-	//}
-	//if (!Editor::Get().GetSettings().Gizmo)
-	//	return;
-	//
-	//shader->Use();
-	//const EditorCamera* camera = Editor::Get().GetCamera();
-	//glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCENE_WIDTH / (float)SCENE_HEIGHT, 0.1f, 1000.0f);
-	//glm::mat4 view = camera->GetViewMatrix();
-	//shader->SetMat4("projection", projection);
-	//shader->SetMat4("view", view);
-	//shader->SetMat4("model", glm::mat4(1));
-	//
-	//gizmos[WireCubeGizmo]->DrawInstanced(shader, transforms);
+	auto getMatrices = [](const std::vector<Transform>& transforms) -> std::vector<glm::mat4> 
+	{
+		std::vector<glm::mat4> matrices;
+		matrices.reserve(transforms.size());
+
+		for (const auto& t : transforms)
+			matrices.push_back(t.GetTransformMatrix());
+		
+		return matrices;
+	};
+
+	std::vector<glm::mat4> models = getMatrices(transforms);
+
+	// update instance VBO with new positions
+	glBindBuffer(GL_ARRAY_BUFFER, cubeInstanceVBO);
+	glBufferData(GL_ARRAY_BUFFER, models.size() * sizeof(glm::mat4), models.data(), GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// bind VAO then draw
+	glBindVertexArray(gizmos[WireCubeGizmo]->GetVAO());
+	glLineWidth(Gizmo::GIZMO_WIDTH); // maybe set up in a constant file
+	glDrawElementsInstanced(GL_LINES, static_cast<GLsizei>(gizmos[WireCubeGizmo]->Indices.size()), GL_UNSIGNED_INT, 0, static_cast<GLsizei>(models.size()));
+	glLineWidth(1); // reset to default
+	glBindVertexArray(0);
 }
 
 void Gizmo::DrawWireSphere(const Color& color, const Transform& transform)
@@ -170,6 +192,7 @@ void Gizmo::bindShader(const Color& color, const Transform& transform)
 	shader->SetMat4("model", model);
 
 	shader->SetVec3("color", color.Value);
+	shader->SetBool("instanceEnabled", false);
 }
 
 void Gizmo::initInstanceVBO()
@@ -177,16 +200,28 @@ void Gizmo::initInstanceVBO()
 	// create instance VBO
 	glGenBuffers(1, &cubeInstanceVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeInstanceVBO);
-	glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(gizmos[WireCubeGizmo]->GetVAO());
 	glBindBuffer(GL_ARRAY_BUFFER, cubeInstanceVBO);
 
-	// instances transforms
+	std::size_t vec4Size = sizeof(glm::vec4);
+
 	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(1 * vec4Size));
+	glEnableVertexAttribArray(5);
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(2 * vec4Size));
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(3 * vec4Size));
+
 	glVertexAttribDivisor(3, 1);
+	glVertexAttribDivisor(4, 1);
+	glVertexAttribDivisor(5, 1);
+	glVertexAttribDivisor(6, 1);
 
 	glBindVertexArray(0);
 }
