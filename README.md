@@ -19,7 +19,7 @@ My 3D Engine built with OpenGL, providing graphics rendering with raytracing and
 
 ## Articles made to explain concepts of the project 💬
 
-- **Objects Mouse Picking**: <a href="https://medium.com/@logandvllrd/how-to-pick-a-3d-object-using-raycasting-in-c-39112aed1987" target="_blank">How to pick a 3D object using raycasting in C++</a>
+- **Objects Mouse Picking**: [How to pick a 3D object using raycasting in C++](https://medium.com/@logandvllrd/how-to-pick-a-3d-object-using-raycasting-in-c-39112aed1987)
 
 ## Tech Stack ⚙️
 
