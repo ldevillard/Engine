@@ -66,11 +66,11 @@ void BVH::DrawNodes(const Transform& transform) const
 							 * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
 							 * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, .0f));
 
-	std::vector<Transform> transformsToDraw;
+	std::vector<glm::mat4> transformMatricesToDraw;
 
-	drawNodes(transform, hierarchy, 0, rotationMatrix, transformsToDraw);
+	drawNodes(transform, hierarchy, 0, rotationMatrix, transformMatricesToDraw);
 
-	Gizmo::DrawWireCubeInstanced(getColorForDepth(VISUAL_MAX_DEPTH), transformsToDraw);
+	Gizmo::DrawWireCubeInstanced(getColorForDepth(VISUAL_MAX_DEPTH), transformMatricesToDraw);
 }
 
 // we assume that ray is in bvh' local space
@@ -226,27 +226,29 @@ bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<BVHNode>& node, Hit
 }
 
 void BVH::drawNodes(const Transform& transform, const std::shared_ptr<BVHNode>& node, int depth,
-	const glm::mat4& rotationMatrix, std::vector<Transform>& outTransforms) const
+	const glm::mat4& rotationMatrix, std::vector<glm::mat4>& outTransformMatrices) const
 {
 	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH)
 		return;
 
 	if (node->TriangleCount > 0 && depth == VISUAL_MAX_DEPTH - 1)
 	{
-		// compute the bounding box with transformation
-		Transform tr = transform;
-		tr.Scale *= glm::abs(node->Bounds.Max - node->Bounds.Min) * 0.5f;
+		// make a transform matrix from the bounding box and add it to the list
+		glm::vec3 scale = transform.Scale * glm::abs(node->Bounds.Max - node->Bounds.Min) * 0.5f;
 		glm::vec3 center = node->Bounds.GetCenter() * transform.Scale;
-		center = glm::vec3(rotationMatrix * glm::vec4(center, 1.0f)) + tr.Position;
-		tr.Position = center;
+		center = glm::vec3(rotationMatrix * glm::vec4(center, 1.0f)) + transform.Position;
+		
+		glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), center);
+		modelMatrix = modelMatrix * rotationMatrix;
+		modelMatrix = glm::scale(modelMatrix, scale);
 
-		outTransforms.push_back(tr);
+		outTransformMatrices.push_back(modelMatrix);
 	}
 
 	if ((node->ChildIndex > 0 || node == hierarchy) && allNodes.size() > 1)
 	{
-		drawNodes(transform, allNodes[node->ChildIndex + 1], depth + 1, rotationMatrix, outTransforms);
-		drawNodes(transform, allNodes[node->ChildIndex], depth + 1, rotationMatrix, outTransforms);
+		drawNodes(transform, allNodes[node->ChildIndex + 1], depth + 1, rotationMatrix, outTransformMatrices);
+		drawNodes(transform, allNodes[node->ChildIndex], depth + 1, rotationMatrix, outTransformMatrices);
 	}
 }
 

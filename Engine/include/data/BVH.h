@@ -59,6 +59,6 @@ private:
 
 	// visualisation
 	void drawNodes(const Transform& transform, const std::shared_ptr<BVHNode>& node, int depth,
-		const glm::mat4& rotationMatrix, std::vector<Transform>& outTransforms) const;
+		const glm::mat4& rotationMatrix, std::vector<glm::mat4> &outTransformMatrices) const;
 	Color getColorForDepth(int depth) const;
 };

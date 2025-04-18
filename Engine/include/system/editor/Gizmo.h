@@ -17,7 +17,7 @@ public:
 	static void ReleaseGizmos();
 
 	static void DrawWireCube(const Color& color = Color(), const Transform& transform = Transform());
-	static void DrawWireCubeInstanced(const Color& color = Color(), const std::vector<Transform>& transforms = std::vector<Transform>());
+	static void DrawWireCubeInstanced(const Color& color = Color(), const std::vector<glm::mat4>& transformMatrices = std::vector<glm::mat4>());
 
 	static void DrawWireSphere(const Color& color = Color(), const Transform& transform = Transform());
 	static void DrawWireCone(const Color& color = Color(), const Transform& transform = Transform());

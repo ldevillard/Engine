@@ -56,7 +56,7 @@ void Gizmo::DrawWireCube(const Color& color, const Transform& transform)
 	gizmos[WireCubeGizmo]->Draw(shader);
 }
 
-void Gizmo::DrawWireCubeInstanced(const Color& color, const std::vector<Transform>& transforms)
+void Gizmo::DrawWireCubeInstanced(const Color& color, const std::vector<glm::mat4>& transformMatrices)
 {
 	if (!shader)
 	{
@@ -65,7 +65,7 @@ void Gizmo::DrawWireCubeInstanced(const Color& color, const std::vector<Transfor
 	}
 
 	// check if gizmo is enabled and if there are transforms to draw
-	if (!Editor::Get().GetSettings().Gizmo || transforms.size() == 0) 
+	if (!Editor::Get().GetSettings().Gizmo || transformMatrices.size() == 0)
 	{
 		return;
 	}
@@ -84,32 +84,16 @@ void Gizmo::DrawWireCubeInstanced(const Color& color, const std::vector<Transfor
 	// enable instance rendering
 	shader->SetBool("instanceEnabled", true);
 
-	// convert transforms to matrices
-	auto getMatrices = [](const std::vector<Transform>& transforms) -> std::vector<glm::mat4> 
-	{
-		std::vector<glm::mat4> matrices;
-		matrices.reserve(transforms.size());
-
-		for (const Transform& tr : transforms)
-		{
-			matrices.push_back(tr.GetTransformMatrix());
-		}
-		
-		return matrices;
-	};
-
-	std::vector<glm::mat4> models = getMatrices(transforms);
-
 	// update instance VBO with new instance matrices
 	glBindBuffer(GL_ARRAY_BUFFER, cubeInstanceVBO);
-	glBufferData(GL_ARRAY_BUFFER, models.size() * sizeof(glm::mat4), models.data(), GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, transformMatrices.size() * sizeof(glm::mat4), transformMatrices.data(), GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// bind VAO then draw
 	glBindVertexArray(gizmos[WireCubeGizmo]->GetVAO());
 	glLineWidth(Gizmo::GIZMO_WIDTH);
 	// draw instances
-	glDrawElementsInstanced(GL_LINES, static_cast<GLsizei>(gizmos[WireCubeGizmo]->Indices.size()), GL_UNSIGNED_INT, 0, static_cast<GLsizei>(models.size()));
+	glDrawElementsInstanced(GL_LINES, static_cast<GLsizei>(gizmos[WireCubeGizmo]->Indices.size()), GL_UNSIGNED_INT, 0, static_cast<GLsizei>(transformMatrices.size()));
 	glLineWidth(1); // reset to default
 	glBindVertexArray(0);
 }
