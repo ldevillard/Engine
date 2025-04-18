@@ -80,6 +80,7 @@ void Gizmo::DrawWireCubeInstanced(const Color& color, const std::vector<Transfor
 	shader->SetMat4("projection", projection);
 	shader->SetMat4("view", view);
 	shader->SetMat4("model", glm::mat4(1.0f));
+	shader->SetVec3("color", color.Value);
 	// enable instance rendering
 	shader->SetBool("instanceEnabled", true);
 

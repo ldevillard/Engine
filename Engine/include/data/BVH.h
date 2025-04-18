@@ -58,6 +58,7 @@ private:
 	bool intersectRay(const Ray& ray, const std::shared_ptr<BVHNode>& node, HitInfo& outHitInfo) const;
 
 	// visualisation
-	void drawNodes(const Transform& transform, const std::shared_ptr<BVHNode>& node, int depth, const glm::mat4& rotationMatrix) const;
+	void drawNodes(const Transform& transform, const std::shared_ptr<BVHNode>& node, int depth,
+		const glm::mat4& rotationMatrix, std::vector<Transform>& outTransforms) const;
 	Color getColorForDepth(int depth) const;
 };

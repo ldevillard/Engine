@@ -7,6 +7,7 @@
 #include "data/physics/HitInfo.h"
 #include "data/physics/Ray.h"
 #include "physics/RayIntersection.h"
+#include "system/editor/Gizmo.h"
 
 int BVH::VISUAL_MAX_DEPTH = 0;
 
@@ -65,7 +66,11 @@ void BVH::DrawNodes(const Transform& transform) const
 							 * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f))
 							 * glm::rotate(glm::mat4(1.0f), glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, .0f));
 
-	drawNodes(transform, hierarchy, 0, rotationMatrix);
+	std::vector<Transform> transformsToDraw;
+
+	drawNodes(transform, hierarchy, 0, rotationMatrix, transformsToDraw);
+
+	Gizmo::DrawWireCubeInstanced(getColorForDepth(VISUAL_MAX_DEPTH), transformsToDraw);
 }
 
 // we assume that ray is in bvh' local space
@@ -220,21 +225,28 @@ bool BVH::intersectRay(const Ray& ray, const std::shared_ptr<BVHNode>& node, Hit
 	return outHitInfo.hit;
 }
 
-void BVH::drawNodes(const Transform& transform, const std::shared_ptr<BVHNode>& node, int depth, const glm::mat4& rotationMatrix) const
+void BVH::drawNodes(const Transform& transform, const std::shared_ptr<BVHNode>& node, int depth,
+	const glm::mat4& rotationMatrix, std::vector<Transform>& outTransforms) const
 {
 	if (depth == maxDepth || depth == VISUAL_MAX_DEPTH)
 		return;
 
 	if (node->TriangleCount > 0 && depth == VISUAL_MAX_DEPTH - 1)
 	{
-		Color color = getColorForDepth(depth);
-		node->Bounds.Draw(transform, rotationMatrix, color);
+		// compute the bounding box with transformation
+		Transform tr = transform;
+		tr.Scale *= glm::abs(node->Bounds.Max - node->Bounds.Min) * 0.5f;
+		glm::vec3 center = node->Bounds.GetCenter() * transform.Scale;
+		center = glm::vec3(rotationMatrix * glm::vec4(center, 1.0f)) + tr.Position;
+		tr.Position = center;
+
+		outTransforms.push_back(tr);
 	}
 
 	if ((node->ChildIndex > 0 || node == hierarchy) && allNodes.size() > 1)
 	{
-		drawNodes(transform, allNodes[node->ChildIndex + 1], depth + 1, rotationMatrix);
-		drawNodes(transform, allNodes[node->ChildIndex], depth + 1, rotationMatrix);
+		drawNodes(transform, allNodes[node->ChildIndex + 1], depth + 1, rotationMatrix, outTransforms);
+		drawNodes(transform, allNodes[node->ChildIndex], depth + 1, rotationMatrix, outTransforms);
 	}
 }
 
