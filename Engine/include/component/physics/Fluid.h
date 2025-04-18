@@ -8,6 +8,7 @@ class Fluid : public Component
 {
 public:
 	Fluid();
+	~Fluid();
 
 	void Compute() override;
 	Component* Clone() override;

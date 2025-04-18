@@ -18,11 +18,14 @@ out vec2 TexCoord;
 
 void main()
 {
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
-
+    // if instanceEnabled is 0, we don't need to apply the instance matrix
     if (instanceEnabled != 0)
     {
-        gl_Position *= instanceMatrix;
+       gl_Position = projection * view * model * instanceMatrix* vec4(aPos, 1.0);
+    }
+    else
+    {
+        gl_Position = projection * view * model * vec4(aPos, 1.0);
     }
 
     FragPos = vec3(model * vec4(aPos, 1));

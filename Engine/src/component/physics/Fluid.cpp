@@ -28,6 +28,12 @@ Fluid::Fluid() : Component()
 	glBindVertexArray(0);
 }
 
+Fluid::~Fluid()
+{
+	// delete instance VBO
+	glDeleteBuffers(1, &instanceVBO);
+}
+
 void Fluid::Compute()
 {
 	Gizmo::DrawWireCube(Color::Blue, *transform);

@@ -14,6 +14,7 @@ class Gizmo
 {
 public:
 	static void InitGizmos(Shader* shader);
+	static void ReleaseGizmos();
 
 	static void DrawWireCube(const Color& color = Color(), const Transform& transform = Transform());
 	static void DrawWireCubeInstanced(const Color& color = Color(), const std::vector<Transform>& transforms = std::vector<Transform>());
@@ -27,7 +28,7 @@ public:
 
 private:
 	static void bindShader(const Color& color, const Transform& transform);
-	static void initInstanceVBO();
+	static void initCubeInstanceVBO();
 
 	static Shader* shader;
 	static std::map<GizmoType, std::unique_ptr<Mesh>> gizmos;
