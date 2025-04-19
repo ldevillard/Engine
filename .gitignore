@@ -1,4 +1,13 @@
 #################
+## Devil-Engine
+#################
+DevilEngine.sln
+DevilEngine.vcxproj
+DevilEngine.vcxproj.filters
+CMakeFiles/
+.idea/
+
+#################
 ## Eclipse
 #################
 
