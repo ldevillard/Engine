@@ -73,8 +73,8 @@ void Gizmo::DrawWireCubeInstanced(const Color& color, const std::vector<glm::mat
 	shader->Use();
 	// get camera matrices
 	const EditorCamera* camera = Editor::Get().GetCamera();
-	glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCENE_WIDTH / (float)SCENE_HEIGHT, 0.1f, 1000.0f);
-	glm::mat4 view = camera->GetViewMatrix();
+	const glm::mat4& projection = camera->GetProjectionMatrix(CameraProjectionType::SCENE);
+	const glm::mat4& view = camera->GetViewMatrix();
 
 	// set shader uniforms
 	shader->SetMat4("projection", projection);
@@ -180,8 +180,8 @@ void Gizmo::bindShader(const Color& color, const Transform& transform)
 
 	// get camera matrices
 	const EditorCamera* camera = Editor::Get().GetCamera();
-	glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCENE_WIDTH / (float)SCENE_HEIGHT, 0.1f, 1000.0f);
-	glm::mat4 view = camera->GetViewMatrix();
+	const glm::mat4& projection = camera->GetProjectionMatrix(CameraProjectionType::SCENE);
+	const glm::mat4& view = camera->GetViewMatrix();
 
 	// compute the model matrix
 	glm::mat4 model = glm::mat4(1.0f);

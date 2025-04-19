@@ -67,8 +67,8 @@ void Raytracer::Draw(const CubeMap& cubeMap)
 
 	const EditorCamera* camera = Editor::Get().GetCamera();
 
-	const glm::mat4& projection = Editor::Get().GetCamera()->GetProjectionMatrix(CameraProjectionType::RAYTRACED_SCENE);
-	const glm::mat4& view = Editor::Get().GetCamera()->GetViewMatrix();
+	const glm::mat4& projection = camera->GetProjectionMatrix(CameraProjectionType::RAYTRACED_SCENE);
+	const glm::mat4& view = camera->GetViewMatrix();
 	raytracingShader->SetMat4("invProjection", glm::inverse(projection));
 	raytracingShader->SetMat4("invView", glm::inverse(view));
 	raytracingShader->SetVec3("cameraPosition", camera->Position);
