@@ -76,6 +76,9 @@ float GetShadowFactor(vec4 fragPosLightSpace, vec3 lightDir, vec3 normal)
     }
     shadow /= 9.0;
 
+    // reduce shadow darkness to avoid black spots
+    shadow = clamp(shadow * 0.8, 0.0, 1.0);
+
     return shadow;
 }
 
