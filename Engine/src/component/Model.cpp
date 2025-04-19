@@ -121,6 +121,7 @@ Component* Model::Clone()
     model->material = material;
     model->directory = directory;
     model->ModelType = ModelType;
+	model->modelPath = modelPath;
 
 	return model;
 }
