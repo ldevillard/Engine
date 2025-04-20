@@ -19,6 +19,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <maths/glm/gtx/matrix_decompose.hpp>
 
+#include "system/editor/SceneManager.h"
+
 #pragma region Singleton Methods
 
 // singleton override
@@ -29,9 +31,12 @@ void Editor::initialize()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+	// enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	// enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+	// enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	ImGui_Utils::SetPurpleTheme();
 
@@ -41,8 +46,8 @@ void Editor::initialize()
 	// init file browser
 	ifd::FileDialog::Instance().Initialize();
 
-	// load default scene, need to handle this properly (maybe a scene manager)
-	Serializer::LoadSceneFromFile("resources/scenes/NinjaScene.devil", "NinjaScene");
+	// load default scene
+	SceneManager::Get().LoadScene("resources/scenes/NinjaScene.devil", "NinjaScene");
 
 	setupDebugScreenQuad();
 }
@@ -136,7 +141,8 @@ void Editor::PreRender()
 	editorCamera->ProcessMatrices();
 }
 
-void Editor::RenderCamera(Shader* shader) // TODO set is function in the camera class
+// TODO: set this function in the camera class
+void Editor::RenderCamera(Shader* shader)
 {
 	shader->Use();
 	shader->SetVec3("viewPos", editorCamera->Position);
@@ -153,13 +159,13 @@ void Editor::RenderEditor()
 	unsigned int w = SCENE_WIDTH;
 	unsigned int h = SCENE_HEIGHT;
 
-	// Rendering ImGui
+	// rendering ImGui
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 	ImGui::SetNextWindowSize(ImVec2(static_cast<float>(w), static_cast<float>(h)));
 
-	// Setup docking space
+	// setup docking space
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImVec2 pos(viewport->Pos.x, viewport->Pos.y + TOP_BAR_HEIGHT);
 	ImVec2 size(viewport->Size.x, viewport->Size.y - TOP_BAR_HEIGHT);
@@ -174,17 +180,25 @@ void Editor::RenderEditor()
 	ImGui::DockSpace(dockspace_id);
 	ImGui::End();
 
-	// Clean the screen
+	// clean the screen
 	glClear(GL_COLOR_BUFFER_BIT);
-	
-	// Render the scene and the UI
-	renderTopBar();
-	renderSettings();
-	renderHierarchy();
-	renderInspector();
-	renderRayTracer();
-	renderScene(w, h);
-	renderShadowMap();
+
+	// show loading screen if we are loading entities
+	if (EntityManager::Get().IsLoadingEntities())
+	{
+		SceneManager::Get().ShowLoadingScreen(EntityManager::Get().GetLoadingProgress());
+	}
+	else 
+	{
+		// render the scene and the UI
+		renderTopBar();
+		renderSettings();
+		renderHierarchy();
+		renderInspector();
+		renderRayTracer();
+		renderScene(w, h);
+		renderShadowMap();
+	}
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -408,7 +422,7 @@ void Editor::processInputs()
 			, editorCamera->GetProjectionMatrix(CameraProjectionType::SCENE)
 			, glm::vec4(0, 0, sceneWindowSize.x, sceneWindowSize.y));
 
-		// Raycast
+		// raycast
 		glm::vec3 direction = glm::normalize(worldPos - editorCamera->Position);
 		Ray ray = Ray(editorCamera->Position, direction);
 		RaycastHit hit;
@@ -427,7 +441,7 @@ void Editor::processInputs()
 
 void Editor::renderTopBar()
 {
-	// TO DO correct format for the save and load filedialog
+	// TODO: correct format for the save and load filedialog
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
@@ -435,7 +449,7 @@ void Editor::renderTopBar()
 			if (ImGui::MenuItem("New Scene"))
 			{
 				resetEntitySelection();
-				Serializer::LoadSceneFromFile("resources/scenes/Blank.devil", "Blank");
+				SceneManager::Get().LoadScene("resources/scenes/Blank.devil", "Blank");
 			}
 			if (ImGui::MenuItem("Save Scene"))
 			{
@@ -478,7 +492,7 @@ void Editor::renderTopBar()
 			std::string filename = ifd::FileDialog::Instance().GetResult().stem().string();
 
 			resetEntitySelection();
-			Serializer::LoadSceneFromFile(filepath, filename);
+			SceneManager::Get().LoadScene(filepath, filename);
 		}
 		ifd::FileDialog::Instance().Close();
 	}
@@ -690,10 +704,10 @@ void Editor::transformGizmo(unsigned int width, unsigned int height)
 
 	// snapping
 	bool snap = Input::GetKey(GLFW_KEY_LEFT_CONTROL);
-	float snapValue = 1.f; // Snap to 1m for translation and scale
+	float snapValue = 1.f; // snap to 1m for translation and scale
 
 	if (gizmoOperation == ImGuizmo::OPERATION::ROTATE)
-		snapValue = 22.5f; // Snap to 22.5 degrees for rotation
+		snapValue = 22.5f; // snap to 22.5 degrees for rotation
 
 	float snapValues[3] = { snapValue, snapValue, snapValue };
 
@@ -704,7 +718,7 @@ void Editor::transformGizmo(unsigned int width, unsigned int height)
 
 	if (ImGuizmo::IsUsing())
 	{
-		// Decompose the model matrix
+		// decompose the model matrix
 		glm::vec3 scale;
 		glm::quat rotation;
 		glm::vec3 translation;
@@ -724,8 +738,8 @@ void Editor::transformGizmo(unsigned int width, unsigned int height)
 	}
 }
 
-/* Show context menu when right click on the hierarchy                            
-/* For the entity creation we generate a name to avoid duplicate name in the scene */
+// show context menu when right click on the hierarchy                            
+// for the entity creation we generate a name to avoid duplicate name in the scene
 void Editor::showHierarchyContextMenu()
 {
 	if (!ImGui::IsAnyItemHovered() || ImGui::IsPopupOpen("HierarchyContextMenu"))
@@ -739,7 +753,7 @@ void Editor::showHierarchyContextMenu()
 					ifd::FileDialog::Instance().Open("LoadMeshDialog", "Load Mesh", "Mesh file (*.obj;*.fbx){.obj,.fbx},.*");
 				}
 
-				// TODO make a method instead of redondant code
+				// TODO: make a method instead of redondant code
 				if (ImGui::MenuItem("Sphere"))
 				{
 					const std::string name = EntityManager::Get().GenerateNewEntityName("Sphere");

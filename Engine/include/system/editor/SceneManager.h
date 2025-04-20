@@ -11,6 +11,7 @@ public:
     static void Initialize();
 
     void LoadScene(const std::string& scenePath, const std::string& sceneName);
+    void ShowLoadingScreen(float loadingProgress);
 
 protected:
     void initialize() override;

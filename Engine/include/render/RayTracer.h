@@ -80,7 +80,9 @@ struct RaytracingBVHNode
 class Raytracer : public Singleton<Raytracer>
 {
 public:
-	void Initialize(Shader* shader, ComputeShader* accumulate);
+	// singleton
+	static void Initialize(Shader* shader, ComputeShader* accumulate);
+
 	void Draw(const CubeMap& cubeMap);
 
 	void ResetFrameCount();

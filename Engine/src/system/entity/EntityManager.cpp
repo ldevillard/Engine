@@ -161,6 +161,16 @@ void EntityManager::UpdateLightsIndex()
 	lightsCount = index;
 }
 
+bool EntityManager::IsLoadingEntities() const
+{
+	return isLoading;
+}
+
+float EntityManager::GetLoadingProgress() const
+{
+	return (float)entitiesLoaded / (float)entitiesToLoad;
+}
+
 const std::vector<Entity*>& EntityManager::GetEntities() const
 {
 	return entities;
@@ -268,20 +278,7 @@ void EntityManager::Deserialize(const nlohmann::ordered_json& json)
 		entity->Deserialize(entityJson);
 	}
 
-	std::vector<std::thread> threads;
-	auto bvhBuilder = [](Entity* entity) 
-	{
-		entity->BuildBVH();
-	};
-	
-	for (Entity* entity : entities)
-		threads.emplace_back(bvhBuilder, entity);
-
-	for (std::thread& thread : threads)
-	{
-		if (thread.joinable())
-			thread.join();
-	}
+	buildEntitiesAsync();
 }
 
 #pragma endregion
@@ -322,6 +319,41 @@ std::vector<Entity*>::iterator EntityManager::unregisterEntity(Entity* e)
 		assert(false && "Couldn't not find Entity to unregister!");
 	}
 	return it;
+}
+
+void EntityManager::buildEntitiesAsync()
+{
+	isLoading = true;
+	entitiesLoaded = 0;
+	
+	std::thread([this]()
+	{
+		entitiesToLoad = static_cast<int>(entities.size());
+
+		std::vector<std::thread> threads;
+		threads.reserve(entitiesToLoad);
+		
+		for (Entity* entity : entities)
+		{
+			threads.emplace_back([this, entity]()
+			{
+				entity->BuildBVH();
+				// thread safe increment of loadingProgress
+				++entitiesLoaded;
+			});
+		}
+
+		// wait for all entities to be loaded
+		for (std::thread& thread : threads)
+		{
+			if (thread.joinable())
+			{
+				thread.join();
+			}
+		}
+
+		isLoading = false;
+	}).detach();
 }
 
 #pragma endregion

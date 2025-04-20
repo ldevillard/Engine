@@ -11,17 +11,11 @@
 // glm
 #include <maths/glm/glm.hpp>
 #include <maths/glm/gtc/matrix_transform.hpp>
-#include <maths/glm/gtc/type_ptr.hpp>
 
 // engine
-#include "component/Light.h"
 #include "component/Model.h"
 #include "data/AxisGrid.h"
-#include "data/Color.h"
 #include "data/CubeMap.h"
-#include "data/Material.h"
-#include "data/Texture.h"
-#include "debug/DebugMenu.h"
 #include "render/ComputeShader.h"
 #include "render/Raytracer.h"
 #include "render/Shader.h"
@@ -122,11 +116,12 @@ int main()
 
 	// initialize systems
 	Outliner::Initialize(&outlineShader, &outlineDilateShader, &outlineBlitShader);
-	Raytracer::Get().Initialize(&raytracingShader, &accumulateShader);
+	Raytracer::Initialize(&raytracingShader, &accumulateShader);
 	Gizmo::InitGizmos(&gizmoShader);
 	EntityManager::Initialize(&shader);
 	Model::LoadPrimitives();
 	SceneManager::Initialize();
+	// initialize editor
 	Editor::Initialize(window);
 
 	// render loop
@@ -148,13 +143,17 @@ int main()
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
-		// 3D rendering
-		Editor::Get().RenderShadowMap(&shadowMapShader, &depthQuadShader);
-		Editor::Get().RenderFrame(&shader, &cubemap, &grid);
+		// we don't want to render the scene if we are loading entities
+		if (!EntityManager::Get().IsLoadingEntities())
+		{
+			// 3D rendering
+			Editor::Get().RenderShadowMap(&shadowMapShader, &depthQuadShader);
+			Editor::Get().RenderFrame(&shader, &cubemap, &grid);
 
-		// raytracing
-		if (settings.Raytracing)
-			Raytracer::Get().Draw(cubemap);
+			// raytracing
+			if (settings.Raytracing)
+				Raytracer::Get().Draw(cubemap);
+		}
 
 		// editor interface rendering
 		Editor::Get().RenderEditor();
