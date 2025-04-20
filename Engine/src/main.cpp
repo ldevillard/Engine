@@ -29,6 +29,7 @@
 #include "system/entity/EntityManager.h"
 #include "system/editor/Gizmo.h"
 #include "system/editor/Outliner.h"
+#include "system/editor/SceneManager.h"
 #include "system/Input.h"
 #include "system/Time.h"
 
@@ -125,6 +126,7 @@ int main()
 	Gizmo::InitGizmos(&gizmoShader);
 	EntityManager::Initialize(&shader);
 	Model::LoadPrimitives();
+	SceneManager::Initialize();
 	Editor::Initialize(window);
 
 	// render loop
