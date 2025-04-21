@@ -11,32 +11,32 @@ namespace ImGui_Utils
 		auto& colors = ImGui::GetStyle().Colors;
 		colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
 
-		// Headers
+		// headers
 		colors[ImGuiCol_Header] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
 		colors[ImGuiCol_HeaderHovered] = ImVec4{ 0.6f, 0.3f, 0.6f, 1.0f };
 		colors[ImGuiCol_HeaderActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
 
-		// Buttons
+		// buttons
 		colors[ImGuiCol_Button] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
 		colors[ImGuiCol_ButtonHovered] = ImVec4{ 0.6f, 0.3f, 0.6f, 1.0f };
 		colors[ImGuiCol_ButtonActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
 
-		// Checkboxes
+		// checkboxes
 		colors[ImGuiCol_CheckMark] = ImVec4{ 0.8f, 0.5f, 0.8f, 1.0f };
 
-		// Frame BG
+		// frame background
 		colors[ImGuiCol_FrameBg] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
 		colors[ImGuiCol_FrameBgHovered] = ImVec4{ 0.6f, 0.3f, 0.6f, 1.0f };
 		colors[ImGuiCol_FrameBgActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
 
-		// Tabs
+		// tabs
 		colors[ImGuiCol_Tab] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
 		colors[ImGuiCol_TabHovered] = ImVec4{ 0.75f, 0.38f, 0.75f, 1.0f };
 		colors[ImGuiCol_TabActive] = ImVec4{ 0.56f, 0.28f, 0.56f, 1.0f };
 		colors[ImGuiCol_TabUnfocused] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
 		colors[ImGuiCol_TabUnfocusedActive] = ImVec4{ 0.4f, 0.2f, 0.4f, 1.0f };
 
-		// Title
+		// titles
 		colors[ImGuiCol_TitleBg] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
 		colors[ImGuiCol_TitleBgActive] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
 		colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.3f, 0.15f, 0.3f, 1.0f };
@@ -225,10 +225,10 @@ namespace ImGui_Utils
 		ImGui::Columns(2);
 		ImGui::SetColumnWidth(0, columnWidth);
 
-		// Dessiner le label dans la premi�re colonne
+		// draw label in the first column
 		ImGui::Text(label.c_str());
 
-		// Enregistrer la position de d�but de la deuxi�me colonne
+		// save start position of the first column
 		float posX = ImGui::GetCursorPosX();
 		ImGui::NextColumn();
 
@@ -256,7 +256,7 @@ namespace ImGui_Utils
 
 		ImGui::PopItemWidth();
 
-		// R�tablir la position de d�but de la deuxi�me colonne
+		// restore the start position of the second column
 		ImGui::SetCursorPosX(posX);
 
 		ImGui::Columns(1);
