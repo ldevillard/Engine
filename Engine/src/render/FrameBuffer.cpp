@@ -1,5 +1,7 @@
 #include "render/FrameBuffer.h"
 
+#include <iostream>
+
 #pragma region Public Methods
 
 FrameBuffer::FrameBuffer() :

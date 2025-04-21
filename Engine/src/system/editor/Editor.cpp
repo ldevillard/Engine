@@ -2,12 +2,20 @@
 
 #include <glfw3.h>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <maths/glm/gtx/matrix_decompose.hpp>
+
+// imgui
+#include "imgui_impl_opengl3.h"
+#include "imgui_internal.h"
+
 #include "component/Transform.h"
 #include "data/AxisGrid.h"
 #include "data/CubeMap.h"
 #include "maths/Math.h"
 #include "physics/Physics.h"
 #include "render/Raytracer.h"
+#include "system/editor/SceneManager.h"
 #include "system/entity/EntityManager.h"
 #include "system/Input.h"
 #include "system/Time.h"
@@ -16,10 +24,7 @@
 #include "utils/serializer/Serializer.h"
 #include "utils/Utils.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <maths/glm/gtx/matrix_decompose.hpp>
 
-#include "system/editor/SceneManager.h"
 
 #pragma region Singleton Methods
 

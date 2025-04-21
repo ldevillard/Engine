@@ -5,7 +5,6 @@
 // data
 #include "data/Vertex.h"
 #include "data/Texture.h"
-#include "data/mesh/MeshData.h"
 #include "data/Triangle.h"
 
 #include "render/Shader.h"

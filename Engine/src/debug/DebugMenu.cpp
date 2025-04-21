@@ -1,5 +1,7 @@
 #include "debug/DebugMenu.h"
 
+#include "imgui_impl_opengl3.h"
+
 #pragma region Public Methods
 
 DebugMenu::DebugMenu(GLFWwindow* window)

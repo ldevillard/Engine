@@ -1,5 +1,8 @@
 #include "render/ComputeShader.h"
 
+#include <fstream>
+#include <iostream>
+
 #pragma region Public Methods
 
 ComputeShader::ComputeShader(const char* path, glm::uvec2 workSize)

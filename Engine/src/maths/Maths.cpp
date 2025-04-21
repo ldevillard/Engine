@@ -1,5 +1,7 @@
 #include "maths/Math.h"
 
+#include <maths/glm/ext/matrix_projection.hpp>
+
 namespace Math
 {
 	glm::vec3 ScreenToWorldPoint(const glm::vec2& screenPos, const glm::mat4& view, const glm::mat4& projection, const glm::vec4& viewport)

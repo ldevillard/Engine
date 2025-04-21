@@ -1,10 +1,8 @@
 #pragma once
-#include <utils/glad/glad.h> // include glad to get all the required OpenGL headers
+#include <utils/glad/glad.h>
 
 #include <string>
-#include <fstream>
 #include <sstream>
-#include <iostream>
 
 #include <maths/glm/glm.hpp>
 #include <maths/glm/gtc/matrix_transform.hpp>

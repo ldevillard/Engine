@@ -8,7 +8,6 @@
 #include <filesystem>
 #include <unordered_map>
 #include <algorithm> // std::min, std::max
-#include <utils/glad/glad.h>
 
 #define IFD_DIALOG_FILE			0
 #define IFD_DIALOG_DIRECTORY	1

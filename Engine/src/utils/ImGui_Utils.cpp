@@ -1,5 +1,9 @@
 #include "utils/ImGui_Utils.h"
 
+// imgui
+#include "imgui.h"
+#include "imgui_internal.h"
+
 namespace ImGui_Utils
 {
 	void SetPurpleTheme()
@@ -221,10 +225,10 @@ namespace ImGui_Utils
 		ImGui::Columns(2);
 		ImGui::SetColumnWidth(0, columnWidth);
 
-		// Dessiner le label dans la première colonne
+		// Dessiner le label dans la premiï¿½re colonne
 		ImGui::Text(label.c_str());
 
-		// Enregistrer la position de début de la deuxième colonne
+		// Enregistrer la position de dï¿½but de la deuxiï¿½me colonne
 		float posX = ImGui::GetCursorPosX();
 		ImGui::NextColumn();
 
@@ -252,7 +256,7 @@ namespace ImGui_Utils
 
 		ImGui::PopItemWidth();
 
-		// Rétablir la position de début de la deuxième colonne
+		// Rï¿½tablir la position de dï¿½but de la deuxiï¿½me colonne
 		ImGui::SetCursorPosX(posX);
 
 		ImGui::Columns(1);

@@ -1,7 +1,8 @@
 #include "data/Texture.h"
 
-#include <utils/glad/glad.h> // include glad to get all the required OpenGL headers
+#include <iostream>
 #include <render/stb_image.h>
+#include <utils/glad/glad.h>
 
 #pragma region Public Methods
 

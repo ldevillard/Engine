@@ -1,7 +1,5 @@
 #pragma once
 
-#include <maths/glm/glm.hpp>
-
 #include "data/BoundingBox.h"
 #include "data/BVH.h"
 

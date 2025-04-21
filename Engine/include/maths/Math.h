@@ -1,8 +1,6 @@
 #pragma once
 
 #include <maths/glm/glm.hpp>
-#include <maths/glm/gtc/quaternion.hpp>
-#include <maths/glm/gtc/matrix_transform.hpp>
 
 namespace Math
 {

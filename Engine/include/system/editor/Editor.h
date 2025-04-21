@@ -1,16 +1,11 @@
 #pragma once
 
+#include <maths/glm/glm.hpp>
+
+// imgui
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include "imgui_internal.h"
 #include "ImGuizmo.h"
-
-// openGL
-#include <utils/glad/glad.h>
-
-// glm
-#include <maths/glm/glm.hpp>
 
 #include "system/editor/Inspector.h"
 #include "system/entity/Entity.h"

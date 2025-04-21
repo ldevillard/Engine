@@ -2,13 +2,9 @@
 #include <utils/glad/glad.h> // include glad to get all the required OpenGL headers
 
 #include <string>
-#include <fstream>
-#include <sstream>
 #include <iostream>
 
 #include <maths/glm/glm.hpp>
-#include <maths/glm/gtc/matrix_transform.hpp>
-#include <maths/glm/gtc/type_ptr.hpp>
 
 class Shader
 {

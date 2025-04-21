@@ -1,6 +1,5 @@
 #pragma once
 
-#include <maths/glm/glm.hpp>
 #include "component/physics/EditorCollider.h"
 #include "data/physics/HitInfo.h"
 

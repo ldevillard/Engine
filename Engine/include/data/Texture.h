@@ -2,8 +2,6 @@
 
 #include <string>
 #include <fstream>
-#include <sstream>
-#include <iostream>
 
 #include <utils/glad/glad.h>
 

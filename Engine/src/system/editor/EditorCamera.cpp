@@ -1,5 +1,10 @@
 #include "system/editor/EditorCamera.h"
 
+#include <maths/glm/detail/type_quat.hpp>
+#include <maths/glm/ext/quaternion_trigonometric.hpp>
+#include <maths/glm/ext/matrix_clip_space.hpp>
+#include <maths/glm/ext/matrix_transform.hpp>
+
 #include "system/editor/ScreenSettings.h"
 #include "system/Time.h"
 

@@ -1,14 +1,10 @@
 #pragma once
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-
-// openGL
-#include <utils/glad/glad.h>
-
 // glm
 #include <maths/glm/glm.hpp>
+
+// imgui
+#include "imgui_impl_glfw.h"
 
 #include "render/FrameBuffer.h"
 

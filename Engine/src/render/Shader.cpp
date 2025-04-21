@@ -1,5 +1,9 @@
 #include "render/Shader.h"
 
+#include <fstream>
+#include <maths/glm/gtc/type_ptr.hpp>
+#include <sstream>
+
 #pragma region Public Methods
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)

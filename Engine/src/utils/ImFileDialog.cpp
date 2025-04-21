@@ -13,6 +13,9 @@
 //#define STB_IMAGE_IMPLEMENTATION
 #include "render/stb_image.h"
 
+// glad
+#include "utils/glad/glad.h"
+
 #ifdef _WIN32
 #include <windows.h>
 #include <shellapi.h>

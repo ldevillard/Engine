@@ -1,7 +1,6 @@
 #pragma once
 
 #include <maths/glm/glm.hpp>
-#include <maths/glm/gtc/matrix_transform.hpp>
 
 #include "data/Color.h"
 
