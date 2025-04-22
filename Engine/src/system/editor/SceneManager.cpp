@@ -1,6 +1,7 @@
 #include "system/editor/SceneManager.h"
 
 #include "imgui.h"
+#include "utils/ImFileDialog.h"
 #include "utils/serializer/Serializer.h"
 
 #pragma region Singleton Methods
@@ -26,6 +27,16 @@ void SceneManager::LoadScene(const std::string& scenePath, const std::string& sc
 {
     // Load the scene from the specified path
     Serializer::LoadSceneFromFile(scenePath, sceneName);
+}
+
+void SceneManager::ShowLoadSceneDialog()
+{
+    ifd::FileDialog::Instance().Open("LoadSceneDialog", "Load Scene", "Scene file (*.devil){.devil},.*");
+}
+
+void SceneManager::ShowSaveSceneDialog()
+{
+    ifd::FileDialog::Instance().Save("SaveSceneDialog", "Save Scene", "Scene file (*.devil){.devil},.*");
 }
 
 void SceneManager::ShowLoadingScreen(float loadingProgress)

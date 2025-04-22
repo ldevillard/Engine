@@ -458,11 +458,11 @@ void Editor::renderTopBar()
 			}
 			if (ImGui::MenuItem("Save Scene"))
 			{
-				ifd::FileDialog::Instance().Save("SaveSceneDialog", "Save Scene", "Scene file (*.devil){.devil},.*");
+				SceneManager::Get().ShowSaveSceneDialog();
 			}
 			if (ImGui::MenuItem("Load Scene"))
 			{
-				ifd::FileDialog::Instance().Open("LoadSceneDialog", "Load Scene", "Scene file (*.devil){.devil},.*");
+				SceneManager::Get().ShowLoadSceneDialog();
 			}
 			ImGui::EndMenu();
 		}
@@ -477,7 +477,7 @@ void Editor::renderTopBar()
 		ImGui::EndMainMenuBar();
 	}
 
-	if (ifd::FileDialog::Instance().IsDone("SaveSceneDialog")) 
+	if (ifd::FileDialog::Instance().IsDone("SaveSceneDialog"))
 	{
 		if (ifd::FileDialog::Instance().HasResult()) 
 		{
